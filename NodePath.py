@@ -1,13 +1,12 @@
 
 class NodePath(list):
     separator = '.'
-    def __init__(self, representation = None):
+    def __init__(self, representation = None, absolute = False):
         super(NodePath, self).__init__()
-        self.isabsolute = False
+        self.isabsolute = absolute
         if isinstance(representation, str):
             self._parse_path(representation)
-        if isinstance(representation, list):
-            self.clear()
+        elif isinstance(representation, list):
             self.extend(representation)
 
     def _parse_path(self, text):

@@ -1,25 +1,25 @@
 from ContextNode import *
+from NodePath import *
 
 class ContextCommand:
-    def __init__(self, target : ContextNode, command : ContextNode, arguments):
-        self.target = target
-        self.command = command
+    def __init__(self, target, name, arguments = []):
+        self.target = self._to_path(target)
+        self.name = self._to_path(name)
         self.arguments = arguments
 
-    def invoke(self) -> ContextNode:
-        evaluated_arguments = []
-        for arg in self.arguments:
-            if isinstance(arg, ContextNode):
-                evaluated_arguments.append(arg)
-            else:
-                if isinstance(arg, ContextCommand):
-                    evaluated_arguments.append(arg.invoke())
-                else:
-                    try:
-                        evaluated_arguments.append(ContextNode(eval(arg)))
-                    except NameError:
-                        evaluated_arguments.append(str(arg))
-        return self.command.call(self.target, evaluated_arguments)
+    def _to_path(self, value) -> NodePath:
+        if isinstance(value, NodePath):
+            return value
+        return NodePath(value)
 
     def __str__(self):
-        return "{{{}: {} {}}}".format(self.target, self.command, " ".join(self.arguments))
+        args = " ".join(map(str, self.arguments))
+        if len(args) > 0:
+            return "{{{}: {} {}}}".format(self.target, self.name, args)
+        else:
+            return "{{{}: {}}}".format(self.target, self.name)
+
+#c1 = ContextCommand('foo.bar', 'get')
+#c2 = ContextCommand('spam', 'set', [c1])
+#
+#print(c2)

@@ -1,0 +1,7 @@
+.:create foo
+.foo: set 3
+.foo: create bar
+.foo.bar: set rabarbar
+.: list
+.foo: get
+.foo.bar:get
