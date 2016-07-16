@@ -12,15 +12,23 @@ class ContextTree:
         commands.create('get', Commands.Get())
         commands.create('set', Commands.Set())
         commands.create('list', Commands.List())
+        commands.create('repr', Commands.Repr())
         self.root.print()
 
     def execute(self, command : ContextCommand):
+        # Resolve target node
         target_path = self._to_path(self._evaluate(command.target))
         target_node = self._resolve_path(target_path)
+        if target_node == None:
+            raise NameError('Could not evaluate target path: {}'.format(command.target))
 
+        # Resolve command node
         command_name = self._to_path(self._evaluate(command.name))
         command_node = self.find_command(target_path, command_name)
+        if command_node == None:
+            raise NameError('No command named: {}'.format(command.name))
 
+        # Evaluate all arguments
         arguments = map(self._evaluate, command.arguments)
 
         return command_node(target_node, *arguments)
@@ -60,6 +68,7 @@ class ContextTree:
 
         current_node = self.root
         for name in path:
+            #print("Resolving: " + name)
             current_node = current_node.get_subnode(name)
             if current_node == None:
                 return None

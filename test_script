@@ -1,7 +1,35 @@
-.:create foo
-.foo: set 3
-.foo: create bar
-.foo.bar: set rabarbar
+.: set root_node
+.:create foo foo
+.foo: create bar bar
+
+# list test
 .: list
-.foo: get
-.foo.bar:get
+.@commands: list
+.foo.@parent: list
+
+# @name test
+.@name: get
+.foo.@name: get
+.foo.bar.@name: get
+.@commands.get.@name: get
+.foo.bar.@parent.@name: get
+
+# @parent test
+.: get
+.: repr
+.foo.@parent: get
+.foo.@parent: repr
+.foo.@parent: list
+
+# @path test
+.foo.bar.@path: get
+
+# repr test
+.foo.bar.@path: repr
+# Following should return perhaps '@path'
+.foo.bar.@path.@name: get
+.foo.bar.@path.@name: repr
+.foo.bar.@name.@path: get
+.foo.bar.@name.@path: repr
+.foo.bar: repr
+.foo: repr

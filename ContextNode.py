@@ -5,11 +5,33 @@ class ContextNode:
     def __init__(self, value = None): #TODO: add parent parameter
         self._value = value
         self._subnodes = []
-        #self._parent = parent
+        self._parent = self
 
     @property
     def parent(self):
         return self._parent
+
+    @property
+    def name(self):
+        if self.parent == self:
+            return ""
+        # Find node by reference
+        #parent_node_entry = self.parent.get_subnode_entry_by_reference(self)
+        #if parent_node_entry == None:
+        #    raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
+
+        this_node_name = next((n[0] for n in self.parent._subnodes if n[1] is self), None)
+        if this_node_name == None:
+            raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
+        return this_node_name
+
+    @property
+    def path(self):
+        if self.parent == self:
+            return str(NodePath(absolute = True))
+        this_node_path = NodePath(self.parent.path)
+        this_node_path.append(self.name)
+        return str(this_node_path)
 
     def get(self):
         return self._value
@@ -18,11 +40,11 @@ class ContextNode:
         self._value = new_value
 
     def create(self, name, node):
-        print("Creating {} = {}".format(name, node))
         if not isinstance(node, ContextNode):
             node = ContextNode(node)
         if self.get_subnode(name) != None:
             raise NameError(str(name) + ' already exists')
+        node._parent = self
         self._subnodes.append((name, node))
 
     def delete(self, name):
@@ -66,12 +88,19 @@ class ContextNode:
     def __str__(self):
         return str(self.get())
 
+    def __repr__(self):
+        value = self.get()
+        return "{{{} = {}}}".format(self.path, type(value))
+
     def get_subnode(self, name): #TODO: replace by path
         subnode = self.get_subnode_entry(name)
-        if subnode == None:
-            #TODO: throw an exception?
-            return None
-        return subnode[1]
+        if subnode != None:
+            return subnode[1]
+        subnode = self.get_object_entry(name)
+        if subnode != None:
+            return subnode[1]
+
+        return None
 
     def get_subnode_entry(self, name):
         if name == None:
@@ -82,6 +111,25 @@ class ContextNode:
             else:
                 return None
         return next((n for n in self._subnodes if n[0] == name), None)
+
+    def get_object_entry(self, name):
+        if name == None:
+            return self
+        if not name.startswith('@'):
+            return None
+
+        # Find property named 'name' in this object
+        field = getattr(self, name[1:]) # strip '@' at begining
+        if field == None:
+            return None
+
+        if isinstance(field, ContextNode): #TODO: check if this is necessarry
+            return (name, field)
+        else:
+            temporary_node = ContextNode(field)
+            # FIXME: get temporary/attribute nodes properly anchored
+            # temporary_node._parent = self
+            return (name, temporary_node) # CHECK: how to store fractal data in properties? Is it needed for such properties?
 
     # For debug purposes
     def print(self, prefix = ''):

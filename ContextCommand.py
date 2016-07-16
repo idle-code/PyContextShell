@@ -19,7 +19,3 @@ class ContextCommand:
         else:
             return "{{{}: {}}}".format(self.target, self.name)
 
-#c1 = ContextCommand('foo.bar', 'get')
-#c2 = ContextCommand('spam', 'set', [c1])
-#
-#print(c2)

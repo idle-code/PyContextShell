@@ -7,12 +7,10 @@ class Create(CommandNode):
 
     def __call__(self, target, name, value = None):
         name = name.get()
-        print("Creating node with name:", name)
 
         if value != None:
             value = value.get()
-            print("Setting {} value to {}".format(name, value))
-
+            #print("Setting {} value to {}".format(name, value))
         target.create(name, value)
 
 
@@ -37,4 +35,11 @@ class List(CommandNode):
 
     def __call__(self, target):
         return [node for node in target]
+
+class Repr(CommandNode):
+    def __init__(self):
+        super(Repr, self).__init__()
+
+    def __call__(self, target):
+        return repr(target)
 
