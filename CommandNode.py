@@ -7,10 +7,10 @@ class CommandNode(Node):
             callback = self.__call__
         else:
             self.__call__ = callback
-        self.set(callback)
+        self.value = callback
 
     def __call__(self, target, *arguments):
-        callback = self.get()
+        callback = self.value
         if callback == None:
             raise NotImplemented('__call__ method not overriden or callback not provided')
         return callback(self, target, arguments)

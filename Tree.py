@@ -6,14 +6,35 @@ class Tree(Node):
     def __init__(self):
         super(Tree, self).__init__()
 
-        #TODO: add more generic way to populate @commands branch (in Node?)
-        self.create('@commands', None)
+        self.append_node('@commands', Node())
         commands = self['@commands']
-        commands.create('create', Commands.Create())
-        commands.create('get', Commands.Get())
-        commands.create('set', Commands.Set())
-        commands.create('list', Commands.List())
-        commands.create('repr', Commands.Repr())
+        commands.append_node('create', Commands.Create())
+        commands.append_node('get', Commands.Get())
+        commands.append_node('set', Commands.Set())
+        commands.append_node('list', Commands.List())
+        commands.append_node('repr', Commands.Repr())
+        #self.print()
+
+    def create(self, path, value = None):
+        node_path = NodePath(path, True)
+        return self.call(node_path.branch_name, "create", node_path.base_name, value)
+
+    def get(self, path):
+        return self.call(path, "get")
+
+    def set(self, path, value):
+        return self.call(path, "set", value)
+
+    def call(self, target_path, command_name, *command_parameters):
+        command_parameters = list(command_parameters)
+        #print("Invoking '{}' on '{}' with arguments: {}".format(command_name, target_path, command_parameters))
+        result = self.execute(Command(target_path, command_name, command_parameters))
+        if result == None:
+            return None
+
+        if isinstance(result, Node):
+            result = result.value
+        return result
 
     def execute(self, command : Command):
         # Resolve target node
@@ -34,11 +55,14 @@ class Tree(Node):
         return command_node(target_node, *arguments)
 
     def _evaluate(self, value):
-        #print('Evaluating:', value)
+        #print('Evaluating:', repr(value), type(value))
         if isinstance(value, Command):
             return self.execute(value)
         if isinstance(value, list): # for paths
             return value
+
+        if value == None or isinstance(value, int) or isinstance(value, str):
+            return Node(value)
 
         try:
             value = Node(eval(value))

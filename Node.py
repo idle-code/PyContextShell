@@ -33,21 +33,21 @@ class Node:
         this_node_path.append(self.name)
         return str(this_node_path)
 
-    def get(self):
+    @property
+    def value(self):
         return self._value
 
-    def set(self, new_value):
+    @value.setter
+    def value(self, new_value):
         self._value = new_value
 
-    def create(self, name, node):
-        if not isinstance(node, Node):
-            node = Node(node)
+    def append_node(self, name, node):
         if self.get_subnode(name) != None:
             raise NameError(str(name) + ' already exists')
         node._parent = self
         self._subnodes.append((name, node))
 
-    def delete(self, name):
+    def remove_node(self, name):
         node_to_delete = self.get_subnode(name)
         del self._subnodes[self._subnodes.index(node_to_delete)]
 
@@ -86,10 +86,10 @@ class Node:
         return subnode
 
     def __str__(self):
-        return str(self.get())
+        return str(self.value)
 
     def __repr__(self):
-        value = self.get()
+        value = self.value
         return "{{{} = {}}}".format(self.path, type(value))
 
     def get_subnode(self, name): #TODO: replace by path

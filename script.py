@@ -14,6 +14,8 @@ shell = Shell(tree)
 with open(sys.argv[1]) as script:
     for line in script.readlines():
         line = line.strip()
+        if len(line) == 0:
+            continue
         if line.startswith('#'):
             print(line)
             continue

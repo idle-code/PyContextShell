@@ -9,6 +9,14 @@ class NodePath(list):
         elif isinstance(representation, list):
             self.extend(representation)
 
+    @property
+    def branch_name(self):
+        return str(NodePath(self[:-1]))
+
+    @property
+    def base_name(self):
+        return str(NodePath(self[-1]))
+
     def _parse_path(self, text):
         self.clear()
         text = text.strip()
