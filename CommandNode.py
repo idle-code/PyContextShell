@@ -1,6 +1,6 @@
-from ContextNode import *
+from Node import *
 
-class CommandNode(ContextNode):
+class CommandNode(Node):
     def __init__(self, callback = None):
         super(CommandNode, self).__init__()
         if callback == None:

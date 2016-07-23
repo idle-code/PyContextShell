@@ -1,8 +1,8 @@
 from NodePath import *
 import collections
 
-class ContextNode:
-    def __init__(self, value = None): #TODO: add parent parameter
+class Node:
+    def __init__(self, value = None):
         self._value = value
         self._subnodes = []
         self._parent = self
@@ -40,8 +40,8 @@ class ContextNode:
         self._value = new_value
 
     def create(self, name, node):
-        if not isinstance(node, ContextNode):
-            node = ContextNode(node)
+        if not isinstance(node, Node):
+            node = Node(node)
         if self.get_subnode(name) != None:
             raise NameError(str(name) + ' already exists')
         node._parent = self
@@ -123,10 +123,10 @@ class ContextNode:
         if field == None:
             return None
 
-        if isinstance(field, ContextNode): #TODO: check if this is necessarry
+        if isinstance(field, Node): #TODO: check if this is necessarry
             return (name, field)
         else:
-            temporary_node = ContextNode(field)
+            temporary_node = Node(field)
             # FIXME: get temporary/attribute nodes properly anchored
             # temporary_node._parent = self
             return (name, temporary_node) # CHECK: how to store fractal data in properties? Is it needed for such properties?

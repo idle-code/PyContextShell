@@ -1,21 +1,21 @@
-from ContextCommand import *
-from ContextNode import *
+from Command import *
+from Node import *
 import Commands
 
-class ContextTree:
+class Tree(Node):
     def __init__(self):
-        self.root = ContextNode()
+        super(Tree, self).__init__()
 
-        self.root.create('@commands', None)
-        commands = self.root['@commands']
+        #TODO: add more generic way to populate @commands branch (in Node?)
+        self.create('@commands', None)
+        commands = self['@commands']
         commands.create('create', Commands.Create())
         commands.create('get', Commands.Get())
         commands.create('set', Commands.Set())
         commands.create('list', Commands.List())
         commands.create('repr', Commands.Repr())
-        self.root.print()
 
-    def execute(self, command : ContextCommand):
+    def execute(self, command : Command):
         # Resolve target node
         target_path = self._to_path(self._evaluate(command.target))
         target_node = self._resolve_path(target_path)
@@ -35,17 +35,17 @@ class ContextTree:
 
     def _evaluate(self, value):
         #print('Evaluating:', value)
-        if isinstance(value, ContextCommand):
+        if isinstance(value, Command):
             return self.execute(value)
         if isinstance(value, list): # for paths
             return value
 
         try:
-            value = ContextNode(eval(value))
+            value = Node(eval(value))
         except NameError:
-            value = ContextNode(str(value))
+            value = Node(str(value))
         except TypeError:
-            value = ContextNode(str(value))
+            value = Node(str(value))
 
         return value
 
@@ -66,7 +66,7 @@ class ContextTree:
         if path == None:
             raise ValueError('Cannot resolve none path')
 
-        current_node = self.root
+        current_node = self
         for name in path:
             #print("Resolving: " + name)
             current_node = current_node.get_subnode(name)
@@ -77,7 +77,7 @@ class ContextTree:
     def _to_path(self, value):
         if isinstance(value, str):
             value = [value]
-        elif isinstance(value, ContextNode):
+        elif isinstance(value, Node):
             value = value.get()
 
         if not isinstance(value, list):

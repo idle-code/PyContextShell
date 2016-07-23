@@ -26,7 +26,7 @@
 
 # repr test
 .foo.bar.@path: repr
-# Following should return perhaps '@path'
+# Following perhaps should return '@path'
 .foo.bar.@path.@name: get
 .foo.bar.@path.@name: repr
 .foo.bar.@name.@path: get

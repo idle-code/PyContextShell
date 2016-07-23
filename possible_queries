@@ -1,0 +1,37 @@
+{selected}: play
+foo: set 1 2 3
+system.network.interfaces: select eth*
+bar: list
+spam: set {bar: list}
+{system.network.interfaces: list}: bring.up
+system.network.interfaces: list |: bring.up
+system.network.interfaces: list |.ip: get
+system.network.interfaces|ip: get
+system.network|interfaces|ip: get
+{system.network.interfaces: list}.ip
+
+{system.network.interfaces: list}: map {{get}}
+{system.network.interfaces: list}: map {{.ip: get}}
+system.network.interfaces: list |: map {{get}}
+system.network.interfaces: list |: filter {{.connected == Yes}} |.ip
+{ {system.network.interfaces: list}: filter {{.connected == Yes}} }.ip
+raw.vim /my/file.txt
+raw.cat /etc/rc.local | raw.echo
+$cat /etc/rc.local | $echo
+$git commit
+git.commit
+
+git.branch.create FooBar
+git.branch.rename FooBar -> Spam
+git.branch.rename source=FooBar destination=Spam
+git.branch.FooBar: rename Spam
+git.rebase master <- HEAD
+git.rebase -> master
+file.rename bar.txt -> spam.cpp
+
+.: list
+foo   3
+bar   "rabarbar"
+spam  3 (&.foo)
+
+

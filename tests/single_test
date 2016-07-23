@@ -1,0 +1,12 @@
+#!/usr/bin/zsh
+
+if [ $# -lt 1 ]
+then
+  echo "Use: $0 <python_test_name.py>"
+  exit 1
+fi
+
+TEST_NAME=`realpath $1`
+
+cd ../ && python3 -m unittest $TEST_NAME
+

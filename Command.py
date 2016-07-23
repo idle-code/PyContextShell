@@ -1,7 +1,7 @@
-from ContextNode import *
+from Node import *
 from NodePath import *
 
-class ContextCommand:
+class Command:
     def __init__(self, target, name, arguments = []):
         self.target = self._to_path(target)
         self.name = self._to_path(name)

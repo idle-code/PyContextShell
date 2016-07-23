@@ -1,17 +1,27 @@
-from ContextCommand import *
-from ContextNode import *
+from Command import *
+from Node import *
 from NodePath import *
 from CommandNode import *
 
 from itertools import takewhile, dropwhile
 
-class ContextShell:
-    def __init__(self, root : ContextNode):
+class Shell:
+    def __init__(self, root : Node):
         self._root = root
         self.current_path = NodePath()
         self.current_path.isabsolute = True
 
     def parse(self, command_line):
+        if command_line == None:
+            return None
+
+        command_line = command_line.strip()
+        if len(command_line) == 0:
+            return None # ignore empty lines
+
+        if command_line.startswith('#'):
+            return None # ignore comments
+
         i = iter(command_line)
 
         path = self.current_path
@@ -24,7 +34,7 @@ class ContextShell:
         arguments, i = self._parse_arguments(i)
 
         #TODO: check if i is finished
-        command = ContextCommand(path, command_name, arguments)
+        command = Command(path, command_name, arguments)
         #print(command)
         return command
 
@@ -44,4 +54,15 @@ class ContextShell:
         args = args.split(' ')
         args = [a for a in args if len(a) > 0]
         return args, iterator
+
+    @staticmethod
+    def pretty_print(result):
+        if isinstance(result, list):
+            index = 0
+            for r in result:
+                print("[{}] {}\t = {}".format(index, r["@name"], r))
+                index += 1
+        else:
+            print(result)
+
 

@@ -1,4 +1,4 @@
-from ContextNode import *
+from Node import *
 from CommandNode import *
 
 class Create(CommandNode):
