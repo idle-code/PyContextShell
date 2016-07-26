@@ -8,6 +8,8 @@ class Tree(Node):
 
         self.append_node('@commands', Node())
         commands = self['@commands']
+
+        # Register standard commands:
         commands.append_node('create', Commands.Create())
         commands.append_node('get', Commands.Get())
         commands.append_node('set', Commands.Set())
@@ -27,7 +29,6 @@ class Tree(Node):
 
     def call(self, target_path, command_name, *command_parameters):
         command_parameters = list(command_parameters)
-        #print("Invoking '{}' on '{}' with arguments: {}".format(command_name, target_path, command_parameters))
         result = self.execute(Command(target_path, command_name, command_parameters))
         if result == None:
             return None

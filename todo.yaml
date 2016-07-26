@@ -1,0 +1,49 @@
+Tree:
+  - Self-awareness - .contexttree (or similar) branch
+  - Support for subcommands
+    - create.int, create.string, create.<type>
+    - list.commands
+      list.all
+  - Serialization to file
+    - Values
+    - Commands
+  - Commands parameter tree (generation?)
+  - Commands argument validation according to parameter tree
+  - Type safety
+  - Removal of nodes (just test delete command)
+  - Read-only nodes
+  - System executables as commands
+  - In-tree links support?
+  - File-to-node mapping
+  - Easy creation of custom nodes from python classes
+    - Get rid of Commands.py (move commands to Tree or similar place)
+    - @VirtualAttribute decorator
+    + @Attribute decorator
+      - Add attribute rewrite to work with bare python classes
+    - @Subnode decorator?
+    + @Action decorator
+      - Add method rewrite to work with bare python classes
+  - Sessions
+  - Server-client architecture
+  - Command output streaming - list | filter | ...
+  - Field streaming - {list}|.@name (based on command output streaming; filter?)
+  - Batch calling - {selected}: play
+  - Index addressing
+
+Functionality:
+  - select and selected commands
+  - Date/Time types
+    - System time reading
+  - Filesystem mapping
+    - copy, cut and paste commands (using select(ed) commands?)
+    - mime-type based file typing
+
+Shell:
+  - Suggestions
+  - Autocompletion
+  - Server-client architecture
+  - Branch navigation commands (aka cd); should be in session?
+  - Command invocation wizard (based on command's parameter tree)
+  - set alias - .some.key = 321
+  - get alias - .some.key (should be translated to .some.key: get if possible)
+

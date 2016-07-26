@@ -1,11 +1,17 @@
 from NodePath import *
 import collections
+import functools
+
+def VirtualNode(get_method):
+    def _VirtualNodeDecorator(self, *args, **kwargs):
+        return self.get_method(*args, **kwargs)
+    return functools.wraps(get_method)(_VirtualNodeDecorator)
 
 class Node:
     def __init__(self, value = None):
+        self._parent = self
         self._value = value
         self._subnodes = []
-        self._parent = self
 
     @property
     def parent(self):
@@ -47,37 +53,43 @@ class Node:
         node._parent = self
         self._subnodes.append((name, node))
 
+    def append_action_node(self, name, node):
+        if '@commands' not in self:
+            self.append_node('@commands', Node())
+        self['@commands'].append_node(name, node)
+
     def remove_node(self, name):
         node_to_delete = self.get_subnode(name)
         del self._subnodes[self._subnodes.index(node_to_delete)]
 
-    def contains(self, name):
-        return name in self
+    #def contains(self, name):
+    #    return name in self
 
     def __contains__(self, name):
         return self.get_subnode_entry(name) != None
 
-    def __iter__(self):
-        return map(lambda t: t[1], self._subnodes)
+    #def __iter__(self):
+    #    return map(lambda t: t[1], self._subnodes)
 
     def __len__(self):
         return len(self._subnodes)
 
     def __getattr__(self, name):
+        #TODO: throw NameError (or similar) when there is no node
         return self.get_subnode(name)
 
     #def __setattr__(self, name, value):
     #    if not name.startswith('_'):
     #        self.create(name, value)
 
-    def __delattr__(self, name):
-        self.delete(name)
+    #def __delattr__(self, name):
+    #    self.delete(name)
 
-    def __setitem__(self, name, value):
-        if name in self:
-            self[name].set(value)
-        else:
-            self.create(name, value)
+    #def __setitem__(self, name, value):
+    #    if name in self:
+    #        self[name].set(value)
+    #    else:
+    #        self.create(name, value)
 
     def __getitem__(self, name):
         subnode = self.get_subnode(name)
@@ -96,10 +108,6 @@ class Node:
         subnode = self.get_subnode_entry(name)
         if subnode != None:
             return subnode[1]
-        subnode = self.get_object_entry(name)
-        if subnode != None:
-            return subnode[1]
-
         return None
 
     def get_subnode_entry(self, name):
@@ -111,25 +119,6 @@ class Node:
             else:
                 return None
         return next((n for n in self._subnodes if n[0] == name), None)
-
-    def get_object_entry(self, name):
-        if name == None:
-            return self
-        if not name.startswith('@'):
-            return None
-
-        # Find property named 'name' in this object
-        field = getattr(self, name[1:]) # strip '@' at begining
-        if field == None:
-            return None
-
-        if isinstance(field, Node): #TODO: check if this is necessarry
-            return (name, field)
-        else:
-            temporary_node = Node(field)
-            # FIXME: get temporary/attribute nodes properly anchored
-            # temporary_node._parent = self
-            return (name, temporary_node) # CHECK: how to store fractal data in properties? Is it needed for such properties?
 
     # For debug purposes
     def print(self, prefix = ''):

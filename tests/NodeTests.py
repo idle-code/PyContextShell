@@ -1,6 +1,6 @@
-import unittest
-
 from Node import *
+
+import unittest
 
 class NodeTests(unittest.TestCase):
     def setUp(self):
@@ -11,21 +11,21 @@ class NodeTests(unittest.TestCase):
         strnode = Node("spam")
         nonenode = Node()
 
-    def test_get(self):
+    def test_value(self):
         intnode = Node(123)
-        self.assertEqual(123, intnode.get())
+        self.assertEqual(123, intnode.value)
 
         strnode = Node("spam")
-        self.assertEqual("spam", strnode.get())
+        self.assertEqual("spam", strnode.value)
 
         nonenode = Node()
-        self.assertEqual(None, nonenode.get())
+        self.assertEqual(None, nonenode.value)
 
     def test_set(self):
         intnode = Node(123)
-        self.assertEqual(123, intnode.get())
-        intnode.set(321)
-        self.assertEqual(321, intnode.get())
+        self.assertEqual(123, intnode.value)
+        intnode.value = 321
+        self.assertEqual(321, intnode.value)
 
 if __name__ == '__main__':
     unittest.main()

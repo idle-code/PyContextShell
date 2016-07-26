@@ -1,7 +1,6 @@
 from Command import *
 from Node import *
 from NodePath import *
-from CommandNode import *
 
 from itertools import takewhile, dropwhile
 

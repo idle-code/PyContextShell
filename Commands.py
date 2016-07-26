@@ -1,7 +1,7 @@
 from Node import *
-from CommandNode import *
+from ActionNode import *
 
-class Create(CommandNode):
+class Create(ActionNode):
     def __init__(self):
         super(Create, self).__init__()
 
@@ -12,14 +12,22 @@ class Create(CommandNode):
             value_node = value_node.value
         target_node.append_node(name, Node(value_node))
 
-class Get(CommandNode):
+class Delete(ActionNode):
+    def __init__(self):
+        super(Delete, self).__init__()
+
+    def __call__(self, target_node):
+        target_node.remove_node(target_node['@name'].value)
+
+
+class Get(ActionNode):
     def __init__(self):
         super(Get, self).__init__()
 
     def __call__(self, target_node):
         return target_node.value
 
-class Set(CommandNode):
+class Set(ActionNode):
     def __init__(self):
         super(Set, self).__init__()
 
@@ -27,14 +35,14 @@ class Set(CommandNode):
         value = value_node.value
         target_node.value = value
 
-class List(CommandNode):
+class List(ActionNode):
     def __init__(self):
         super(List, self).__init__()
 
     def __call__(self, target_node):
         return [node for node in target_node]
 
-class Repr(CommandNode):
+class Repr(ActionNode):
     def __init__(self):
         super(Repr, self).__init__()
 
