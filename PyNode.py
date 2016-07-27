@@ -17,5 +17,6 @@ class PyNode(Node):
             if not is_creator(field):
                 continue
             #print("Creating node for:", field_name)
-            field(self)
+            original_field = field(self)
+            setattr(self, field_name, original_field)
 

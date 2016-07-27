@@ -21,10 +21,6 @@ class Node:
     def name(self):
         if self.parent == self:
             return ""
-        # Find node by reference
-        #parent_node_entry = self.parent.get_subnode_entry_by_reference(self)
-        #if parent_node_entry == None:
-        #    raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
 
         this_node_name = next((n[0] for n in self.parent._subnodes if n[1] is self), None)
         if this_node_name == None:
@@ -59,8 +55,11 @@ class Node:
         self['@commands'].append_node(name, node)
 
     def remove_node(self, name):
-        node_to_delete = self.get_subnode(name)
-        del self._subnodes[self._subnodes.index(node_to_delete)]
+        entry_to_delete = self.get_subnode_entry(name)
+        if entry_to_delete == None:
+            return False
+        self._subnodes.remove(entry_to_delete)
+        return True
 
     #def contains(self, name):
     #    return name in self
@@ -108,6 +107,20 @@ class Node:
         subnode = self.get_subnode_entry(name)
         if subnode != None:
             return subnode[1]
+        subnode = self._get_special_entry(name)
+        if subnode != None:
+            return subnode[1]
+        return None
+
+    #FIXME: find better way of handling attributes/nodes common for all nodes
+    def _get_special_entry(self, special_name):
+        if special_name == '@name':
+            return (special_name, Node(self.name))
+        elif special_name == '@path':
+            return (special_name, Node(self.path))
+        elif special_name == '@parent':
+            return (special_name, self.parent)
+
         return None
 
     def get_subnode_entry(self, name):

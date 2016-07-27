@@ -17,8 +17,12 @@ class Delete(ActionNode):
         super(Delete, self).__init__()
 
     def __call__(self, target_node):
-        target_node.remove_node(target_node['@name'].value)
+        target_node.parent.remove_node(target_node.name)
 
+class Exists(ActionNode):
+    def __call__(self, target_node, name_node):
+        name = name_node.value
+        return name in target_node
 
 class Get(ActionNode):
     def __init__(self):

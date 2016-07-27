@@ -27,5 +27,6 @@ def Action(callback):
 
         commands = parent_node[ActionNode.ActionNodeName]
         commands.append_node(callback.__name__, ActionNode(callback))
+        return callback
     return action_creator
 

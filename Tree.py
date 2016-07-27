@@ -1,8 +1,8 @@
 from Command import *
-from Node import *
+from PyNode import *
 import Commands
 
-class Tree(Node):
+class Tree(PyNode):
     def __init__(self):
         super(Tree, self).__init__()
 
@@ -14,6 +14,8 @@ class Tree(Node):
         commands.append_node('get', Commands.Get())
         commands.append_node('set', Commands.Set())
         commands.append_node('list', Commands.List())
+        commands.append_node('exists', Commands.Exists())
+        commands.append_node('delete', Commands.Delete())
         commands.append_node('repr', Commands.Repr())
         #self.print()
 
@@ -26,6 +28,13 @@ class Tree(Node):
 
     def set(self, path, value):
         return self.call(path, "set", value)
+
+    def delete(self, path):
+        return self.call(path, "delete")
+
+    def exists(self, path):
+        node_path = NodePath(path, True)
+        return self.call(node_path.branch_name, "exists", node_path.base_name)
 
     def call(self, target_path, command_name, *command_parameters):
         command_parameters = list(command_parameters)

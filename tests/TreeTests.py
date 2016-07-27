@@ -62,7 +62,7 @@ class TreeTests(unittest.TestCase):
 
         self.assertTrue(self.root.exists('foo'))
         self.root.delete('foo')
-        self.assertTrue(self.root.exists('foo'))
+        self.assertFalse(self.root.exists('foo'))
 
 
 if __name__ == '__main__':

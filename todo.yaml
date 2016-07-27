@@ -10,19 +10,19 @@ Tree:
   - Commands parameter tree (generation?)
   - Commands argument validation according to parameter tree
   - Type safety
-  - Removal of nodes (just test delete command)
+  + Removal of nodes (just test delete command)
   - Read-only nodes
-  - System executables as commands
   - In-tree links support?
-  - File-to-node mapping
   - Easy creation of custom nodes from python classes
     - Get rid of Commands.py (move commands to Tree or similar place)
-    - @VirtualAttribute decorator
+    - Find a way to implement @name, @path and @parent for every Node (inheritable attributes? actions?)
+    - @VirtualAttribute decorator - for on-request node generation
     + @Attribute decorator
-      - Add attribute rewrite to work with bare python classes
-    - @Subnode decorator?
+      - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
+    ? @Subnode decorator
     + @Action decorator
-      - Add method rewrite to work with bare python classes
+      - Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
+      - Add method rewrite to work with bare python classes (use @CreatorFunction to do this?)
   - Sessions
   - Server-client architecture
   - Command output streaming - list | filter | ...
@@ -31,6 +31,8 @@ Tree:
   - Index addressing
 
 Functionality:
+  - System executables as commands
+  - File-to-node mapping
   - select and selected commands
   - Date/Time types
     - System time reading
