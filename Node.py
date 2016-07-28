@@ -9,7 +9,7 @@ class Node:
         self._value = value
         self._subnodes = []
 
-        self.append_node_generator('@parent', lambda: self.parent)
+        #self.append_node_generator('@parent', lambda: self.parent)
         self.append_node_generator('@name', lambda: self.name)
         self.append_node_generator('@path', lambda: self.path)
 

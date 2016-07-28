@@ -15,16 +15,18 @@ Tree:
   - In-tree links support?
   - Easy creation of custom nodes from python classes
     - Get rid of Commands.py (move commands to Tree or similar place)
-    - Find a way to implement @name, @path and @parent for every Node (inheritable attributes? actions?)
-    - @VirtualAttribute decorator - for on-request node generation
-    + @Attribute decorator
-      - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
-      - Add (nested) path parameter
-    ? @Subnode decorator
-    + @Action decorator
+    + Find a way to implement @name, @path and @parent for every Node
+      ? Implement @parent virtual attribute (with in-tree links?)
+    - Decorators:
       - Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
-      - Add method rewrite to work with bare python classes (use @CreatorFunction to do this?)
-      - Add (nested) path parameter
+      + @Attribute decorator
+        - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
+        - Add (nested) path parameter
+      ? @Subnode decorator
+      + @Action decorator
+        - Add method rewrite to work with bare python classes (use @CreatorFunction to do this?)
+        - Add (nested) path parameter
+      - @VirtualNode - for on-request node generation (Node.append_node_generator)
   - Sessions
   - Server-client architecture
   - Command output streaming - list | filter | ...
