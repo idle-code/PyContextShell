@@ -1,6 +1,7 @@
 .: set root_node
 .:create foo foo
 .foo: create bar bar
+.foo.bar.@path: get
 
 # list test
 .: list

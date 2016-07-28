@@ -8,6 +8,7 @@ import readline
 from AttributeNode import *
 from ActionNode import *
 from PyNode import *
+
 class TestNode(PyNode):
     @Action
     def action(self, target, *args):

@@ -5,6 +5,8 @@ import unittest
 class NodeTests(unittest.TestCase):
     def setUp(self):
         self.root = Node()
+        self.child = Node()
+        self.root.append_node('child', self.child)
 
     def test_constructor(self):
         intnode = Node(123)
@@ -26,6 +28,49 @@ class NodeTests(unittest.TestCase):
         self.assertEqual(123, intnode.value)
         intnode.value = 321
         self.assertEqual(321, intnode.value)
+
+    def test_parent(self):
+        self.assertIs(self.root, self.root.parent)
+
+    def test_parent_node(self):
+        self.test_parent()
+
+        parent_node = self.child['@parent']
+        self.assertIsInstance(parent_node, Node)
+        self.assertIs(self.root, parent_node)
+
+    def test_path(self):
+        self.assertEqual(".child", self.child.path)
+
+    def test_path_node(self):
+        self.test_path()
+
+        path_node = self.child['@path']
+        self.assertIsInstance(path_node, Node)
+        self.assertEqual(".child", path_node.value)
+
+    def test_name(self):
+        self.assertEqual("child", self.child.name)
+
+    def test_name_node(self):
+        self.test_name()
+
+        name_node = self.child['@name']
+        self.assertIsInstance(name_node, Node)
+        self.assertEqual("child", name_node.value)
+
+    def test_nested_virtual_node(self):
+        self.assertEqual('@name', self.child['@name']['@name'].value)
+        self.assertEqual('@path', self.child['@path']['@name'].value)
+        #FIXME: self.assertEqual('@parent', self.child['@parent']['@name'].value)
+
+        self.assertEqual('.child.@name', self.child['@name']['@path'].value)
+        self.assertEqual('.child.@path', self.child['@path']['@path'].value)
+        #FIXME: self.assertEqual('.child.@parent', self.child['@parent']['@path'].value)
+
+        self.assertIs(self.child, self.child['@name']['@parent'])
+        self.assertIs(self.child, self.child['@path']['@parent'])
+        self.assertIs(self.root, self.child['@parent']['@parent'])
 
 if __name__ == '__main__':
     unittest.main()
