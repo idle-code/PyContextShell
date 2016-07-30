@@ -1,0 +1,3 @@
+#!/bin/sh
+python3 -m unittest discover --verbose -s $1 -p '*.py'
+

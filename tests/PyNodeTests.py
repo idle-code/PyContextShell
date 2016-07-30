@@ -84,7 +84,6 @@ class PyNodeTests(unittest.TestCase):
 
         self.assertTrue('virtual' in self.node)
         virtual_node = self.node['virtual']
-        print('virtual_node', type(virtual_node))
         self.assertIsInstance(virtual_node, Node)
         self.assertEqual("ra", virtual_node.value)
 

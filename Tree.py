@@ -1,25 +1,10 @@
 from Command import *
 from PyNode import *
 from ActionNode import *
-import Commands
 
 class Tree(PyNode):
     def __init__(self):
-        super(Tree, self).__init__()
-
-        if '@actions' not in self:
-            self.append_node('@actions', Node())
-        commands = self['@actions']
-
-        # Register standard commands:
-        #commands.append_node('create', Commands.Create())
-        commands.append_node('get', Commands.Get())
-        commands.append_node('set', Commands.Set())
-        commands.append_node('list', Commands.List())
-        commands.append_node('exists', Commands.Exists())
-        commands.append_node('delete', Commands.Delete())
-        commands.append_node('repr', Commands.Repr())
-        #self.print()
+        super().__init__()
 
     @Action
     def create(self, target_node, name_node, value_node = None):
@@ -34,18 +19,32 @@ class Tree(PyNode):
 
         target_node.append_node(name, Node(value))
 
-    def get(self, path):
-        return self.call(path, "get")
+    @Action
+    def get(self, target_node):
+        return target_node.value
 
-    def set(self, path, value):
-        return self.call(path, "set", value)
+    @Action
+    def set(self, target_node, value_node):
+        target_node.value = value_node.value
 
-    def delete(self, path):
-        return self.call(path, "delete")
+    @Action
+    def list(self, target_node):
+        return [node for node in target_node]
 
-    def exists(self, path):
-        node_path = NodePath(path, True)
-        return self.call(node_path.branch_name, "exists", node_path.base_name)
+    @Action
+    def delete(self, target_node, name_node):
+        if not target_node.remove_node(name_node.value):
+            raise NameError("Node {} does not exists".format(name_node.value))
+
+    @Action
+    def exists(self, target_node, name_node):
+        name = name_node.value
+        return name in target_node
+
+    @Action
+    def repr(self, target_node):
+        return repr(target_node)
+
 
     def call(self, target_path, action_name, *action_parameters):
         if not isinstance(target_path, str):

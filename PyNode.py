@@ -37,7 +37,8 @@ class PyNode(Node):
             if is_creator(field):
                 #print("Creating node for:", field_name)
                 original_field = field(self)
-                setattr(self, field_name, original_field)
+                bound_method = types.MethodType(original_field, self)
+                setattr(self, field_name, bound_method)
             elif is_node_generator(field):
                 #print("Creating node generator:", field.node_name)
                 self.append_node_generator(field.node_name, field)

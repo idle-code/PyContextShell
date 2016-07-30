@@ -1,20 +1,20 @@
 Tree:
   - Self-awareness - .contexttree (or similar) branch
-  - Support for subcommands
+  - Support for subactions
     - create.int, create.string, create.<type>
     - list.commands
       list.all
   - Serialization to file
     - Values
-    - Commands
-  - Commands parameter tree (generation?)
-  - Commands argument validation according to parameter tree
+    - Actions
+  - Action parameter tree (generation?)
+  - Action argument validation according to parameter tree
   - Type safety
   + Removal of nodes (just test delete command)
   - Read-only nodes
   - In-tree links support?
   - Easy creation of custom nodes from python classes
-    - Get rid of Commands.py (move commands to Tree or similar place)
+    + Get rid of Commands.py
     + Find a way to implement @name, @path and @parent for every Node
       ? Implement @parent virtual attribute (with in-tree links?)
     - Decorators:
@@ -24,7 +24,7 @@ Tree:
         - Add (nested) path parameter
       ? @Subnode decorator
       + @Action decorator
-        - Add method rewrite to work with bare python classes (use @CreatorFunction to do this?)
+        + Add method rewrite to work with bare python classes
         - Add (nested) path parameter
       - @VirtualNode - for on-request node generation (Node.append_node_generator)
   - Sessions
@@ -35,20 +35,20 @@ Tree:
   - Index addressing
 
 Functionality:
-  - System executables as commands
+  - System executables as actions
   - File-to-node mapping
-  - select and selected commands
+  - select and selected actions
   - Date/Time types
     - System time reading
   - Filesystem mapping
-    - copy, cut and paste commands (using select(ed) commands?)
+    - copy, cut and paste actions (using select(ed) action?)
     - mime-type based file typing
 
 Shell:
   - Suggestions
   - Autocompletion
   - Server-client architecture
-  - Branch navigation commands (aka cd); should be in session?
+  - Branch navigation action (aka cd); should be in session?
   - Command invocation wizard (based on command's parameter tree)
   - set alias - .some.key = 321
   - get alias - .some.key (should be translated to .some.key: get if possible)

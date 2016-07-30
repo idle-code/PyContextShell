@@ -26,8 +26,10 @@ def NodeArgumentWrapper(function):
         return Node(arg)
 
     @functools.wraps(function)
-    def wrap_arguments(*args, **kwargs):
-        args = list(map(wrap_arg, args))
+    def wrap_arguments(self, target_node, *args, **kwargs):
+        if not isinstance(target_node, Node):
+            raise TypeError('target_node should have Node type but is ' + str(type(target_node)))
+        args = [self, target_node] + list(map(wrap_arg, args))
         #CHECK: wrap keyword arguments?
         return function(*args, **kwargs)
 
@@ -46,6 +48,6 @@ def Action(method):
 
         actions_node = parent_node[ActionNode.ActionNodeName]
         actions_node.append_node(method.__name__, ActionNode(bound_method))
-        return bound_method # to restore original
+        return method # to restore original
     return action_creator
 
