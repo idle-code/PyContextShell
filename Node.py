@@ -71,6 +71,7 @@ class Node:
     def _add_subnode(self, name, node):
         if name in self._subnode_names:
             raise NameError("Subnode entry with name '" + str(name) + "' already exists")
+
         self._subnodes.append((name, node))
 
     def _remove_subnode(self, name):
@@ -118,11 +119,7 @@ class Node:
 
     #TODO: test
     def __getattr__(self, name):
-        #TODO: throw NameError (or similar) when there is no node
-        subnode = self.get_subnode(name)
-        if subnode == None:
-            raise KeyError("Could not find subnode: '{}'".format(name))
-        return subnode
+        return self.get_subnode(name)
 
     #def __setattr__(self, name, value):
     #    if not name.startswith('_'):

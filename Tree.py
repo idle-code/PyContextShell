@@ -1,16 +1,18 @@
 from Command import *
 from PyNode import *
+from ActionNode import *
 import Commands
 
 class Tree(PyNode):
     def __init__(self):
         super(Tree, self).__init__()
 
-        self.append_node('@commands', Node())
-        commands = self['@commands']
+        if '@actions' not in self:
+            self.append_node('@actions', Node())
+        commands = self['@actions']
 
         # Register standard commands:
-        commands.append_node('create', Commands.Create())
+        #commands.append_node('create', Commands.Create())
         commands.append_node('get', Commands.Get())
         commands.append_node('set', Commands.Set())
         commands.append_node('list', Commands.List())
@@ -19,9 +21,18 @@ class Tree(PyNode):
         commands.append_node('repr', Commands.Repr())
         #self.print()
 
-    def create(self, path, value = None):
-        node_path = NodePath(path, True)
-        return self.call(node_path.branch_name, "create", node_path.base_name, value)
+    @Action
+    def create(self, target_node, name_node, value_node = None):
+        #parent_path = NodePath(target.value, True)
+        name = name_node.value
+        if not isinstance(name, str):
+            raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
+
+        value = None # default value
+        if value_node != None:
+            value = value_node.value
+
+        target_node.append_node(name, Node(value))
 
     def get(self, path):
         return self.call(path, "get")
@@ -36,9 +47,14 @@ class Tree(PyNode):
         node_path = NodePath(path, True)
         return self.call(node_path.branch_name, "exists", node_path.base_name)
 
-    def call(self, target_path, command_name, *command_parameters):
-        command_parameters = list(command_parameters)
-        result = self.execute(Command(target_path, command_name, command_parameters))
+    def call(self, target_path, action_name, *action_parameters):
+        if not isinstance(target_path, str):
+            raise TypeError("target_path should be string")
+        if not isinstance(action_name, str):
+            raise TypeError("action_name should be string")
+
+        action_parameters = list(action_parameters) #TODO: check if this conversion is needed
+        result = self.execute(Command(target_path, action_name, action_parameters))
         if result == None:
             return None
 
@@ -47,48 +63,46 @@ class Tree(PyNode):
         return result
 
     def execute(self, command : Command):
+        if not isinstance(command, Command):
+            raise TypeError('Tree can only execute Commands')
+
         # Resolve target node
         target_path = self._to_path(self._evaluate(command.target))
-        target_node = self._resolve_path(target_path)
+        target_node = self.resolve_path(target_path)
         if target_node == None:
-            raise NameError('Could not evaluate target path: {}'.format(command.target))
+            raise NameError('Could not find target path: {}'.format(target_path))
 
         # Resolve command node
-        command_name = self._to_path(self._evaluate(command.name))
-        command_node = self.find_command(target_path, command_name)
-        if command_node == None:
-            raise NameError('No command named: {}'.format(command.name))
+        action_name = self._to_path(self._evaluate(command.name))
+        action_node = self.find_action(target_path, action_name)
+        if action_node == None:
+            raise NameError('No action named: {}'.format(command.name))
 
         # Evaluate all arguments
         arguments = map(self._evaluate, command.arguments)
 
-        return command_node(target_node, *arguments)
+        return action_node(target_node, *arguments)
 
-    def _evaluate(self, value):
+    def _evaluate(self, value) -> Node:
         #print('Evaluating:', repr(value), type(value))
         if isinstance(value, Command):
             return self.execute(value)
-        if isinstance(value, list): # for paths
+        elif isinstance(value, Node):
             return value
+        raise TypeError("Cannot evaluate '{}' value to node".format(value))
 
-        if value == None or isinstance(value, int) or isinstance(value, str):
-            return Node(value)
+    @staticmethod
+    def _evaluate_to_node(value) -> Node:
+        if isinstance(value, Node):
+            return value
+        return Node(value)
 
-        try:
-            value = Node(eval(value))
-        except NameError:
-            value = Node(str(value))
-        except TypeError:
-            value = Node(str(value))
-
-        return value
-
-    def find_command(self, target_path : list, command_path : list):
-        #print("Looking for '{}' from '{}'".format(command_path, target_path))
+    def find_action(self, target_path : NodePath, action_path : NodePath):
+        #print("Looking for '{}' from '{}'".format(action_path, target_path))
         while True:
-            cp = target_path + ['@commands'] + command_path
+            candidate_path = target_path + ['@actions'] + action_path
             #print("  checking", cp)
-            candidate_node = self._resolve_path(cp)
+            candidate_node = self.resolve_path(candidate_path)
             if candidate_node != None:
                 return candidate_node
             if len(target_path) == 0:
@@ -96,25 +110,28 @@ class Tree(PyNode):
             target_path.pop()
         return None
 
-    def _resolve_path(self, path):
+    def resolve_path(self, path):
         if path == None:
             raise ValueError('Cannot resolve none path')
+
+        #TODO: add support for relative paths
+        #if not path.isabsolute:
+        #    raise ValueError('No support for relative paths yet: ' + str(path))
 
         current_node = self
         for name in path:
             #print("Resolving: " + name)
-            current_node = current_node.get_subnode(name)
+            current_node = current_node[name]
             if current_node == None:
                 return None
         return current_node
 
-    def _to_path(self, value):
-        if isinstance(value, str):
-            value = [value]
-        elif isinstance(value, Node):
-            value = value.get()
+    def _to_path(self, value) -> NodePath:
+        if isinstance(value, Node):
+            value = value.value
 
-        if not isinstance(value, list):
-            raise TypeError('Unsupported path type: ' + str(type(value)))
-        return value
+        if not isinstance(value, str):
+            raise TypeError("Could not convert '{}' ({}) to NodePath".format(value, type(value)))
+
+        return NodePath(value)
 

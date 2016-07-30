@@ -3,19 +3,29 @@ from NodePath import *
 
 class Command:
     def __init__(self, target, name, arguments = []):
-        self.target = self._to_path(target)
-        self.name = self._to_path(name)
-        self.arguments = arguments
+        self.target = Command._wrap_arg(target)
+        self.name = Command._wrap_arg(name)
+        self.arguments = list(map(Command._wrap_arg, arguments))
 
-    def _to_path(self, value) -> NodePath:
-        if isinstance(value, NodePath):
+    @staticmethod
+    def _wrap_arg(value) -> Node:
+        if isinstance(value, Command):
             return value
-        return NodePath(value)
+        if isinstance(value, Node):
+            return value # No need to wrap nodes
+
+        if isinstance(value, str):
+            # Try parse string as one of supported values
+            try:
+                value = int(value)
+            except ValueError:
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass # Treat value as text
+
+        return Node(value)
 
     def __str__(self):
-        args = " ".join(map(str, self.arguments))
-        if len(args) > 0:
-            return "{{{}: {} {}}}".format(self.target, self.name, args)
-        else:
-            return "{{{}: {}}}".format(self.target, self.name)
+        return "{{{}: {}}}".format(self.target, " ".join([self.name] + self.arguments))
 

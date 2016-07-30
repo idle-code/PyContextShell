@@ -9,10 +9,6 @@ class CustomNode(PyNode):
         super().__init__()
         self.attribute_value = None
 
-    @Action
-    def simple_action(self, target : Node):
-        return [target]
-
     @Attribute
     def readonly_attribute(self):
         return 3412
@@ -40,23 +36,6 @@ class CustomNode(PyNode):
 class PyNodeTests(unittest.TestCase):
     def setUp(self):
         self.node = CustomNode()
-
-    def test_action_decorator_node(self):
-        self.assertTrue('@actions' in self.node)
-        commands_node = self.node['@actions']
-        self.assertTrue('simple_action' in commands_node)
-
-        simple_action_node = commands_node['simple_action']
-        self.assertIn(self.node, simple_action_node(self.node))
-
-    #FIXME
-    @unittest.skip("method/function rewrite is required for it to work")
-    def test_action_decorator_method(self):
-        self.assertTrue('@actions' in self.node)
-        commands_node = self.node['@actions']
-        self.assertTrue('simple_action' in commands_node)
-
-        self.assertIn(self.node, self.node.simple_action(self.node))
 
     def test_attribute_decorator_node_get(self):
         self.assertTrue('@readonly_attribute' in self.node)

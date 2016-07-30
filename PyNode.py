@@ -1,5 +1,7 @@
 from Node import *
 import functools
+from pprint import pprint
+import types
 
 def CreatorFunction(creator_function):
     creator_function.is_creator = True
@@ -37,6 +39,6 @@ class PyNode(Node):
                 original_field = field(self)
                 setattr(self, field_name, original_field)
             elif is_node_generator(field):
-                print("Creating generator", field.node_name)
+                #print("Creating node generator:", field.node_name)
                 self.append_node_generator(field.node_name, field)
 

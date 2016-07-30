@@ -17,16 +17,35 @@ class ActionNode(Node):
         callback = self.value
         if callback == None:
             raise NotImplemented('__call__ method not overriden or no callback provided')
-        return callback(self, target, *arguments)
+        return callback(target, *arguments)
 
-def Action(callback):
+def NodeArgumentWrapper(function):
+    def wrap_arg(arg):
+        if isinstance(arg, Node):
+            return arg
+        return Node(arg)
+
+    @functools.wraps(function)
+    def wrap_arguments(*args, **kwargs):
+        args = list(map(wrap_arg, args))
+        #CHECK: wrap keyword arguments?
+        return function(*args, **kwargs)
+
+    return wrap_arguments
+
+def Action(method):
+    method = NodeArgumentWrapper(method)
+
     @CreatorFunction
     def action_creator(parent_node : Node):
         if ActionNode.ActionNodeName not in parent_node:
             parent_node.append_node(ActionNode.ActionNodeName, Node())
 
-        commands = parent_node[ActionNode.ActionNodeName]
-        commands.append_node(callback.__name__, ActionNode(callback))
-        return callback
+        # Bind method to instance:
+        bound_method = types.MethodType(method, parent_node)
+
+        actions_node = parent_node[ActionNode.ActionNodeName]
+        actions_node.append_node(method.__name__, ActionNode(bound_method))
+        return bound_method # to restore original
     return action_creator
 
