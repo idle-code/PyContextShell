@@ -28,8 +28,8 @@ def is_node_generator(function):
     return hasattr(function, 'is_node_generator')
 
 class PyNode(Node):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, value = None):
+        super().__init__(value)
         self._populate_subnodes()
 
     def _populate_subnodes(self):

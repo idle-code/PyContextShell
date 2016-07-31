@@ -2,13 +2,14 @@ from Command import *
 from PyNode import *
 from ActionNode import *
 
+from IntNode import *
+
 class Tree(PyNode):
     def __init__(self):
         super().__init__()
 
     @Action
     def create(self, target_node, name_node, value_node = None):
-        #parent_path = NodePath(target.value, True)
         name = name_node.value
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
@@ -18,6 +19,18 @@ class Tree(PyNode):
             value = value_node.value
 
         target_node.append_node(name, Node(value))
+
+    @Action(path='create.int')
+    def create_int(self, target_node, name_node, value_node = None):
+        name = name_node.value
+        if not isinstance(name, str):
+            raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
+
+        value = 0 # default value
+        if value_node != None:
+            value = value_node.value
+
+        target_node.append_node(name, IntNode(value))
 
     @Action
     def get(self, target_node):

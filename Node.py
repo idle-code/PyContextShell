@@ -10,8 +10,8 @@ class Node:
         self._subnodes = []
 
         #self.append_node_generator('@parent', lambda: self.parent)
-        self.append_node_generator('@name', lambda: self.name)
-        self.append_node_generator('@path', lambda: self.path)
+        self.append_node_generator('@name', lambda parent_node: parent_node.name)
+        self.append_node_generator('@path', lambda parent_node: parent_node.path)
 
     @property
     def parent(self):
@@ -19,7 +19,7 @@ class Node:
 
     @property
     def name(self):
-        if self.parent is self:
+        if self.parent == None:
             return ""
 
         this_node_name = next((n[0] for n in self.parent._subnodes if n[1] is self), None)
@@ -80,14 +80,16 @@ class Node:
         subnode_index = next((index for index, value in enumerate(self._subnodes) if value[0] == existing_name), None)
         if subnode_index == None:
             raise NameError("Subnode entry with name '" + str(name) + "' doesn not exists")
+
         # Take subs (by swaping) from replaced node into new one:
         existing_node = self._subnodes[subnode_index][1]
-        existing_node._subnodes, new_node._subnodes = new_node._subnodes, existing_node._subnodes
-        existing_node._parent, new_node._parent = new_node._parent, existing_node._parent
+
+        new_node._subnodes = existing_node._subnodes
+        new_node._parent = self
+        existing_node._subnodes = []
+        existing_node._parent = None
 
         self._subnodes[subnode_index] = (existing_name, new_node)
-
-        return existing_node # so it can be accessed anyway
 
     def _remove_subnode(self, name):
         if name not in self._subnode_names:
@@ -103,7 +105,7 @@ class Node:
 
         if isinstance(subnode, types.FunctionType): # if subnode is generator
             #print("Instantiating '{}' virtual node".format(name))
-            subnode = subnode()
+            subnode = subnode(self)
             if not isinstance(subnode, Node):
                 #print("Wrapping '{}' value into node".format(subnode))
                 subnode = Node(subnode)
@@ -128,7 +130,10 @@ class Node:
 
     #TODO: test
     def __getattr__(self, name):
-        return self.get_subnode(name)
+        subnode = self.get_subnode(name)
+        if subnode == None:
+            raise AttributeError("No subnode with name '{}' found".format(name))
+        return subnode
 
     #def __setattr__(self, name, value):
     #    if not name.startswith('_'):
@@ -148,7 +153,7 @@ class Node:
             subnode = self._subnodes[name]
             return self.get_subnode(subnode[0])
 
-        return getattr(self, name)
+        return self.get_subnode(name)
 
     def __str__(self):
         return str(self.value)

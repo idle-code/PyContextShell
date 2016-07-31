@@ -29,6 +29,17 @@ class NodeTests(unittest.TestCase):
         intnode.value = 321
         self.assertEqual(321, intnode.value)
 
+    def test_replace_node(self):
+        self.child.value = 1
+        self.assertEqual(1, self.root['child'].value)
+        self.assertIs(self.root, self.root['child'].parent)
+
+        new_node = Node(2)
+        self.root.replace_node('child', new_node)
+        self.assertEqual(2, self.root['child'].value)
+        self.assertIs(self.root, self.root['child'].parent)
+        self.assertIs(None, self.child.parent)
+
     def test_parent(self):
         self.assertIs(None, self.root.parent)
         self.assertIs(self.root, self.root['child'].parent)
