@@ -53,6 +53,9 @@ class Node:
         node._parent = self
         self._add_subnode(name, node)
 
+    def replace_node(self, existing_name, new_node):
+        return self._replace_subnode(existing_name, new_node)
+
     def append_node_generator(self, name, generator):
         if not isinstance(generator, types.FunctionType):
             raise TypeError("Could not add non-callable node generator")
@@ -73,6 +76,19 @@ class Node:
             raise NameError("Subnode entry with name '" + str(name) + "' already exists")
 
         self._subnodes.append((name, node))
+
+    def _replace_subnode(self, existing_name, new_node):
+        subnode_index = next((index for index, value in enumerate(self._subnodes) if value[0] == existing_name), None)
+        if subnode_index == None:
+            raise NameError("Subnode entry with name '" + str(name) + "' doesn not exists")
+        # Take subs (by swaping) from replaced node into new one:
+        existing_node = self._subnodes[subnode_index][1]
+        existing_node._subnodes, new_node._subnodes = new_node._subnodes, existing_node._subnodes
+        existing_node._parent, new_node._parent = new_node._parent, existing_node._parent
+
+        self._subnodes[subnode_index] = (existing_name, new_node)
+
+        return existing_node # so it can be accessed anyway
 
     def _remove_subnode(self, name):
         if name not in self._subnode_names:

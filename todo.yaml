@@ -1,15 +1,11 @@
 Tree:
   - Self-awareness - .contexttree (or similar) branch
-  - Support for subactions
-    - create.int, create.string, create.<type>
-    - list.commands
-      list.all
   - Serialization to file
     - Values
     - Actions
-  - Action parameter tree (generation?)
-  - Action argument validation according to parameter tree
   - Type safety
+    - Action parameter tree (generation?)
+    - Action argument validation according to parameter tree
   + Removal of nodes (just test delete command)
   - Read-only nodes
   - In-tree links support?
@@ -18,15 +14,19 @@ Tree:
     + Find a way to implement @name, @path and @parent for every Node
       ? Implement @parent virtual attribute (with in-tree links?)
     - Decorators:
-      - Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
+      + Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
       + @Attribute decorator
         - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
         - Add (nested) path parameter
       ? @Subnode decorator
       + @Action decorator
+        + Support for subactions
         + Add method rewrite to work with bare python classes
-        - Add (nested) path parameter
+        + Add (nested) path parameter
       - @VirtualNode - for on-request node generation (Node.append_node_generator)
+  - Add 'Node.' prefix too all node-related actions
+  - Support NodePath as argument to Node.*node methods
+  - Customizable search path (or virtually merged branches)
   - Sessions
   - Server-client architecture
   - Command output streaming - list | filter | ...
@@ -43,6 +43,12 @@ Functionality:
   - Filesystem mapping
     - copy, cut and paste actions (using select(ed) action?)
     - mime-type based file typing
+  - create.int
+  - create.string
+  - create.<type>
+  - list.attributes
+  - list.commands
+  - list.all
 
 Shell:
   - Suggestions
@@ -50,6 +56,6 @@ Shell:
   - Server-client architecture
   - Branch navigation action (aka cd); should be in session?
   - Command invocation wizard (based on command's parameter tree)
-  - set alias - .some.key = 321
-  - get alias - .some.key (should be translated to .some.key: get if possible)
+  - set syntax sugar - .some.key = 321
+  - get syntax sugar - .some.key (should be translated to .some.key: get if possible)
 

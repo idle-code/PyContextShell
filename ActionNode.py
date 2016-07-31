@@ -3,7 +3,7 @@ from PyNode import *
 import functools
 
 class ActionNode(Node):
-    ActionNodeName = '@actions'
+    ActionsNodeName = '@actions'
     def __init__(self, callback = None):
         super().__init__()
         #TODO: check if passed prototype have right signature
@@ -35,19 +35,44 @@ def NodeArgumentWrapper(function):
 
     return wrap_arguments
 
-def Action(method):
-    method = NodeArgumentWrapper(method)
+def Action(method=None, path=None):
+    if not path:
+        path = method.__name__
 
-    @CreatorFunction
-    def action_creator(parent_node : Node):
-        if ActionNode.ActionNodeName not in parent_node:
-            parent_node.append_node(ActionNode.ActionNodeName, Node())
+    # Apply str -> NodePath conversion if needed
+    path = NodePath.cast(path)
 
-        # Bind method to instance:
-        bound_method = types.MethodType(method, parent_node)
+    def decorator(method):
+        method = NodeArgumentWrapper(method)
 
-        actions_node = parent_node[ActionNode.ActionNodeName]
-        actions_node.append_node(method.__name__, ActionNode(bound_method))
-        return method # to restore original
-    return action_creator
+        @CreatorFunction
+        def action_creator(parent_node : Node):
+            if ActionNode.ActionsNodeName not in parent_node:
+                parent_node.append_node(ActionNode.ActionsNodeName, Node())
+
+            # Create path to the node if needed
+            current_node = parent_node
+            for name in NodePath.join(ActionNode.ActionsNodeName, path.base_path):
+                if name not in current_node:
+                    # Create empty node just to accomodate subnodes
+                    current_node.append_node(name, Node())
+                current_node = current_node.get_subnode(name)
+
+            # Bind method to instance (so it will become independent callable):
+            bound_method = types.MethodType(method, parent_node)
+
+            if path.base_name in current_node:
+                # If subaction created path to node beforehand - we need to replace it
+                # WARNING: this may cause undefined results when creating two actions with the same paths
+                current_node.replace_node(path.base_name, ActionNode(bound_method))
+            else:
+                current_node.append_node(path.base_name, ActionNode(bound_method))
+
+            return method # to restore original
+        return action_creator
+
+    if method:
+        return decorator(method)
+    else:
+        return decorator
 

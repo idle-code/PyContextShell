@@ -1,17 +1,35 @@
 
 class NodePath(list):
     separator = '.'
-    def __init__(self, representation = None, absolute = False):
-        super(NodePath, self).__init__()
+
+    @staticmethod
+    def join(*names):
+        path = NodePath()
+        for name in names:
+            name = NodePath.cast(name)
+            path.extend(name)
+        return path
+
+    @staticmethod
+    def cast(path):
+        """If needed converts passed argument to NodePath"""
+        if isinstance(path, NodePath):
+            return path
+        return NodePath(path)
+
+    def __init__(self, representation = [], absolute = False):
+        super().__init__()
         self.isabsolute = absolute
         if isinstance(representation, str):
             self._parse_path(representation)
         elif isinstance(representation, list):
             self.extend(representation)
+        else:
+            raise ValueError("Could not convert {} to NodePath".format(representation))
 
     @property
-    def branch_name(self):
-        return str(NodePath(self[:-1]))
+    def base_path(self):
+        return NodePath(self[:-1])
 
     @property
     def base_name(self):
