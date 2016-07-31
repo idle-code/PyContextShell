@@ -30,7 +30,8 @@ class NodeTests(unittest.TestCase):
         self.assertEqual(321, intnode.value)
 
     def test_parent(self):
-        self.assertIs(self.root, self.root.parent)
+        self.assertIs(None, self.root.parent)
+        self.assertIs(self.root, self.root['child'].parent)
 
     @unittest.skip("@parent virtual node is not supported now")
     def test_parent_node(self):

@@ -1,5 +1,4 @@
 from Node import *
-from NodePath import *
 
 class Command:
     def __init__(self, target, name, arguments = []):
@@ -10,7 +9,7 @@ class Command:
     @staticmethod
     def _wrap_arg(value) -> Node:
         if isinstance(value, Command):
-            return value
+            return value # Command fields could also be commands
         if isinstance(value, Node):
             return value # No need to wrap nodes
 

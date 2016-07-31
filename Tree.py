@@ -128,9 +128,5 @@ class Tree(PyNode):
     def _to_path(self, value) -> NodePath:
         if isinstance(value, Node):
             value = value.value
-
-        if not isinstance(value, str):
-            raise TypeError("Could not convert '{}' ({}) to NodePath".format(value, type(value)))
-
-        return NodePath(value)
+        return NodePath.cast(value)
 

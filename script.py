@@ -20,7 +20,7 @@ with open(sys.argv[1]) as script:
             print(line)
             continue
 
-        print("COMMAND:", line)
+        print("$", line)
         command = shell.parse(line)
         if command == None:
             print("WARNING: No parse output for: '{}'".format(line))

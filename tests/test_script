@@ -5,22 +5,13 @@
 
 # list test
 .: list
-.@commands: list
-.foo.@parent: list
+.@actions: list
 
 # @name test
 .@name: get
 .foo.@name: get
 .foo.bar.@name: get
-.@commands.get.@name: get
-.foo.bar.@parent.@name: get
-
-# @parent test
-.: get
-.: repr
-.foo.@parent: get
-.foo.@parent: repr
-.foo.@parent: list
+.@actions.get.@name: get
 
 # @path test
 .foo.bar.@path: get

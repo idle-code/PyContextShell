@@ -3,9 +3,9 @@ class NodePath(list):
     separator = '.'
 
     @staticmethod
-    def join(*names):
-        path = NodePath()
-        for name in names:
+    def join(first, *rest):
+        path = NodePath.cast(first)
+        for name in rest:
             name = NodePath.cast(name)
             path.extend(name)
         return path

@@ -6,7 +6,7 @@ Tree:
   - Type safety
     - Action parameter tree (generation?)
     - Action argument validation according to parameter tree
-  + Removal of nodes (just test delete command)
+  + Removal of nodes (just test delete action)
   - Read-only nodes
   - In-tree links support?
   - Easy creation of custom nodes from python classes
@@ -47,7 +47,7 @@ Functionality:
   - create.string
   - create.<type>
   - list.attributes
-  - list.commands
+  - list.actions
   - list.all
 
 Shell:

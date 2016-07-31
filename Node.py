@@ -5,7 +5,7 @@ import types
 
 class Node:
     def __init__(self, value = None):
-        self._parent = self
+        self._parent = None
         self._value = value
         self._subnodes = []
 
@@ -33,10 +33,9 @@ class Node:
 
     @property
     def path(self):
-        if self.parent == self:
+        if self.parent == None:
             return str(NodePath(absolute = True))
-        this_node_path = NodePath(self.parent.path)
-        this_node_path.append(self.name)
+        this_node_path = NodePath.join(self.parent.path, self.name)
         return str(this_node_path)
 
     @property
@@ -114,12 +113,6 @@ class Node:
         elif isinstance(subnode, Node):
             return subnode
         raise TypeError('Unknown subnode type: ' + type(subnode))
-
-    # For debug purposes
-    def print(self, prefix = ''):
-        print('{}:\t{}'.format(prefix, self))
-        for sub in self._subnodes:
-            sub[1].print(NodePath.separator.join([prefix, sub[0]]))
 
     #def contains(self, name):
     #    return name in self
