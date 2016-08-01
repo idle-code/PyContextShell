@@ -22,9 +22,10 @@ class Node:
         if self.parent == None:
             return ""
 
+        # Find node name searching parent subnodes for instance:
         this_node_name = next((n[0] for n in self.parent._subnodes if n[1] is self), None)
         if this_node_name == None:
-            # Workaround for wirtual nodes (which are not found in _subnodes)
+            # Workaround for wirtual nodes (which are not found in parent subnodes)
             if hasattr(self, '_virtual_name'):
                 this_node_name = self._virtual_name
             else:
@@ -81,13 +82,21 @@ class Node:
         if subnode_index == None:
             raise NameError("Subnode entry with name '" + str(name) + "' doesn not exists")
 
-        # Take subs (by swaping) from replaced node into new one:
-        existing_node = self._subnodes[subnode_index][1]
+        if isinstance(new_node, Node):
+            # Take subs from replaced node into new one:
+            existing_node = self._subnodes[subnode_index][1]
+            if isinstance(existing_node, Node):
+                # Take subnodes from replaced node into new_node:
+                new_node._subnodes =  existing_node._subnodes
+                for entry in new_node._subnodes:
+                    if not isinstance(entry[1], types.FunctionType): # if subnode is generator
+                        # Update subnode subnodes with new parent:
+                        entry[1]._parent = new_node
+                    #CHECK: find a way to preserve nodes and generators from new_node
+                existing_node._parent = None
+                existing_node._subnodes = []
 
-        new_node._subnodes = existing_node._subnodes
-        new_node._parent = self
-        existing_node._subnodes = []
-        existing_node._parent = None
+            new_node._parent = self
 
         self._subnodes[subnode_index] = (existing_name, new_node)
 
@@ -104,13 +113,13 @@ class Node:
             return None
 
         if isinstance(subnode, types.FunctionType): # if subnode is generator
-            #print("Instantiating '{}' virtual node".format(name))
+            #print("Instantiating '{}' virtual node (in {})".format(name, self.path))
             subnode = subnode(self)
             if not isinstance(subnode, Node):
                 #print("Wrapping '{}' value into node".format(subnode))
                 subnode = Node(subnode)
-                subnode._parent = self
-                subnode._virtual_name = name
+            subnode._parent = self
+            subnode._virtual_name = name
             return subnode
         elif isinstance(subnode, Node):
             return subnode

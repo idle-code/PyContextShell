@@ -40,9 +40,31 @@ class Tree(PyNode):
     def set(self, target_node, value_node):
         target_node.value = value_node.value
 
+    @Action(path='list.all')
+    def list_all(self, target_node):
+        return [node for node in target_node]
+
+    @Action(path='list.names')
+    def list_names(self, target_node):
+        return [name for name in target_node._subnode_names]
+
     @Action
     def list(self, target_node):
-        return [node for node in target_node]
+        return self.list_nodes(target_node)
+
+    @Action(path='list.nodes')
+    def list_nodes(self, target_node):
+        return [n for n in self.list_all(target_node) if not n['@name'].value.startswith('@')]
+
+    @Action(path='list.attributes')
+    def list_attributes(self, target_node):
+        return [n for n in self.list_all(target_node) if n['@name'].value.startswith('@')]
+
+    @Action(path='list.actions')
+    def list_actions(self, target_node):
+        if ActionNode.ActionsNodeName in target_node:
+            return self.list(target_node[ActionNode.ActionsNodeName])
+        return []
 
     @Action
     def delete(self, target_node, name_node):
@@ -57,7 +79,6 @@ class Tree(PyNode):
     @Action
     def repr(self, target_node):
         return repr(target_node)
-
 
     def call(self, target_path, action_name, *action_parameters):
         if not isinstance(target_path, str):

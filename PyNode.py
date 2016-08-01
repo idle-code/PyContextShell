@@ -33,7 +33,7 @@ class PyNode(Node):
         self._populate_subnodes()
 
     def _populate_subnodes(self):
-        for field_name, field in type(self).__dict__.items():
+        for field_name, field in sorted(type(self).__dict__.items()):
             if is_creator(field):
                 #print("Creating node for:", field_name)
                 original_field = field(self)

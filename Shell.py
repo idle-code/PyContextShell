@@ -59,7 +59,10 @@ class Shell:
         if isinstance(result, list):
             index = 0
             for r in result:
-                print("[{}] {}\t = {}".format(index, r["@name"], r))
+                if isinstance(r, Node):
+                    print("[{}] {}\t = {}".format(index, r["@name"], r))
+                else:
+                    print("[{}] {}".format(index, r))
                 index += 1
         else:
             print(result)

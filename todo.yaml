@@ -14,6 +14,8 @@ Tree:
     + Find a way to implement @name, @path and @parent for every Node
       ? Implement @parent virtual attribute (with in-tree links?)
     - Decorators:
+      + Sort after dynamic node creation
+        ? Create nodes in order in which decorators were defined
       + Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
       + @Attribute decorator
         - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
@@ -29,9 +31,6 @@ Tree:
   - Customizable search path (or virtually merged branches)
   - Sessions
   - Server-client architecture
-  - Command output streaming - list | filter | ...
-  - Field streaming - {list}|.@name (based on command output streaming; filter?)
-  - Batch calling - {selected}: play
   - Index addressing
 
 Functionality:
@@ -46,9 +45,10 @@ Functionality:
   - create.int
   - create.string
   - create.<type>
-  - list.attributes
-  - list.actions
-  - list.all
+  + list.attributes
+  + list.actions
+  + list.all
+  + list.nodes
 
 Shell:
   - Suggestions
@@ -58,4 +58,7 @@ Shell:
   - Command invocation wizard (based on command's parameter tree)
   - set syntax sugar - .some.key = 321
   - get syntax sugar - .some.key (should be translated to .some.key: get if possible)
+  - Command output streaming - list | filter | ...
+  - Field streaming - {list}|.@name (based on command output streaming; filter?)
+  - Batch calling - {selected}: play
 
