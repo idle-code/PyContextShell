@@ -62,7 +62,7 @@ class TreeTests(unittest.TestCase):
 
         root_subnodes = self.root.list(self.root)
         subnode_names = list(map(lambda n: n['@name'].value, root_subnodes))
-        self.assertListEqual(['@name', '@path', '@actions', 'foo', 'bar', 'spam'], subnode_names)
+        self.assertListEqual(['foo', 'bar', 'spam'], subnode_names)
 
     def test_exists(self):
         self.test_get()

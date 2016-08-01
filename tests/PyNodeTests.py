@@ -10,15 +10,15 @@ class CustomNode(PyNode):
 
     @VirtualNode(name='@virtual_attribute')
     def virtual_attribute(self):
-        if isinstance(self.parent.value, int):
-            return self.parent.value + 1
-        return 1
+        if self.parent == None:
+            return 1
+        return self.parent.value + 1
 
     @VirtualNode
     def virtual(self):
-        if isinstance(self.parent.value, str):
-            return self.parent.value + "bar"
-        return "ra"
+        if self.parent == None:
+            return "ra"
+        return self.parent.value + "bar"
 
 class PyNodeTests(unittest.TestCase):
     def setUp(self):

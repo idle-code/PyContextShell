@@ -1,6 +1,6 @@
-from IntNode import *
-
 import unittest
+
+from IntNode import *
 
 class IntNodeTests(unittest.TestCase):
     def setUp(self):
