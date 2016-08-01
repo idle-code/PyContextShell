@@ -9,6 +9,8 @@ from AttributeNode import *
 from ActionNode import *
 from PyNode import *
 
+from DateNode import *
+
 class TestNode(PyNode):
     @Action
     def action(self, target, *args):
@@ -23,6 +25,7 @@ class TestNode(PyNode):
 if __name__ == '__main__':
     tree = Tree()
     tree.append_node('tn', TestNode())
+    tree.append_node('today', DateNode())
     shell = Shell(tree)
     readline.parse_and_bind('tab: complete')
     #readline.set_completer(shell.completer_function)

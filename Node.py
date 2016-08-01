@@ -4,6 +4,12 @@ import functools
 import types
 
 class Node:
+    @staticmethod
+    def cast(value):
+        if isinstance(value, Node):
+            return value
+        return Node(value)
+
     def __init__(self, value = None):
         self._parent = None
         self._value = value
@@ -70,6 +76,15 @@ class Node:
             return False
         self._remove_subnode(name)
         return True
+
+    def create_path(self, path):
+        path = NodePath.cast(path)
+        current_node = self
+        for name in path:
+            if name not in current_node:
+                current_node.append_node(name, Node())
+            current_node = current_node.get_subnode(name)
+        return current_node
 
     @property
     def _subnode_names(self):

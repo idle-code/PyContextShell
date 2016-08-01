@@ -51,12 +51,7 @@ def Action(method=None, path=None):
                 parent_node.append_node(ActionNode.ActionsNodeName, Node())
 
             # Create path to the node if needed
-            current_node = parent_node
-            for name in NodePath.join(ActionNode.ActionsNodeName, path.base_path):
-                if name not in current_node:
-                    # Create empty node just to accomodate subnodes
-                    current_node.append_node(name, Node())
-                current_node = current_node.get_subnode(name)
+            current_node = parent_node.create_path(NodePath.join(ActionNode.ActionsNodeName, path.base_path))
 
             # Bind method to instance (so it will become independent callable):
             bound_method = types.MethodType(method, parent_node)
