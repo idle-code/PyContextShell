@@ -26,11 +26,15 @@ class Node:
         this_node_name = next((n[0] for n in self.parent._subnodes if n[1] is self), None)
         if this_node_name == None:
             # Workaround for wirtual nodes (which are not found in parent subnodes)
-            if hasattr(self, '_virtual_name'):
+            if Node.is_virtual(self):
                 this_node_name = self._virtual_name
             else:
                 raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
         return this_node_name
+
+    @staticmethod
+    def is_virtual(node):
+        return hasattr(node, '_virtual_name')
 
     @property
     def path(self):

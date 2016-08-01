@@ -66,6 +66,16 @@ class Tree(PyNode):
             return self.list(target_node[ActionNode.ActionsNodeName])
         return []
 
+    @Action(path='list.tree')
+    def list_tree(self, target_node):
+        paths = []
+        for node in target_node:
+            if Node.is_virtual(node): # So infinite nodes won't be generated
+                continue
+            paths.append(node.path)
+            paths.extend(self.list_tree(node))
+        return paths
+
     @Action
     def delete(self, target_node, name_node):
         if not target_node.remove_node(name_node.value):
