@@ -5,13 +5,13 @@ import functools
 class ActionNode(Node):
     ActionsNodeName = '@actions'
     def __init__(self, callback = None):
-        super().__init__()
         #TODO: check if passed prototype have right signature
         if callback == None:
             callback = self.__call__
         else:
             self.__call__ = callback
-        self.value = callback
+        super().__init__(callback)
+        #self.value = callback
 
     def __call__(self, target, *arguments):
         callback = self.value

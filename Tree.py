@@ -42,11 +42,11 @@ class Tree(PyNode):
 
     @Action(path='list.all')
     def list_all(self, target_node):
-        return [node for node in target_node]
+        return [node for node in target_node.subnodes]
 
     @Action(path='list.names')
     def list_names(self, target_node):
-        return [name for name in target_node._subnode_names]
+        return [name for name in target_node.subnode_names]
 
     @Action
     def list(self, target_node):
@@ -62,14 +62,14 @@ class Tree(PyNode):
 
     @Action(path='list.actions')
     def list_actions(self, target_node):
-        if ActionNode.ActionsNodeName in target_node:
+        if ActionNode.ActionsNodeName in target_node.subnode_names:
             return self.list(target_node[ActionNode.ActionsNodeName])
         return []
 
     @Action(path='list.tree')
     def list_tree(self, target_node):
         paths = []
-        for node in target_node:
+        for node in target_node.subnodes:
             if Node.is_virtual(node): # So infinite nodes won't be generated
                 continue
             paths.append(node.path)
@@ -84,7 +84,7 @@ class Tree(PyNode):
     @Action
     def exists(self, target_node, name_node):
         name = name_node.value
-        return name in target_node
+        return name in target_node.subnode_names
 
     @Action
     def repr(self, target_node):
@@ -143,17 +143,18 @@ class Tree(PyNode):
     def find_action(self, target_path : NodePath, action_path : NodePath):
         #print("Looking for '{}' from '{}'".format(action_path, target_path))
         while True:
-            candidate_path = target_path + ['@actions'] + action_path
-            #print("  checking", cp)
+            candidate_path = NodePath.join(target_path, ActionNode.ActionsNodeName, action_path)
             candidate_node = self.resolve_path(candidate_path)
             if candidate_node != None:
                 return candidate_node
+
             if len(target_path) == 0:
                 break
             target_path.pop()
+        #TODO: try other (system defined) search paths
         return None
 
-    def resolve_path(self, path):
+    def resolve_path(self, path : NodePath):
         if path == None:
             raise ValueError('Cannot resolve none path')
 

@@ -48,10 +48,10 @@ class ActionNodeTests(unittest.TestCase):
         self.node = CustomNode()
 
     def _test_node(self, action_name, result):
-        self.assertTrue('@actions' in self.node)
+        self.assertTrue('@actions' in self.node.subnode_names)
 
         actions_node = self.node['@actions']
-        self.assertIn(action_name, list(actions_node._subnode_names))
+        self.assertIn(action_name, list(actions_node.subnode_names))
 
         action_node = actions_node[action_name]
         self.assertEqual(result, action_node(self.node))
@@ -78,12 +78,12 @@ class ActionNodeTests(unittest.TestCase):
         self._test_method(self.node.named, 'named')
 
     def test_nested_node(self):
-        self.assertTrue('@actions' in self.node)
+        self.assertTrue('@actions' in self.node.subnode_names)
 
         actions_node = self.node['@actions']
-        self.assertTrue('very' in actions_node)
-        self.assertTrue('much' in actions_node['very'])
-        self.assertTrue('nested' in actions_node['very']['much'])
+        self.assertTrue('very' in actions_node.subnode_names)
+        self.assertTrue('much' in actions_node['very'].subnode_names)
+        self.assertTrue('nested' in actions_node['very']['much'].subnode_names)
 
         nested_node = actions_node['very']['much']['nested']
         self.assertEqual("nested", nested_node(self.node))
@@ -97,8 +97,8 @@ class ActionNodeTests(unittest.TestCase):
         self.test_named_node()
 
         actions_node = self.node['@actions']
-        self.assertTrue('named' in actions_node)
-        self.assertTrue('subaction' in actions_node['named'])
+        self.assertTrue('named' in actions_node.subnode_names)
+        self.assertTrue('subaction' in actions_node['named'].subnode_names)
 
         subaction_node = actions_node['named']['subaction']
         self.assertEqual("subaction", subaction_node(self.node))

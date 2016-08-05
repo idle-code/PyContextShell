@@ -4,10 +4,16 @@ class NodePath(list):
 
     @staticmethod
     def join(first, *rest):
-        path = NodePath.cast(first)
+        path = NodePath()
+        if isinstance(first, NodePath):
+            path.isabsolute = first.isabsolute
+            path.extend(first)
+        else:
+            path = NodePath.cast(first)
+
         for name in rest:
-            name = NodePath.cast(name)
-            path.extend(name)
+            part = NodePath.cast(name)
+            path.extend(part)
         return path
 
     @staticmethod

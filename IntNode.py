@@ -14,12 +14,12 @@ class IntNode(PyNode):
 
         new_value = new_value.value
 
-        if '@minimum' in target_node:
+        if '@minimum' in target_node.subnode_names:
             minimum = target_node['@minimum'].value
             if new_value < minimum:
                 raise ValueError("Could not set value below minimum: {}".format(minimum))
 
-        if '@maximum' in target_node:
+        if '@maximum' in target_node.subnode_names:
             maximum = target_node['@maximum'].value
             if new_value > maximum:
                 raise ValueError("Could not set value below maximum: {}".format(maximum))
