@@ -57,14 +57,11 @@ class Shell:
     @staticmethod
     def pretty_print(result):
         if isinstance(result, list):
-            index = 0
             for r in result:
                 if isinstance(r, Node):
-                    print("[{}] {}\t = {}".format(index, r["@name"], r))
+                    print("[{}] {}\t = {}".format(r['@index'], r["@name"], r))
                 else:
-                    print("[{}] {}".format(index, r))
-                index += 1
+                    print("[{}] {}".format(r['@index'], r))
         else:
             print(result)
-
 

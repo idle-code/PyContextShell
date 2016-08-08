@@ -27,11 +27,12 @@ Tree:
         + Add (nested) path parameter
       - @VirtualNode - for on-request node generation (Node.append_node_generator)
   - Add 'Node.' prefix too all node-related actions
-  - Support NodePath as argument to Node.*node methods
+  + Support NodePath as argument to Node.*node methods
   - Customizable search path (or virtually merged branches)
   - Sessions
   - Server-client architecture
-  - Index addressing/anonymous nodes
+  + Index addressing
+  - Anonymous nodes
 
 Functionality:
   - System executables as actions

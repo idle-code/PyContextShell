@@ -48,6 +48,7 @@ class NodePathTests(unittest.TestCase):
 
         self.assertEqual(4, len(ab2c))
         self.assertEqual('.a.b.2.c', str(ab2c))
+        self.assertIsInstance(ab2c[2], int)
 
     def test_cast(self):
         none = NodePath.cast(None)
@@ -58,6 +59,12 @@ class NodePathTests(unittest.TestCase):
         self.assertEqual(1, len(number))
         self.assertFalse(number.isabsolute)
         self.assertIsInstance(number[0], int)
+        self.assertEqual(13, number[0])
+
+        strnumber = NodePath.cast('42')
+        self.assertEqual(1, len(strnumber))
+        self.assertFalse(strnumber.isabsolute)
+        self.assertEqual(42, strnumber[0])
 
         name = NodePath.cast('foo')
         self.assertEqual(1, len(name))

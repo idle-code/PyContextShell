@@ -111,7 +111,7 @@ class Tree(PyNode):
 
         # Resolve target node
         target_path = self._to_path(self._evaluate(command.target))
-        target_node = self.resolve_path(target_path)
+        target_node = self[target_path]
         if target_node == None:
             raise NameError('Could not find target path: {}'.format(target_path))
 
@@ -144,31 +144,14 @@ class Tree(PyNode):
         #print("Looking for '{}' from '{}'".format(action_path, target_path))
         while True:
             candidate_path = NodePath.join(target_path, ActionNode.ActionsNodeName, action_path)
-            candidate_node = self.resolve_path(candidate_path)
-            if candidate_node != None:
-                return candidate_node
+            if candidate_path in self:
+                return self[candidate_path]
 
             if len(target_path) == 0:
                 break
             target_path.pop()
         #TODO: try other (system defined) search paths
         return None
-
-    def resolve_path(self, path : NodePath):
-        if path == None:
-            raise ValueError('Cannot resolve none path')
-
-        #TODO: add support for relative paths
-        #if not path.isabsolute:
-        #    raise ValueError('No support for relative paths yet: ' + str(path))
-
-        current_node = self
-        for name in path:
-            #print("Resolving: " + name)
-            if name not in current_node:
-                return None
-            current_node = current_node[name]
-        return current_node
 
     def _to_path(self, value) -> NodePath:
         if isinstance(value, Node):

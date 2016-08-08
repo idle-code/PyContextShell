@@ -45,11 +45,17 @@ class NodePath(list):
     def base_name(self):
         return self[-1]
 
+    @staticmethod
+    def _to_path_part(name : str):
+        if name.isnumeric():
+            return int(name)
+        return name
+
     def _parse_path(self, text):
         text = text.strip()
         if text.startswith(NodePath.separator):
             self.isabsolute = True
-        new_path = [part for part in text.split(NodePath.separator) if len(part) > 0]
+        new_path = map(NodePath._to_path_part, [part for part in text.split(NodePath.separator) if len(part) > 0])
         self.extend(new_path)
 
     def __str__(self):
