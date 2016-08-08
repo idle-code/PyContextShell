@@ -8,13 +8,13 @@ class CustomNode(PyNode):
     def __init__(self):
         super().__init__()
 
-    @VirtualNode(name='@virtual_attribute')
+    #@VirtualNode(name='@virtual_attribute')
     def virtual_attribute(self):
         if self.parent == None:
             return 1
         return self.parent.value + 1
 
-    @VirtualNode
+    #@VirtualNode
     def virtual(self):
         if self.parent == None:
             return "ra"

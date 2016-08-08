@@ -83,6 +83,29 @@ class NodeTests(unittest.TestCase):
     def test_name(self):
         self.assertEqual("child", self.child.name)
 
+    def test_path_indexing(self):
+        leaf = Node("leaf")
+        self.root.append_node('child.leaf', leaf)
+        self.assertIn('leaf', self.root['child'].subnode_names)
+        self.assertIs(leaf, self.root['child.leaf'])
+
+    def test_path_numeric_indexing(self):
+        r = Node()
+        first = Node(1)
+        second = Node(2)
+        third = Node(3)
+        r.append_node('first', first)
+        r.append_node('second', second)
+        r.append_node('third', third)
+
+        self.assertIs(first, r[DefaultAttributeCount + 0])
+        self.assertIs(second, r[DefaultAttributeCount + 1])
+        self.assertIs(third, r[DefaultAttributeCount + 2])
+
+        with self.assertRaises(TypeError):
+            r.append_node(55, Node('fourth'))
+
+
 class NodeVirtualNodesTests(unittest.TestCase):
     def setUp(self):
         self.root = Node()

@@ -19,6 +19,8 @@ class NodePath(list):
     @staticmethod
     def cast(path):
         """If needed converts passed argument to NodePath"""
+        if path == None:
+            return NodePath()
         if isinstance(path, NodePath):
             return path
         return NodePath(path)
@@ -26,7 +28,9 @@ class NodePath(list):
     def __init__(self, representation = [], absolute = False):
         super().__init__()
         self.isabsolute = absolute
-        if isinstance(representation, str):
+        if isinstance(representation, int):
+            self.append(representation)
+        elif isinstance(representation, str):
             self._parse_path(representation)
         elif isinstance(representation, list):
             self.extend(representation)
@@ -39,10 +43,9 @@ class NodePath(list):
 
     @property
     def base_name(self):
-        return str(NodePath(self[-1]))
+        return self[-1]
 
     def _parse_path(self, text):
-        self.clear()
         text = text.strip()
         if text.startswith(NodePath.separator):
             self.isabsolute = True
