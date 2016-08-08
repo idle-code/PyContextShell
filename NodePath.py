@@ -50,7 +50,7 @@ class NodePath(list):
         self.extend(new_path)
 
     def __str__(self):
-        text_representation = NodePath.separator.join(self)
+        text_representation = NodePath.separator.join(map(str, self))
         if self.isabsolute:
             return NodePath.separator + text_representation
         return text_representation

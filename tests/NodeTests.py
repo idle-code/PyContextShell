@@ -5,7 +5,6 @@ import unittest
 DefaultAttributeCount = 2
 
 class NodeBasicOperationsTests(unittest.TestCase):
-
     def test_constructor(self):
         intnode = Node(123)
         strnode = Node("spam")
@@ -54,7 +53,6 @@ class NodeBasicOperationsTests(unittest.TestCase):
         self.assertTrue('a' in node.subnode_names)
         self.assertTrue('b' in node.subnode_names)
         self.assertTrue('c' in node.subnode_names)
-
 
     #TODO: test call
 

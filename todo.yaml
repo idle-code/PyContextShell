@@ -31,7 +31,7 @@ Tree:
   - Customizable search path (or virtually merged branches)
   - Sessions
   - Server-client architecture
-  - Index addressing
+  - Index addressing/anonymous nodes
 
 Functionality:
   - System executables as actions
@@ -51,8 +51,7 @@ Functionality:
   + list.nodes
 
 Shell:
-  - Suggestions
-  - Autocompletion
+  - Autocompletion/suggestions
   - Server-client architecture
   - Branch navigation action (aka cd); should be in session?
   - Command invocation wizard (based on command's parameter tree)
