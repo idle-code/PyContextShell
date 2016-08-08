@@ -18,6 +18,7 @@ class Node:
         #self.append_node_generator('@parent', lambda: self.parent)
         self.append_node_generator('@name', lambda parent_node: parent_node.name)
         self.append_node_generator('@path', lambda parent_node: parent_node.path)
+        self.append_node_generator('@index', lambda parent_node: parent_node.index)
 
     @property
     def parent(self):
@@ -26,7 +27,7 @@ class Node:
     @property
     def name(self):
         if self.parent == None:
-            return ""
+            return None
 
         # Workaround for wirtual nodes (which are not found in parent subnodes)
         if Node.is_virtual(self):
@@ -38,6 +39,12 @@ class Node:
         if this_node_name == None:
             raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
         return this_node_name
+
+    @property
+    def index(self):
+        if not self.parent:
+            return None
+        return self.parent._get_subnode_index_by_name(self.name)
 
     @staticmethod
     def is_virtual(node):

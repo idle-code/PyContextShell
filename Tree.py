@@ -165,9 +165,9 @@ class Tree(PyNode):
         current_node = self
         for name in path:
             #print("Resolving: " + name)
-            current_node = current_node[name]
-            if current_node == None:
+            if name not in current_node:
                 return None
+            current_node = current_node[name]
         return current_node
 
     def _to_path(self, value) -> NodePath:

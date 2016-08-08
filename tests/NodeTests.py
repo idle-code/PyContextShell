@@ -2,7 +2,7 @@ from Node import *
 
 import unittest
 
-DefaultAttributeCount = 2
+DefaultAttributeCount = 3
 
 class NodeBasicOperationsTests(unittest.TestCase):
     def test_constructor(self):
@@ -105,7 +105,6 @@ class NodeTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             r.append_node(55, Node('fourth'))
 
-
 class NodeVirtualNodesTests(unittest.TestCase):
     def setUp(self):
         self.root = Node()
@@ -118,10 +117,21 @@ class NodeVirtualNodesTests(unittest.TestCase):
         self.assertIsInstance(parent_node, Node)
         self.assertIs(self.root, parent_node)
 
+    @unittest.skip("@parent virtual node is not supported now")
+    def test_nested_parent_node(self):
+        self.assertIs(self.child, self.child['@name']['@parent'])
+        self.assertIs(self.child, self.child['@path']['@parent'])
+        self.assertIs(self.root, self.child['@parent']['@parent'])
+
     def test_path_node(self):
         path_node = self.child['@path']
         self.assertIsInstance(path_node, Node)
         self.assertEqual(".child", path_node.value)
+
+    def test_nested_path_node(self):
+        self.assertEqual('.child.@name', self.child['@name']['@path'].value)
+        self.assertEqual('.child.@path', self.child['@path']['@path'].value)
+        #self.assertEqual('.child.@parent', self.child['@parent']['@path'].value)
 
     def test_name_node(self):
         name_node = self.child['@name']
@@ -133,16 +143,15 @@ class NodeVirtualNodesTests(unittest.TestCase):
         self.assertEqual('@path', self.child['@path']['@name'].value)
         #self.assertEqual('@parent', self.child['@parent']['@name'].value)
 
-    def test_nested_path_node(self):
-        self.assertEqual('.child.@name', self.child['@name']['@path'].value)
-        self.assertEqual('.child.@path', self.child['@path']['@path'].value)
-        #self.assertEqual('.child.@parent', self.child['@parent']['@path'].value)
+    def test_no_name(self):
+        self.assertEqual(None, self.root['@name'].value)
 
-    @unittest.skip("@parent virtual node is not supported now")
-    def test_nested_parent_node(self):
-        self.assertIs(self.child, self.child['@name']['@parent'])
-        self.assertIs(self.child, self.child['@path']['@parent'])
-        self.assertIs(self.root, self.child['@parent']['@parent'])
+    def test_index_node(self):
+        index_node = self.child['@index']
+        self.assertIs(self.child, self.root[index_node.value])
+
+    def test_no_index(self):
+        self.assertEqual(None, self.root['@index'].value)
 
 if __name__ == '__main__':
     unittest.main()
