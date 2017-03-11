@@ -1,8 +1,12 @@
 from Command import *
-from PyNode import *
-from ActionNode import *
-
 from IntNode import *
+
+
+def _to_path(value) -> NodePath:
+    if isinstance(value, Node):
+        value = value.value
+    return NodePath.cast(value)
+
 
 class Tree(PyNode):
     def __init__(self):
@@ -15,7 +19,7 @@ class Tree(PyNode):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
         value = None # default value
-        if value_node != None:
+        if value_node is not None:
             value = value_node.value
 
         target_node.append_node(name, Node(value))
@@ -26,8 +30,8 @@ class Tree(PyNode):
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
-        value = 0 # default value
-        if value_node != None:
+        value = 0  # default int value
+        if value_node is not None:
             value = value_node.value
 
         target_node.append_node(name, IntNode(value))
@@ -98,7 +102,7 @@ class Tree(PyNode):
 
         action_parameters = list(action_parameters) #TODO: check if this conversion is needed
         result = self.execute(Command(target_path, action_name, action_parameters))
-        if result == None:
+        if result is None:
             return None
 
         if isinstance(result, Node):
@@ -110,15 +114,15 @@ class Tree(PyNode):
             raise TypeError('Tree can only execute Commands')
 
         # Resolve target node
-        target_path = self._to_path(self._evaluate(command.target))
+        target_path = _to_path(self._evaluate(command.target))
         target_node = self[target_path]
-        if target_node == None:
+        if target_node is None:
             raise NameError('Could not find target path: {}'.format(target_path))
 
         # Resolve command node
-        action_name = self._to_path(self._evaluate(command.name))
+        action_name = _to_path(self._evaluate(command.name))
         action_node = self.find_action(target_path, action_name)
-        if action_node == None:
+        if action_node is None:
             raise NameError('No action named: {}'.format(command.name))
 
         # Evaluate all arguments
@@ -150,11 +154,6 @@ class Tree(PyNode):
             if len(target_path) == 0:
                 break
             target_path.pop()
-        #TODO: try other (system defined) search paths
+        # TODO: try other (system defined) search paths
         return None
-
-    def _to_path(self, value) -> NodePath:
-        if isinstance(value, Node):
-            value = value.value
-        return NodePath.cast(value)
 

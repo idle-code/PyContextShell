@@ -2,6 +2,7 @@ import unittest
 
 from IntNode import *
 
+
 class IntNodeTests(unittest.TestCase):
     def setUp(self):
         self.node = IntNode(123)
@@ -24,7 +25,7 @@ class IntNodeTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.node.set(self.node, 'test')
 
-    def test_set_min_limt(self):
+    def test_set_min_limit(self):
         self.assertEqual(123, self.node.value)
         self.node.append_node('@minimum', Node(100))
         self.assertEqual(123, self.node.value)
@@ -37,7 +38,7 @@ class IntNodeTests(unittest.TestCase):
         self.node.set(self.node, 201)
         self.assertEqual(201, self.node.value)
 
-    def test_set_max_limt(self):
+    def test_set_max_limit(self):
         self.assertEqual(123, self.node.value)
         self.node.append_node('@maximum', Node(200))
         self.assertEqual(123, self.node.value)
@@ -50,8 +51,7 @@ class IntNodeTests(unittest.TestCase):
         self.node.set(self.node, 99)
         self.assertEqual(99, self.node.value)
 
-    #TODO: test_set_max/min when value is above/below created limit
+    # TODO: test_set_max/min when value is above/below created limit
 
 if __name__ == '__main__':
     unittest.main()
-

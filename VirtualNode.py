@@ -1,6 +1,5 @@
-from PyNode import *
 from ActionNode import *
-import types
+
 
 class VirtualNode(PyNode):
     def __init__(self, getter, setter=None):
@@ -9,7 +8,7 @@ class VirtualNode(PyNode):
             raise TypeError("VirtualNode require functional getter not {}".format(repr(getter)))
         self._getter = getter
 
-        if setter != None and not hasattr(setter, '__call__'):
+        if setter is not None and not hasattr(setter, '__call__'):
             raise TypeError("VirtualNode require functional setter not {}".format(repr(getter)))
         self._setter = setter
 
@@ -19,7 +18,7 @@ class VirtualNode(PyNode):
 
     @value.setter
     def value_set(self, new_value):
-        if self._setter == None:
+        if self._setter is None:
             raise TypeError("No setter defined for virtual node")
         return self._setter(new_value)
 

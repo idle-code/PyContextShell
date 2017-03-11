@@ -1,8 +1,8 @@
 
 class State:
-    def __init__(on_enter = None, on_exit = None):
-        self.on_enter = on_enter if on_enter != None else lambda: pass
-        self.on_exit = on_exit if on_exit != None else lambda: pass
+    def __init__(self, on_enter=None, on_exit=None):
+        self.on_enter = on_enter if on_enter is not None else lambda: pass
+        self.on_exit = on_exit if on_exit is not None else lambda: pass
 
     def enter(self):
         self.on_enter()

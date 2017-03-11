@@ -22,11 +22,11 @@ with open(sys.argv[1]) as script:
 
         print("$", line)
         command = shell.parse(line)
-        if command == None:
+        if command is None:
             print("WARNING: No parse output for: '{}'".format(line))
             continue
 
         result = tree.execute(command)
-        if result != None:
+        if result is not None:
             Shell.pretty_print(result)
 

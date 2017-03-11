@@ -3,6 +3,7 @@ import unittest
 from PyNode import *
 from ActionNode import *
 
+
 class CustomNode(PyNode):
     def __init__(self):
         super().__init__()
@@ -42,6 +43,7 @@ class CustomNode(PyNode):
         self._validate_args(target, args)
 
         return self.subaction_value
+
 
 class ActionNodeTests(unittest.TestCase):
     def setUp(self):

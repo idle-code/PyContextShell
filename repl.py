@@ -36,7 +36,7 @@ if __name__ == '__main__':
             command_line = input("{}: ".format(shell.current_path))
             command = shell.parse(command_line)
             result = tree.execute(command)
-            if result != None:
+            if result is not None:
                 Shell.pretty_print(result)
         except EOFError: # exit on Ctrl+D
             break

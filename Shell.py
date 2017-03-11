@@ -4,14 +4,34 @@ from NodePath import *
 
 from itertools import takewhile, dropwhile
 
+
+def _parse_arguments(iterator):
+    args = ''.join(iterator)
+    args = args.split(' ')
+    args = [a for a in args if len(a) > 0]
+    return args, iterator
+
+
+def _parse_command_name(iterator):
+    iterator = dropwhile(lambda c: c.isspace(), iterator)
+    name = ''.join(takewhile(lambda c: not c.isspace(), iterator))
+    return name, iterator
+
+
+def _parse_target(iterator):
+    path = ''.join(takewhile(lambda c: c != ':', iterator))
+    path = NodePath(path)
+    return path, iterator
+
+
 class Shell:
-    def __init__(self, root : Node):
+    def __init__(self, root: Node):
         self._root = root
         self.current_path = NodePath()
-        self.current_path.isabsolute = True
+        self.current_path.is_absolute = True
 
     def parse(self, command_line):
-        if command_line == None:
+        if command_line is None:
             return None
 
         command_line = command_line.strip()
@@ -25,34 +45,17 @@ class Shell:
 
         path = self.current_path
         if ':' in command_line:
-            path, i = self._parse_target(i)
+            path, i = _parse_target(i)
 
-        command_name, i = self._parse_command_name(i)
+        command_name, i = _parse_command_name(i)
 
         # Prepare command arguments:
-        arguments, i = self._parse_arguments(i)
+        arguments, i = _parse_arguments(i)
 
-        #TODO: check if i is finished
+        # TODO: check if i is finished
         command = Command(path, command_name, arguments)
         #print(command)
         return command
-
-    def _parse_target(self, iterator):
-        path = ''.join(takewhile(lambda c: c != ':', iterator))
-        path = NodePath(path)
-        return path, iterator
-
-    def _parse_command_name(self, iterator):
-        spaces = ' \t\r\n'
-        iterator = dropwhile(lambda c: c in spaces, iterator)
-        name = ''.join(takewhile(lambda c: c not in spaces, iterator))
-        return name, iterator
-
-    def _parse_arguments(self, iterator):
-        args = ''.join(iterator)
-        args = args.split(' ')
-        args = [a for a in args if len(a) > 0]
-        return args, iterator
 
     @staticmethod
     def pretty_print(result):
@@ -64,4 +67,3 @@ class Shell:
                     print("[{}] {}".format(r['@index'], r))
         else:
             print(result)
-

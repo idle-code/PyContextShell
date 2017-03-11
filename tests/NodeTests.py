@@ -2,36 +2,29 @@ from Node import *
 
 import unittest
 
-DefaultAttributeCount = 3
+DefaultAttributeCount = len(['@parent', '@name', '@path'])
+
 
 class NodeBasicOperationsTests(unittest.TestCase):
-    def test_constructor(self):
-        intnode = Node(123)
-        strnode = Node("spam")
-        nonenode = Node()
+    def setUp(self):
+        self.intnode = Node(123)
+        self.strnode = Node("spam")
+        self.nonenode = Node()
 
     def test_get(self):
-        intnode = Node(123)
-        self.assertEqual(123, intnode.value)
-
-        strnode = Node("spam")
-        self.assertEqual("spam", strnode.value)
-
-        nonenode = Node()
-        self.assertEqual(None, nonenode.value)
+        self.assertEqual(123, self.intnode.value)
+        self.assertEqual("spam", self.strnode.value)
+        self.assertEqual(None, self.nonenode.value)
 
     def test_set(self):
-        intnode = Node(123)
-        self.assertEqual(123, intnode.value)
-        intnode.value = 321
-        self.assertEqual(321, intnode.value)
+        self.assertEqual(123, self.intnode.value)
+        self.intnode.value = 321
+        self.assertEqual(321, self.intnode.value)
 
     def test_typed_set(self):
-        intnode = Node(123)
-        self.assertEqual(123, intnode.value)
-
+        self.assertIs(int, type(self.intnode.value))
         with self.assertRaises(TypeError):
-            intnode.value = "other type"
+            self.intnode.value = "string value"
 
     def test_empty_list(self):
         empty_node = Node()
@@ -54,7 +47,8 @@ class NodeBasicOperationsTests(unittest.TestCase):
         self.assertTrue('b' in node.subnode_names)
         self.assertTrue('c' in node.subnode_names)
 
-    #TODO: test call
+    # TODO: test call
+
 
 class NodeTests(unittest.TestCase):
     def setUp(self):
@@ -104,6 +98,7 @@ class NodeTests(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             r.append_node(55, Node('fourth'))
+
 
 class NodeVirtualNodesTests(unittest.TestCase):
     def setUp(self):
@@ -155,4 +150,3 @@ class NodeVirtualNodesTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

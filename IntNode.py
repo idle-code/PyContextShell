@@ -1,6 +1,7 @@
 from PyNode import *
 from ActionNode import *
 
+
 class IntNode(PyNode):
     def __init__(self, value = 0):
         super().__init__(value)

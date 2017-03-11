@@ -1,7 +1,6 @@
 from NodePath import *
-import collections
-import functools
 import types
+
 
 class Node:
     @staticmethod
@@ -26,17 +25,17 @@ class Node:
 
     @property
     def name(self):
-        if self.parent == None:
+        if self.parent is None:
             return None
 
-        # Workaround for wirtual nodes (which are not found in parent subnodes)
+        # Workaround for virtual nodes (which are not found in parent subnodes)
         if Node.is_virtual(self):
             return self._virtual_name
 
         # Find node name searching parent subnodes for instance:
         this_node_name = self.parent._get_subnode_by_reference(self)
 
-        if this_node_name == None:
+        if this_node_name is None:
             raise NameError('Could not find name for node {} ({})'.format(repr(self), str(self)))
         return this_node_name
 
@@ -52,8 +51,8 @@ class Node:
 
     @property
     def path(self):
-        if self.parent == None:
-            return str(NodePath(absolute = True))
+        if self.parent is None:
+            return str(NodePath(absolute=True))
         this_node_path = NodePath.join(self.parent.path, self.name)
         return str(this_node_path)
 
@@ -63,7 +62,7 @@ class Node:
 
     @value.setter
     def value(self, new_value):
-        if self.value != None and type(self.value) != type(new_value):
+        if self.value is not None and type(self.value) != type(new_value):
             raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self.value)))
         self._value = new_value
 
@@ -145,8 +144,8 @@ class Node:
         if not isinstance(existing_name, str):
             raise TypeError("Existing node name is not string")
         subnode_index = self._get_subnode_index_by_name(existing_name)
-        if subnode_index == None:
-            raise NameError("Subnode entry with name '" + str(name) + "' doesn not exists")
+        if subnode_index is None:
+            raise NameError("Subnode entry with name '" + str(existing_name) + "' doesn not exists")
 
         if isinstance(new_node, Node):
             # Take subs from replaced node into new one:
@@ -178,7 +177,7 @@ class Node:
             return self
 
         next_node = self._get_subnode_by_name(path.pop(0))
-        if next_node == None:
+        if next_node is None:
             return None
 
         return next_node._get_subnode_by_path(path)
@@ -193,7 +192,7 @@ class Node:
                 return None
             subnode = self._subnodes[index][1]
 
-        if subnode == None:
+        if subnode is None:
             return None
 
         if isinstance(subnode, types.FunctionType): # if subnode is generator
@@ -217,5 +216,3 @@ class Node:
 
     def _get_subnode_index_by_name(self, name):
         return next((index for index, value in enumerate(self._subnodes) if value[0] == name), None)
-
-

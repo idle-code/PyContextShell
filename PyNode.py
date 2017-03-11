@@ -3,12 +3,15 @@ import functools
 from pprint import pprint
 import types
 
+
 def CreatorFunction(creator_function):
     creator_function.is_creator = True
     return creator_function
 
+
 def is_creator(function):
     return hasattr(function, 'is_creator')
+
 
 class PyNode(Node):
     def __init__(self, value = None):
