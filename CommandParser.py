@@ -1,15 +1,64 @@
 from Command import Command
 
 
+def tokenize(text: str) -> [str]:
+    tokens = []
+    tok = ''
+
+    def end_token():
+        nonlocal tok, tokens
+        if len(tok) > 0:
+            tokens.append(tok)
+            tok = ''
+
+    for char in text:
+        if char in "{}:#":
+            end_token()
+            tokens.append(char)
+        elif char.isspace():
+            end_token()
+        else:
+            tok += char
+    end_token()
+    return tokens
+
+
 class CommandParser:
     def __init__(self):
-        self.command_text = ""
         self._root = None
 
     @property
     def root(self):
         return self._root
 
-    def parse(self, text: str) -> Command:
-        cmd = Command(text)
-        self._root = cmd
+    def parse(self, command_line: str):
+        if command_line is None:
+            return None
+
+        tokens = tokenize(command_line)
+        if len(tokens) == 0:
+            return None  # ignore empty lines
+        if tokens[0] == '#':
+            return None  # ignore comments
+
+        self._root = self._parse_scope(iter(tokens))
+
+    def _parse_scope(self, token_iterator) -> Command:
+        parts = []
+        for tok in token_iterator:
+            if tok == '{':
+                parts.append(self._parse_scope(token_iterator))
+            elif tok == '}':
+                break
+            else:
+                parts.append(tok)
+
+        if ':' in parts:
+            cmd = Command(parts[2])
+            cmd.target = parts[0]
+            cmd.arguments = parts[3:]
+            return cmd
+        else:
+            cmd = Command(parts[0])
+            cmd.arguments = parts[1:]
+            return cmd

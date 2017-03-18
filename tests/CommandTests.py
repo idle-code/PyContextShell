@@ -35,8 +35,8 @@ class CommandTests(unittest.TestCase):
 
     def test_nested_arguments_string(self):
         cmd = Command("foobar")
-        cmd.arguments = [Command("spam"), Command("rabarbar")]
-        self.assertEqual("foobar {spam} {rabarbar}", str(cmd))
+        cmd.arguments = [Command("spam"), "rabbit", Command("rabarbar")]
+        self.assertEqual("foobar {spam} rabbit {rabarbar}", str(cmd))
 
 if __name__ == '__main__':
     unittest.main()
