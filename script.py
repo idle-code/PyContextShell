@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from Tree import *
+from TreeRoot import *
 from Shell import *
 
 import io
@@ -8,7 +8,7 @@ import sys
 if len(sys.argv) < 2:
     raise ValueError('Script requires single argument')
 
-tree = Tree()
+tree = TreeRoot()
 shell = Shell(tree)
 
 with open(sys.argv[1]) as script:

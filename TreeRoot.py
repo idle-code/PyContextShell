@@ -8,29 +8,30 @@ def _to_path(value) -> NodePath:
     return NodePath.cast(value)
 
 
-class Tree(PyNode):
+class TreeRoot(PyNode):
     def __init__(self):
         super().__init__()
 
     @Action
-    def create(self, target_node, name_node, value_node = None):
+    def create(self, target_node, name_node, value_node=None):
         name = name_node.value
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
-        value = None # default value
+        value = None  # default empty node value
         if value_node is not None:
             value = value_node.value
 
         target_node.append_node(name, Node(value))
 
     @Action(path='create.int')
-    def create_int(self, target_node, name_node, value_node = None):
+    def create_int(self, target_node, name_node, value_node=None):
+        # TODO: create type-registration system (so methods as this won't be needed)
         name = name_node.value
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
-        value = 0  # default int value
+        value = 0  # default int node value
         if value_node is not None:
             value = value_node.value
 
@@ -95,13 +96,17 @@ class Tree(PyNode):
         return repr(target_node)
 
     def call(self, target_path, action_name, *action_parameters):
+        # TODO: check if following type checks are necessary
         if not isinstance(target_path, str):
             raise TypeError("target_path should be string")
         if not isinstance(action_name, str):
             raise TypeError("action_name should be string")
 
-        action_parameters = list(action_parameters) #TODO: check if this conversion is needed
-        result = self.execute(Command(target_path, action_name, action_parameters))
+        action_parameters = list(action_parameters)  # TODO: check if this conversion is needed
+        cmd = Command(action_name)
+        cmd.target = target_path
+        cmd.arguments = action_parameters
+        result = self.execute(cmd)
         if result is None:
             return None
 
@@ -109,7 +114,7 @@ class Tree(PyNode):
             result = result.value
         return result
 
-    def execute(self, command : Command):
+    def execute(self, command: Command):
         if not isinstance(command, Command):
             raise TypeError('Tree can only execute Commands')
 
@@ -131,7 +136,6 @@ class Tree(PyNode):
         return action_node(target_node, *arguments)
 
     def _evaluate(self, value) -> Node:
-        #print('Evaluating:', repr(value), type(value))
         if isinstance(value, Command):
             return self.execute(value)
         elif isinstance(value, Node):
@@ -144,8 +148,7 @@ class Tree(PyNode):
             return value
         return Node(value)
 
-    def find_action(self, target_path : NodePath, action_path : NodePath):
-        #print("Looking for '{}' from '{}'".format(action_path, target_path))
+    def find_action(self, target_path: NodePath, action_path: NodePath):
         while True:
             candidate_path = NodePath.join(target_path, ActionNode.ActionsNodeName, action_path)
             if candidate_path in self:
@@ -156,4 +159,3 @@ class Tree(PyNode):
             target_path.pop()
         # TODO: try other (system defined) search paths
         return None
-

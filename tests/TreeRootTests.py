@@ -1,12 +1,13 @@
 import unittest
 
-from Tree import *
+from TreeRoot import *
 
-class TreeTests(unittest.TestCase):
+
+class TreeRootTests(unittest.TestCase):
     def setUp(self):
-        self.root = Tree()
+        self.root = TreeRoot()
 
-    def test_create_command(self):
+    def test_create_call(self):
         self.root.call('.', 'create', 'foo')
         self.assertTrue('foo' in self.root)
 
@@ -14,28 +15,19 @@ class TreeTests(unittest.TestCase):
         self.assertTrue('bar' in self.root)
         self.assertEqual(123, self.root.get(self.root['bar']))
 
-    def test_create(self):
+    def test_create_existing(self):
         self.root.create(self.root, 'foo', 123)
-        self.root.create(self.root, 'foo_node', Node(123))
-        self.root.create(self.root, 'bar', "text")
-        self.root.create(self.root, 'bar_node', Node("text"))
-        self.root.create(self.root, 'spam')
-
         with self.assertRaises(NameError):
             self.root.create(self.root, 'foo')
-        return
-        with self.assertRaises(NameError):
-            self.root.create(self.root, 'foo_node')
-        with self.assertRaises(NameError):
-            self.root.create(self.root, 'spam')
 
-        self.assertTrue('bar' in self.root)
-        self.assertTrue('bar_node' in self.root)
+    def test_create(self):
+        self.root.create(self.root, 'foo', 123)
+        self.assertTrue('foo' in self.root)
+        self.assertEqual(123, self.root.get(self.root['.foo']))
 
-        self.assertEqual(123, self.root.get(self.root, '.foo'))
-        self.assertEqual(123, self.root.get('.foo_node'))
-        self.assertEqual("text", self.root.get('.bar'))
-        self.assertEqual("text", self.root.get('.bar_node'))
+        self.root.create(self.root, 'foo_node', Node(123))
+        self.assertTrue('foo_node' in self.root)
+        self.assertEqual(123, self.root.get(self.root['.foo_node']))
 
     def test_get(self):
         self.root.create(self.root, 'foo', 123)
@@ -77,10 +69,25 @@ class TreeTests(unittest.TestCase):
         self.root.delete(self.root, 'foo')
         self.assertFalse(self.root.exists(self.root, 'foo'))
 
-    def test_delete_nonexisting(self):
+    def test_delete_nonexistent(self):
         self.assertFalse(self.root.exists(self.root, 'foo'))
         with self.assertRaises(NameError):
             self.root.delete(self.root, 'foo')
+
+
+class ActionTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TreeRoot()
+        self.root.append_node('foo', Node('foo'))
+        self.root['foo'].append_node('bar', Node('bar'))
+        self.root.append_node('spam', Node(123))
+
+
+class ListActionTests(ActionTests):
+    def test_list_nodes(self):
+        nodes = self.root.list(self.root)
+        self.assertEqual(2, len(nodes))
+        self.assertListEqual(nodes, [self.root['foo'], self.root['spam']])
 
 if __name__ == '__main__':
     unittest.main()

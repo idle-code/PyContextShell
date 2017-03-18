@@ -1,9 +1,8 @@
-from PyNode import *
 from ActionNode import *
 
 
 class IntNode(PyNode):
-    def __init__(self, value = 0):
+    def __init__(self, value=0):
         super().__init__(value)
         if not isinstance(value, int):
             raise TypeError("Int node can only store integer values")
@@ -26,4 +25,3 @@ class IntNode(PyNode):
                 raise ValueError("Could not set value below maximum: {}".format(maximum))
 
         target_node.value = new_value
-

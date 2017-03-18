@@ -2,7 +2,7 @@ from Node import *
 
 import unittest
 
-DefaultAttributeCount = len(['@parent', '@name', '@path'])
+DefaultAttributeCount = len(['@name', '@path', '@index'])
 
 
 class NodeBasicOperationsTests(unittest.TestCase):

@@ -1,6 +1,5 @@
 import unittest
 
-from PyNode import *
 from ActionNode import *
 
 
@@ -21,25 +20,25 @@ class CustomNode(PyNode):
                 raise TypeError('arguments are required to be Node but one is ' + repr(arg))
 
     @Action
-    def action(self, target : Node, *args : [Node]):
+    def action(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.action_value
 
     @Action(path='named')
-    def named(self, target : Node, *args : [Node]):
+    def named(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.named_value
 
     @Action(path='very.much.nested')
-    def nested(self, target : Node, *args : [Node]):
+    def nested(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.nested_value
 
     @Action(path='named.subaction')
-    def subaction(self, target : Node, *args : [Node]):
+    def subaction(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.subaction_value

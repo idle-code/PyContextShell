@@ -25,6 +25,7 @@ def _parse_target(iterator):
 
 
 class Shell:
+    """Makes interaction with user painless"""
     def __init__(self, root: Node):
         self._root = root
         self.current_path = NodePath()
@@ -36,10 +37,10 @@ class Shell:
 
         command_line = command_line.strip()
         if len(command_line) == 0:
-            return None # ignore empty lines
+            return None  # ignore empty lines
 
         if command_line.startswith('#'):
-            return None # ignore comments
+            return None  # ignore comments
 
         i = iter(command_line)
 

@@ -9,7 +9,7 @@ class Node:
             return value
         return Node(value)
 
-    def __init__(self, value = None):
+    def __init__(self, value=None):
         self._parent = None
         self._value = value
         self._subnodes = []
@@ -66,7 +66,7 @@ class Node:
             raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self.value)))
         self._value = new_value
 
-    def append_node(self, path : NodePath, node):
+    def append_node(self, path: NodePath, node):
         if not isinstance(node, Node):
             raise TypeError("Could not add non-Node class")
 
@@ -121,8 +121,6 @@ class Node:
     def __str__(self):
         return str(self.value)
 
-    ### Implementation details ###
-
     @property
     def subnode_names(self):
         return list(map(lambda entry: entry[0], self._subnodes))
@@ -140,7 +138,7 @@ class Node:
         #print("Creating node: '{}' - {}".format(name, type(name)))
         self._subnodes.append((name, node))
 
-    def _replace_subnode(self, existing_name : str, new_node):
+    def _replace_subnode(self, existing_name: str, new_node):
         if not isinstance(existing_name, str):
             raise TypeError("Existing node name is not string")
         subnode_index = self._get_subnode_index_by_name(existing_name)
@@ -152,7 +150,7 @@ class Node:
             existing_node = self._subnodes[subnode_index][1]
             if isinstance(existing_node, Node):
                 # Take subnodes from replaced node into new_node:
-                new_node._subnodes =  existing_node._subnodes
+                new_node._subnodes = existing_node._subnodes
                 for entry in new_node._subnodes:
                     if not isinstance(entry[1], types.FunctionType): # if subnode is generator
                         # Update subnode subnodes with new parent:

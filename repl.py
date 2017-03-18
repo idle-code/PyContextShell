@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from Tree import *
+from TreeRoot import *
 from Shell import *
 
 import io
@@ -23,7 +23,7 @@ class TestNode(PyNode):
         return "I AM ATTRIUBTE"
 
 if __name__ == '__main__':
-    tree = Tree()
+    tree = TreeRoot()
     tree.append_node('tn', TestNode())
     tree.append_node('today', DateNode())
     shell = Shell(tree)
