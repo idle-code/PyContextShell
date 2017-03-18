@@ -75,12 +75,12 @@ class Node:
         parent_node._add_subnode(path.base_name, node)
         node._parent = self
 
-    def replace_node(self, path : NodePath, new_node):
+    def replace_node(self, path: NodePath, new_node):
         path = NodePath.cast(path)
         parent_node = self[path.base_path]
         return parent_node._replace_subnode(path.base_name, new_node)
 
-    def append_node_generator(self, path : NodePath, generator):
+    def append_node_generator(self, path: NodePath, generator):
         if not isinstance(generator, types.FunctionType):
             raise TypeError("Could not add non-callable node generator")
 
@@ -88,7 +88,7 @@ class Node:
         parent_node = self[path.base_path]
         parent_node._add_subnode(path.base_name, generator)
 
-    def remove_node(self, path : NodePath):
+    def remove_node(self, path: NodePath):
         path = NodePath.cast(path)
         parent_node = self._get_subnode_by_path(path.base_path)
         if not parent_node:
@@ -96,7 +96,7 @@ class Node:
         parent_node._remove_subnode(path.base_name)
         return True
 
-    def create_path(self, path : NodePath):
+    def create_path(self, path: NodePath):
         path = NodePath.cast(path)
         current_node = self
         for name in path:
@@ -105,14 +105,14 @@ class Node:
             current_node = current_node._get_subnode_by_name(name)
         return current_node
 
-    def __contains__(self, path : NodePath):
+    def __contains__(self, path: NodePath):
         path = NodePath.cast(path)
         parent_node = self._get_subnode_by_path(path.base_path)
         if not parent_node:
             return False
         return path.base_name in parent_node.subnode_names
 
-    def __getitem__(self, path : NodePath):
+    def __getitem__(self, path: NodePath):
         target_node = self._get_subnode_by_path(NodePath.cast(path))
         if not target_node:
             raise NameError("Could not find path: {}".format(path))
@@ -129,13 +129,12 @@ class Node:
     def subnodes(self):
         return list(map(lambda entry: self._get_subnode_by_name(entry[0]), self._subnodes))
 
-    def _add_subnode(self, name : str, node):
+    def _add_subnode(self, name: str, node):
         if not isinstance(name, str):
             raise TypeError("Node name is not string")
         if name in self.subnode_names:
             raise NameError("Subnode entry with name '" + str(name) + "' already exists")
 
-        #print("Creating node: '{}' - {}".format(name, type(name)))
         self._subnodes.append((name, node))
 
     def _replace_subnode(self, existing_name: str, new_node):
@@ -143,7 +142,7 @@ class Node:
             raise TypeError("Existing node name is not string")
         subnode_index = self._get_subnode_index_by_name(existing_name)
         if subnode_index is None:
-            raise NameError("Subnode entry with name '" + str(existing_name) + "' doesn not exists")
+            raise NameError("Subnode entry with name '" + str(existing_name) + "' does not exists")
 
         if isinstance(new_node, Node):
             # Take subs from replaced node into new one:
@@ -152,10 +151,10 @@ class Node:
                 # Take subnodes from replaced node into new_node:
                 new_node._subnodes = existing_node._subnodes
                 for entry in new_node._subnodes:
-                    if not isinstance(entry[1], types.FunctionType): # if subnode is generator
+                    if not isinstance(entry[1], types.FunctionType):  # if subnode is generator
                         # Update subnode subnodes with new parent:
                         entry[1]._parent = new_node
-                    #CHECK: find a way to preserve nodes and generators from new_node
+                    # CHECK: find a way to preserve nodes and generators from new_node
                 existing_node._parent = None
                 existing_node._subnodes = []
 
@@ -163,13 +162,13 @@ class Node:
 
         self._subnodes[subnode_index] = (existing_name, new_node)
 
-    def _remove_subnode(self, name : str):
+    def _remove_subnode(self, name: str):
         if name not in self.subnode_names:
             raise NameError("Subnode entry with name '" + str(name) + "' does not exists")
         # Filter-out requested subnode
         self._subnodes = [n for n in self._subnodes if not n[0] == name]
 
-    def _get_subnode_by_path(self, path : NodePath):
+    def _get_subnode_by_path(self, path: NodePath):
         path = NodePath.cast(path)
         if len(path) == 0:
             return self
@@ -180,7 +179,7 @@ class Node:
 
         return next_node._get_subnode_by_path(path)
 
-    def _get_subnode_by_name(self, name : str): #TODO: replace by path
+    def _get_subnode_by_name(self, name: str):  # TODO: replace by path
         subnode = None
         if isinstance(name, str):
             subnode = next((n[1] for n in self._subnodes if n[0] == name), None)
@@ -193,11 +192,9 @@ class Node:
         if subnode is None:
             return None
 
-        if isinstance(subnode, types.FunctionType): # if subnode is generator
-            #print("Instantiating '{}' virtual node (in {})".format(name, self.path))
+        if isinstance(subnode, types.FunctionType):  # if subnode is generator
             subnode = subnode(self)
             if not isinstance(subnode, Node):
-                #print("Wrapping '{}' value into node".format(subnode))
                 subnode = Node(subnode)
             subnode._parent = self
             subnode._virtual_name = name

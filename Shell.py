@@ -27,36 +27,15 @@ def _parse_target(iterator):
 class Shell:
     """Makes interaction with user painless"""
     def __init__(self, root: Node):
+        from CommandParser import CommandParser
+        self.parser = CommandParser()
         self._root = root
         self.current_path = NodePath()
         self.current_path.is_absolute = True
 
-    def parse(self, command_line):
-        if command_line is None:
-            return None
+    def parse(self, command_line: str):
+        return self.parser.parse(command_line)
 
-        command_line = command_line.strip()
-        if len(command_line) == 0:
-            return None  # ignore empty lines
-
-        if command_line.startswith('#'):
-            return None  # ignore comments
-
-        i = iter(command_line)
-
-        path = self.current_path
-        if ':' in command_line:
-            path, i = _parse_target(i)
-
-        command_name, i = _parse_command_name(i)
-
-        # Prepare command arguments:
-        arguments, i = _parse_arguments(i)
-
-        # TODO: check if i is finished
-        command = Command(path, command_name, arguments)
-        #print(command)
-        return command
 
     @staticmethod
     def pretty_print(result):

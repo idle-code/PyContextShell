@@ -36,11 +36,11 @@ class CommandParserTests(unittest.TestCase):
         self.parser = CommandParser()
 
     def parse(self, text) -> Command:
-        self.parser.parse(text)
-        if self.parser.root is not None:
+        cmd = self.parser.parse(text)
+        if cmd is not None:
             # Check if parsed command can be rebuild:
-            self.assertEqual(text, str(self.parser.root))
-        return self.parser.root
+            self.assertEqual(text, str(cmd))
+        return cmd
 
     def test_empty(self):
         cmd = self.parse("")

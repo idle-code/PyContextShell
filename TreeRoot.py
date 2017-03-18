@@ -116,7 +116,7 @@ class TreeRoot(PyNode):
 
     def execute(self, command: Command):
         if not isinstance(command, Command):
-            raise TypeError('Tree can only execute Commands')
+            raise TypeError("Tree can only execute Commands ({} given)".format(type(command)))
 
         # Resolve target node
         target_path = _to_path(self._evaluate(command.target))

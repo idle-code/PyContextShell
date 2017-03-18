@@ -67,6 +67,14 @@ class NodePathTests(unittest.TestCase):
         self.assertEqual(3, len(path))
         self.assertFalse(path.is_absolute)
 
+    def test_node_cast_mutability(self):
+        foobar = NodePath(['foo', 'bar'])
+        casted = NodePath.cast(foobar)
+        foobar.append('baz')
+
+        self.assertListEqual(['foo', 'bar', 'baz'], foobar)
+        self.assertListEqual(['foo', 'bar'], casted)
+
     def test_cast_index(self):
         number = NodePath.cast(13)
         self.assertEqual(1, len(number))
@@ -86,6 +94,15 @@ class NodePathTests(unittest.TestCase):
         foobarspam = NodePath.join(foobar, spam)
         self.assertEqual('.foo.bar.spam', str(foobarspam))
         self.assertEqual(3, len(foobarspam))
+
+    def test_join_mutability(self):
+        foobar = NodePath('.foo.bar')
+        spam = NodePath('.spam')
+
+        foobarspam = NodePath.join(foobar, spam)
+        self.assertEqual('.foo.bar.spam', str(foobarspam))
+        self.assertEqual('.foo.bar', str(foobar))
+        self.assertEqual('.spam', str(spam))
 
     def test_join_raw(self):
         rabarbar = NodePath.join('ra', 'bar', 'bar')

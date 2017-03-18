@@ -27,11 +27,7 @@ class CommandParser:
     def __init__(self):
         self._root = None
 
-    @property
-    def root(self):
-        return self._root
-
-    def parse(self, command_line: str):
+    def parse(self, command_line: str) -> Command:
         if command_line is None:
             return None
 
@@ -42,6 +38,7 @@ class CommandParser:
             return None  # ignore comments
 
         self._root = self._parse_scope(iter(tokens))
+        return self._root
 
     def _parse_scope(self, token_iterator) -> Command:
         parts = []

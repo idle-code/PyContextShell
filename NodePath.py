@@ -4,8 +4,7 @@ class NodePath(list):
 
     @staticmethod
     def join(first, *rest):
-        """"""
-        path = NodePath.cast(first)
+        path = NodePath(first)
         for name in rest:
             part = NodePath.cast(name)
             path.extend(part)
@@ -16,8 +15,8 @@ class NodePath(list):
         """Converts passed argument to NodePath (if needed)"""
         if path is None:
             return NodePath()
-        if isinstance(path, NodePath):
-            return path
+        # if isinstance(path, NodePath):
+        #     return path
         return NodePath(path)
 
     def __init__(self, representation=[], absolute=False):
@@ -27,6 +26,9 @@ class NodePath(list):
             self.append(representation)
         elif isinstance(representation, str):
             self._parse_path(representation)
+        elif isinstance(representation, NodePath):
+            self.is_absolute = representation.is_absolute
+            self.extend(representation)
         elif isinstance(representation, list):
             # TODO: check element's types?
             self.extend(representation)
