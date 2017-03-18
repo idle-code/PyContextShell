@@ -1,41 +1,24 @@
-from Command import *
 from Node import *
 from NodePath import *
-
-from itertools import takewhile, dropwhile
-
-
-def _parse_arguments(iterator):
-    args = ''.join(iterator)
-    args = args.split(' ')
-    args = [a for a in args if len(a) > 0]
-    return args, iterator
-
-
-def _parse_command_name(iterator):
-    iterator = dropwhile(lambda c: c.isspace(), iterator)
-    name = ''.join(takewhile(lambda c: not c.isspace(), iterator))
-    return name, iterator
-
-
-def _parse_target(iterator):
-    path = ''.join(takewhile(lambda c: c != ':', iterator))
-    path = NodePath(path)
-    return path, iterator
 
 
 class Shell:
     """Makes interaction with user painless"""
     def __init__(self, root: Node):
         from CommandParser import CommandParser
-        self.parser = CommandParser()
+        from CommandInterpreter import CommandInterpreter
         self._root = root
+        self.interpreter = CommandInterpreter(self._root)
+        self.parser = CommandParser()
+
         self.current_path = NodePath()
         self.current_path.is_absolute = True
 
-    def parse(self, command_line: str):
-        return self.parser.parse(command_line)
-
+    def execute(self, command_line: str):
+        command = self.parser.parse(command_line)
+        if command is None:
+            return None
+        return self.interpreter.execute(command)
 
     @staticmethod
     def pretty_print(result):

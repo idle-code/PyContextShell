@@ -1,15 +1,10 @@
 #!/usr/bin/python3
 from TreeRoot import *
 from Shell import *
-
-import io
+from AttributeNode import *
+from DateNode import *
 import readline
 
-from AttributeNode import *
-from ActionNode import *
-from PyNode import *
-
-from DateNode import *
 
 class TestNode(PyNode):
     @Action
@@ -34,13 +29,10 @@ if __name__ == '__main__':
     while True:
         try:
             command_line = input("{}: ".format(shell.current_path))
-            command = shell.parse(command_line)
-            result = tree.execute(command)
+            result = shell.execute(command_line)
             if result is not None:
                 Shell.pretty_print(result)
-        except EOFError: # exit on Ctrl+D
+        except EOFError:  # exit on Ctrl+D
             break
         except Exception as ex:
             print("Error:", ex)
-
-

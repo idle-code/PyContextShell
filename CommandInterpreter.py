@@ -17,7 +17,7 @@ class CommandInterpreter:
         action_path = NodePath.cast(self.evaluate(command.name))
         action_node = self.find_action(target_node, action_path)
         if action_node is None:
-            raise NameError("Action named '{}' not found".format(action_path))
+            raise NameError("Action '{}' not found for target path: {}".format(action_path, target_path))
 
         arguments = map(self.evaluate, command.arguments)
         return action_node(target_node, *arguments)
@@ -32,8 +32,6 @@ class CommandInterpreter:
         while target is not None:
             if full_action_path in target:
                 return target[full_action_path]
-            if target.parent is None:
-                break
             target = target.parent
         return None
 

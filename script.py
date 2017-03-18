@@ -2,7 +2,6 @@
 from TreeRoot import *
 from Shell import *
 
-import io
 import sys
 
 if len(sys.argv) < 2:
@@ -21,12 +20,6 @@ with open(sys.argv[1]) as script:
             continue
 
         print("$", line)
-        command = shell.parse(line)
-        if command is None:
-            print("WARNING: No parse output for: '{}'".format(line))
-            continue
-
-        result = tree.execute(command)
+        result = shell.execute(line)
         if result is not None:
             Shell.pretty_print(result)
-
