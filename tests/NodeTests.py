@@ -5,49 +5,54 @@ import unittest
 DefaultAttributeCount = len(['@name', '@path', '@index'])
 
 
-class NodeBasicOperationsTests(unittest.TestCase):
-    def setUp(self):
-        self.intnode = Node(123)
-        self.strnode = Node("spam")
-        self.nonenode = Node()
+class NodeValueTests(unittest.TestCase):
+    def test_get_value(self):
+        int_node = Node(123)
+        self.assertEqual(123, int_node.value)
 
-    def test_get(self):
-        self.assertEqual(123, self.intnode.value)
-        self.assertEqual("spam", self.strnode.value)
-        self.assertEqual(None, self.nonenode.value)
+        str_node = Node("spam")
+        self.assertEqual("spam", str_node.value)
 
-    def test_set(self):
-        self.assertEqual(123, self.intnode.value)
-        self.intnode.value = 321
-        self.assertEqual(321, self.intnode.value)
+    def test_set_value(self):
+        int_node = Node(123)
+        self.assertEqual(123, int_node.value)
+        int_node.value = 321
+        self.assertEqual(321, int_node.value)
 
-    def test_typed_set(self):
-        self.assertIs(int, type(self.intnode.value))
+    def test_set_value_different_type(self):
+        int_node = Node(123)
+        self.assertIs(int, type(int_node.value))
         with self.assertRaises(TypeError):
-            self.intnode.value = "string value"
+            int_node.value = "string value"
 
-    def test_empty_list(self):
+    def test_default_constructor(self):
+        empty_node = Node()
+        self.assertEqual(None, empty_node.value)
+
+
+class NodeSubnodesTests(unittest.TestCase):
+    def test_default_constructor(self):
         empty_node = Node()
         self.assertEqual(DefaultAttributeCount, len(empty_node.subnodes))
 
     def test_list(self):
-        node = Node()
-        node.append_node('a', Node(1))
-        node.append_node('b', Node(2))
-        node.append_node('c', Node(3))
+        root = Node()
+        root.append_node('a', Node(1))
+        root.append_node('b', Node(2))
+        root.append_node('c', Node(3))
 
-        self.assertEqual(DefaultAttributeCount + 3, len(node.subnodes))
-        node_values = list(map(lambda n: n.value, node.subnodes))
+        self.assertEqual(DefaultAttributeCount + 3, len(root.subnodes))
+        node_values = list(map(lambda n: n.value, root.subnodes))
         self.assertTrue(1 in node_values)
         self.assertTrue(2 in node_values)
         self.assertTrue(3 in node_values)
 
-        self.assertEqual(DefaultAttributeCount + 3, len(node.subnode_names))
-        self.assertTrue('a' in node.subnode_names)
-        self.assertTrue('b' in node.subnode_names)
-        self.assertTrue('c' in node.subnode_names)
+        self.assertEqual(DefaultAttributeCount + 3, len(root.subnode_names))
+        self.assertTrue('a' in root.subnode_names)
+        self.assertTrue('b' in root.subnode_names)
+        self.assertTrue('c' in root.subnode_names)
 
-    # TODO: test call
+# TODO: test call
 
 
 class NodeTests(unittest.TestCase):
