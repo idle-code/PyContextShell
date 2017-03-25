@@ -78,55 +78,5 @@ class NodeSubnodesByNameTests(unittest.TestCase):
         self.assertTrue(self.root.exists(name='foo'))
         self.assertFalse(self.root.exists(name='bar'))
 
-
-class NodeSubnodesByPathTests(unittest.TestCase):
-    # TODO: add tests for relative/absolute path access
-    def setUp(self):
-        self.root = Node()
-        self.foo = Node(1)
-        self.bar = Node(2)
-        self.root.append('foo', self.foo)
-        self.foo.append('bar', self.bar)
-
-    def test_retrieve_by_path(self):
-        bar = self.root.get_node(path='.foo.bar')
-        self.assertIs(self.bar, bar)
-
-        foo = self.root.get_node(path='.foo')
-        self.assertIs(self.foo, foo)
-
-        foobar_path = NodePath(['foo', 'bar'])
-        bar = self.root.get_node(path=foobar_path)
-        self.assertIs(self.bar, bar)
-
-        root = self.root.get_node(path=NodePath())
-        self.assertIs(self.root, root)
-
-    def test_retrieve_nonexistent_path(self):
-        self.assertIs(None, self.root.get_node(path='bar.spam'))
-
-    def test_remove_by_path(self):
-        self.assertEqual(1, len(self.foo.subnodes))
-        bar = self.root.remove(path='foo.bar')
-        self.assertEqual(0, len(self.foo.subnodes))
-        self.assertIs(self.bar, bar)
-
-    def test_remove_nonexistent_path(self):
-        with self.assertRaises(NameError):
-            self.root.remove(path='foo.spam')
-
-    def test_remove_root(self):
-        with self.assertRaises(NameError):
-            self.root.remove(path=NodePath())
-
-    def test_exists_path(self):
-        self.assertTrue(self.root.exists(path='.foo.bar'))
-        self.assertTrue(self.root.exists(path='foo.bar'))
-        self.assertFalse(self.root.exists(path='.bar'))
-        self.assertFalse(self.root.exists(path='bar'))
-        self.assertFalse(self.root.exists(path='foo.bar.spam'))
-        self.assertFalse(self.root.exists(path=NodePath(['foo', 'bar', 'baz'])))
-        self.assertTrue(self.root.exists(path=NodePath()))
-
 if __name__ == '__main__':
     unittest.main()

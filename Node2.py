@@ -1,5 +1,3 @@
-from NodePath import NodePath
-
 class Node:
     def __init__(self, value=None):
         self._value = value
@@ -28,29 +26,18 @@ class Node:
             raise NameError("Node '{}' already exists".format(name))
         self._subnodes.append((name, node))
 
-    def get_node(self, name: str=None, path: NodePath=None):
-        if name is not None:
-            path = NodePath.cast(name)
-        else:
-            path = NodePath.cast(path)
-
-        if len(path) == 0:
-            return self
-
-        name = path[0]
+    def get_node(self, name: str=None):
         for p in self._subnodes:
             if p[0] == name:
-                return p[1].get_node(path=path[1:])
+                return p[1]
         return None
 
-    def remove(self, name: str=None, path: NodePath=None):
-        node_to_remove = self.get_node(name=name, path=path)
+    def remove(self, name: str=None):
+        node_to_remove = self.get_node(name=name)
         if node_to_remove is None:
             raise NameError("Node '{}' doesn't exists".format(name))
-        if node_to_remove.parent is None:
-            
-        self._subnodes = [p for p in node_to_remove.parent if p[0] != name]
+        self._subnodes = [p for p in self._subnodes if p[0] != name]
         return node_to_remove
 
-    def exists(self, name: str=None, path: NodePath=None) -> bool:
-        return self.get_node(name=name, path=path) is not None
+    def exists(self, name: str=None) -> bool:
+        return self.get_node(name=name) is not None
