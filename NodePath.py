@@ -1,4 +1,3 @@
-
 class NodePath(list):
     separator = '.'
 
@@ -65,4 +64,3 @@ class NodePath(list):
         if self.is_absolute:
             return NodePath.separator + text_representation
         return text_representation
-

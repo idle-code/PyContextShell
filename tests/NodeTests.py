@@ -1,6 +1,6 @@
 import unittest
 from Node2 import Node
-from NodePath import NodePath
+
 
 class NodeValueTests(unittest.TestCase):
     def test_new_node_have_no_value(self):
@@ -35,17 +35,24 @@ class NodeSubnodesByNameTests(unittest.TestCase):
     def test_new_node_have_no_subnodes(self):
         empty_node = Node()
         self.assertEqual(0, len(empty_node.subnodes))
+        self.assertIsNone(self.root.parent)
 
     def test_append(self):
         self.root.append('foo', self.foo)
         self.root.append('bar', Node(2))
+
         self.assertEqual(2, len(self.root.subnodes))
         node_values = list(map(lambda n: n.value, self.root.subnodes))
         self.assertListEqual([1, 2], node_values)
+        self.assertIs(self.root, self.foo.parent)
 
     def test_append_none_name(self):
         with self.assertRaises(NameError):
             self.root.append(None, self.foo)
+
+    def test_append_empty_name(self):
+        with self.assertRaises(NameError):
+            self.root.append('', self.foo)
 
     def test_append_none_node(self):
         with self.assertRaises(ValueError):
@@ -60,8 +67,16 @@ class NodeSubnodesByNameTests(unittest.TestCase):
         self.root.append('foo', self.foo)
         self.assertIs(self.foo, self.root.get_node(name='foo'))
 
+    def test_retrieve_by_getitem(self):
+        self.root.append('foo', self.foo)
+        self.assertIs(self.foo, self.root['foo'])
+
     def test_retrieve_nonexistent_name(self):
         self.assertIs(None, self.root.get_node(name='bar'))
+
+    def test_retrieve_nonexistent_by_getitem(self):
+        with self.assertRaises(KeyError):
+            self.root['bar']
 
     def test_remove_by_name(self):
         self.root.append('foo', self.foo)
