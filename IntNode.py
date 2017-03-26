@@ -8,8 +8,8 @@ class IntNode(PyNode):
         if not isinstance(value, int):
             raise TypeError("Int node can only store integer values")
 
-    @action
-    def set(self, target_node, new_value):
+    @action(path='set')
+    def set_action(self, target_node, new_value):
         if not isinstance(new_value.value, int):
             raise TypeError("Int node can only store integer values")
 

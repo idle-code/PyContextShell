@@ -9,14 +9,14 @@ class Node:
         """Return parent of this node"""
         return self._parent
 
-    @property
-    def value(self):
+    def get(self):
+        """Get value stored in this node"""
         return self._value
 
-    @value.setter
-    def value(self, new_value):
-        if self.value is not None and type(self.value) != type(new_value):
-            raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self.value)))
+    def set(self, new_value):
+        """Store provided value in this node"""
+        if type(self._value) != type(new_value):
+            raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self._value)))
         self._value = new_value
 
     def list(self):

@@ -7,7 +7,7 @@ from ActionNode import ActionNode
 
 def _to_path(value) -> NodePath:
     if isinstance(value, Node):
-        value = value.value
+        value = value.get()
     return NodePath.cast(value)
 
 
@@ -17,36 +17,36 @@ class TreeRoot(PyNode):
 
     @action
     def create(self, target_node, name_node, value_node=None):
-        name = name_node.value
+        name = name_node.get()
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
         value = None  # default empty node value
         if value_node is not None:
-            value = value_node.value
+            value = value_node.get()
 
         target_node.append(name, Node(value))
 
     @action(path='create.int')
     def create_int(self, target_node, name_node, value_node=None):
         # TODO: create type-registration system (so methods as this won't be needed)
-        name = name_node.value
+        name = name_node.get()
         if not isinstance(name, str):
             raise ValueError("Name could only be str but is: {} ({})".format(type(name), name))
 
         value = 0  # default int node value
         if value_node is not None:
-            value = value_node.value
+            value = value_node.get()
 
         target_node.append(name, IntNode(value))
 
     @action
     def get(self, target_node):
-        return target_node.value
+        return target_node.get()
 
     @action
     def set(self, target_node, value_node):
-        target_node.value = value_node.value
+        target_node.set(value_node.get())
 
     @action(path='list.all')
     def list_all(self, target_node):
@@ -62,11 +62,11 @@ class TreeRoot(PyNode):
 
     @action(path='list.nodes')
     def list_nodes(self, target_node):
-        return [n for n in self.list_all(target_node) if not n['@name'].value.startswith('@')]
+        return [n for n in self.list_all(target_node) if not n['@name'].get().startswith('@')]
 
     @action(path='list.attributes')
     def list_attributes(self, target_node):
-        return [n for n in self.list_all(target_node) if n['@name'].value.startswith('@')]
+        return [n for n in self.list_all(target_node) if n['@name'].get().startswith('@')]
 
     @action(path='list.actions')
     def list_actions(self, target_node):
@@ -86,12 +86,12 @@ class TreeRoot(PyNode):
 
     @action
     def delete(self, target_node, name_node):
-        if not target_node.remove_node(name_node.value):
-            raise NameError("Node {} does not exists".format(name_node.value))
+        if not target_node.remove_node(name_node.get()):
+            raise NameError("Node {} does not exists".format(name_node.get()))
 
     @action
     def contains(self, target_node, name_node):
-        name = name_node.value
+        name = name_node.get()
         return name in target_node.subnode_names
 
     @action
@@ -114,7 +114,7 @@ class TreeRoot(PyNode):
             return None
 
         if isinstance(result, Node):
-            result = result.value
+            result = result.get()
         return result
 
     def execute(self, command: Command):

@@ -10,7 +10,7 @@ class GetAction(ActionNode):
         super(GetAction, self).__init__()
 
     def __call__(self, target: Node, *arguments):
-        return target.value
+        return target.get()
 
 
 class SetAction(ActionNode):
@@ -18,7 +18,7 @@ class SetAction(ActionNode):
         super(SetAction, self).__init__()
 
     def __call__(self, target: Node, *arguments):
-        target.value = arguments[0]
+        target.set(arguments[0])
 
 
 class CommandInterpreterTests(unittest.TestCase):
@@ -67,14 +67,14 @@ class CommandInterpreterTests(unittest.TestCase):
         set_cmd = Command('set')
         set_cmd.target = 'foo'
         set_cmd.arguments = [3]
-        self.assertEqual(1, self.interpreter.root['foo'].value)
+        self.assertEqual(1, self.interpreter.root['foo'].get())
         self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.root['foo'].value)
+        self.assertEqual(3, self.interpreter.root['foo'].get())
 
-        self.assertEqual(2, self.interpreter.root['foo']['bar'].value)
+        self.assertEqual(2, self.interpreter.root['foo']['bar'].get())
         set_cmd.target = 'foo.bar'
         self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.root['foo']['bar'].value)
+        self.assertEqual(3, self.interpreter.root['foo']['bar'].get())
 
     def test_unknown_target(self):
         get_cmd = Command('get')
@@ -98,7 +98,7 @@ class CommandInterpreterTests(unittest.TestCase):
 
         # Execute: {foo.name: get}: get
         foo_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(foo_val, self.root['foo'].value)
+        self.assertEqual(foo_val, self.root['foo'].get())
 
     def test_recursive_action_evaluation(self):
         self.root['foo'].append('action', Node('get'))
@@ -110,7 +110,7 @@ class CommandInterpreterTests(unittest.TestCase):
 
         # Execute: foo: {foo.action: get}
         foo_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(foo_val, self.root['foo'].value)
+        self.assertEqual(foo_val, self.root['foo'].get())
 
     def test_recursive_argument_evaluation(self):
         self.root['foo'].append('value', Node(123))
@@ -124,7 +124,7 @@ class CommandInterpreterTests(unittest.TestCase):
 
         # Execute: foo: set {foo.value: get}
         self.interpreter.execute(set_cmd)
-        self.assertEqual(123, self.root['foo'].value)
+        self.assertEqual(123, self.root['foo'].get())
 
 if __name__ == '__main__':
     unittest.main()

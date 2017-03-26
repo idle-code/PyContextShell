@@ -49,15 +49,15 @@ class AttributeNodeTests(unittest.TestCase):
     def test_attribute_node_get(self):
         self.assertTrue(self.node.contains('@readonly_attribute'))
 
-        self.assertEqual(3412, self.node['@readonly_attribute'].value)
+        self.assertEqual(3412, self.node['@readonly_attribute'].get())
 
     @unittest.skip("Re-write Attribute class or use alternative")
     def test_attribute_node_set(self):
         self.assertTrue(self.node.contains('@attribute'))
 
-        self.assertIsNone(self.node['@attribute'].value)
-        self.node['@attribute'].value = "spam"
-        self.assertEqual("spam", self.node['@attribute'].value)
+        self.assertIsNone(self.node['@attribute'].get())
+        self.node['@attribute'].set("spam")
+        self.assertEqual("spam", self.node['@attribute'].get())
 
 
 if __name__ == '__main__':

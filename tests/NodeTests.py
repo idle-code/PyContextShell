@@ -5,26 +5,26 @@ from Node2 import Node
 class NodeValueTests(unittest.TestCase):
     def test_new_node_have_no_value(self):
         empty_node = Node()
-        self.assertEqual(None, empty_node.value)
+        self.assertEqual(None, empty_node.get())
 
     def test_get_value(self):
         int_node = Node(123)
-        self.assertEqual(123, int_node.value)
+        self.assertEqual(123, int_node.get())
 
         str_node = Node("spam")
-        self.assertEqual("spam", str_node.value)
+        self.assertEqual("spam", str_node.get())
 
     def test_set_value(self):
         int_node = Node(123)
-        self.assertEqual(123, int_node.value)
-        int_node.value = 321
-        self.assertEqual(321, int_node.value)
+        self.assertEqual(123, int_node.get())
+        int_node.set(321)
+        self.assertEqual(321, int_node.get())
 
     def test_set_value_different_type(self):
         int_node = Node(123)
-        self.assertIs(int, type(int_node.value))
+        self.assertIs(int, type(int_node.get()))
         with self.assertRaises(TypeError):
-            int_node.value = "string value"
+            int_node.set("string value")
 
 
 class NodeSubnodesByNameTests(unittest.TestCase):
@@ -42,7 +42,7 @@ class NodeSubnodesByNameTests(unittest.TestCase):
         self.root.append('bar', Node(2))
 
         self.assertEqual(2, len(self.root.list()))
-        node_values = list(map(lambda n: self.root[n].value, self.root.list()))
+        node_values = list(map(lambda n: self.root[n].get(), self.root.list()))
         self.assertListEqual([1, 2], node_values)
         self.assertIs(self.root, self.foo.parent)
 

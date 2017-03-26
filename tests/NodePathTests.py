@@ -139,7 +139,7 @@ class HelperMethodsTests(unittest.TestCase):
         self.assertIsNotNone(baz_node)
         spam_node = self.root['foo'].get_node('spam')
         self.assertIsNotNone(spam_node)
-        self.assertIsNone(spam_node.value)
+        self.assertIsNone(spam_node.get())
         self.assertIsNotNone(spam_node.get_node('baz'))
 
     def test_create_path_partially_existing(self):

@@ -17,7 +17,7 @@ class ActionNode(Node):
         # self.value = callback
 
     def __call__(self, target, *arguments):
-        callback = self.value
+        callback = self.get()
         if callback is None:
             raise NotImplemented('__call__ method not overridden or no callback provided')
         return callback(target, *arguments)
