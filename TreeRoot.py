@@ -1,7 +1,8 @@
 from Command import *
 from IntNode import *
-from Node import *
+from Node2 import *
 from NodePath import NodePath
+from ActionNode import ActionNode
 
 
 def _to_path(value) -> NodePath:
@@ -24,7 +25,7 @@ class TreeRoot(PyNode):
         if value_node is not None:
             value = value_node.value
 
-        target_node.append_node(name, Node(value))
+        target_node.append(name, Node(value))
 
     @action(path='create.int')
     def create_int(self, target_node, name_node, value_node=None):
@@ -37,7 +38,7 @@ class TreeRoot(PyNode):
         if value_node is not None:
             value = value_node.value
 
-        target_node.append_node(name, IntNode(value))
+        target_node.append(name, IntNode(value))
 
     @action
     def get(self, target_node):
@@ -77,7 +78,7 @@ class TreeRoot(PyNode):
     def list_tree(self, target_node):
         paths = []
         for node in target_node.subnodes:
-            if Node.is_virtual(node): # So infinite nodes won't be generated
+            if Node.is_virtual(node):  # So infinite nodes won't be generated
                 continue
             paths.append(node.path)
             paths.extend(self.list_tree(node))
@@ -89,7 +90,7 @@ class TreeRoot(PyNode):
             raise NameError("Node {} does not exists".format(name_node.value))
 
     @action
-    def exists(self, target_node, name_node):
+    def contains(self, target_node, name_node):
         name = name_node.value
         return name in target_node.subnode_names
 
@@ -153,8 +154,9 @@ class TreeRoot(PyNode):
     def find_action(self, target_path: NodePath, action_path: NodePath):
         while True:
             candidate_path = NodePath.join(target_path, ActionNode.ActionsNodeName, action_path)
-            if candidate_path in self:
-                return self[candidate_path]
+            candidate_node = NodePath.resolve(self, candidate_path)
+            if candidate_node is not None:
+                return candidate_node
 
             if len(target_path) == 0:
                 break

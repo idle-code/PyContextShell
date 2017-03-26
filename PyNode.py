@@ -1,6 +1,4 @@
-from Node import *
-import functools
-from pprint import pprint
+from Node2 import *
 import types
 
 

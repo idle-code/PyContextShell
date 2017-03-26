@@ -34,15 +34,15 @@ class NodeSubnodesByNameTests(unittest.TestCase):
 
     def test_new_node_have_no_subnodes(self):
         empty_node = Node()
-        self.assertEqual(0, len(empty_node.subnodes))
+        self.assertEqual(0, len(empty_node.list()))
         self.assertIsNone(self.root.parent)
 
     def test_append(self):
         self.root.append('foo', self.foo)
         self.root.append('bar', Node(2))
 
-        self.assertEqual(2, len(self.root.subnodes))
-        node_values = list(map(lambda n: n.value, self.root.subnodes))
+        self.assertEqual(2, len(self.root.list()))
+        node_values = list(map(lambda n: self.root[n].value, self.root.list()))
         self.assertListEqual([1, 2], node_values)
         self.assertIs(self.root, self.foo.parent)
 
@@ -81,7 +81,7 @@ class NodeSubnodesByNameTests(unittest.TestCase):
     def test_remove_by_name(self):
         self.root.append('foo', self.foo)
         a = self.root.remove(name='foo')
-        self.assertEqual(0, len(self.root.subnodes))
+        self.assertEqual(0, len(self.root.list()))
         self.assertIs(self.foo, a)
     
     def test_remove_nonexistent_name(self):
@@ -90,8 +90,13 @@ class NodeSubnodesByNameTests(unittest.TestCase):
 
     def test_exists_name(self):
         self.root.append('foo', self.foo)
-        self.assertTrue(self.root.exists(name='foo'))
-        self.assertFalse(self.root.exists(name='bar'))
+        self.assertTrue(self.root.contains(name='foo'))
+        self.assertFalse(self.root.contains(name='bar'))
+
+    # def test_exists_by_in(self):
+    #     self.root.append('foo', self.foo)
+    #     self.assertTrue('foo' in self.root)
+    #     self.assertFalse('bar' in self.root)
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,6 +6,7 @@ class Node:
 
     @property
     def parent(self):
+        """Return parent of this node"""
         return self._parent
 
     @property
@@ -18,11 +19,12 @@ class Node:
             raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self.value)))
         self._value = new_value
 
-    @property
-    def subnodes(self):
-        return list(map(lambda p: p[1], self._subnodes))
+    def list(self):
+        """List names of the subnodes"""
+        return list(map(lambda p: p[0], self._subnodes))
 
     def append(self, name: str, node):
+        """Append provided node as subnode"""
         if name is None:
             raise NameError("Invalid appended node name - None")
         if len(name) == 0:
@@ -35,6 +37,7 @@ class Node:
         self._subnodes.append((name, node))
 
     def get_node(self, name: str):
+        """Return subnode with provided name"""
         for p in self._subnodes:
             if p[0] == name:
                 return p[1]
@@ -47,11 +50,16 @@ class Node:
         return node
 
     def remove(self, name: str):
+        """Remove subnode with provided name"""
         node_to_remove = self.get_node(name=name)
         if node_to_remove is None:
             raise NameError("Node '{}' doesn't exists".format(name))
         self._subnodes = [p for p in self._subnodes if p[0] != name]
         return node_to_remove
 
-    def exists(self, name: str) -> bool:
+    def contains(self, name: str) -> bool:
+        """Check if there is a subnode with provided name"""
         return self.get_node(name=name) is not None
+
+    # def __contains__(self, name: str):
+    #     return self.contains(name=name)

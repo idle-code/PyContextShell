@@ -1,15 +1,12 @@
 from PyNode import *
-from VirtualNode import *
 from ActionNode import *
 
 import datetime
 
+
 class DateNode(PyNode):
     def __init__(self):
         super().__init__()
-        self.append_node('year', VirtualNode(self.year))
-        self.append_node('month', VirtualNode(self.month))
-        self.append_node('day', VirtualNode(self.day))
 
     @action
     def get(self, target_node):

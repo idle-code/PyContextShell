@@ -1,5 +1,6 @@
+from Node2 import Node
 from PyNode import *
-from NodePath import *
+from NodePath import NodePath
 import functools
 
 
@@ -50,17 +51,17 @@ def action(method=None, path=None):
         @CreatorFunction
         def action_creator(parent_node: Node):
             # Create path to the node if needed
-            current_node = parent_node.create_path(NodePath.join(ActionNode.ActionsNodeName, path.base_path))
+            current_node = NodePath.create_path(parent_node, NodePath.join(ActionNode.ActionsNodeName, path.base_path))
 
             # Bind method to instance, so it will become independent callable:
             bound_method = types.MethodType(decorated_method, parent_node)
 
-            if path.base_name in current_node:
+            if current_node.contains(path.base_name):
                 # If sub-action created path to node beforehand - we need to replace it
                 # WARNING: this may cause undefined results when creating two actions with the same paths
                 current_node.replace_node(path.base_name, ActionNode(bound_method))
             else:
-                current_node.append_node(path.base_name, ActionNode(bound_method))
+                current_node.append(path.base_name, ActionNode(bound_method))
 
             return decorated_method  # to restore original
 
