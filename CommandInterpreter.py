@@ -11,7 +11,7 @@ class CommandInterpreter:
 
     def execute(self, command: Command):
         target_path = NodePath.cast(self.evaluate(command.target))
-        target_node = _resolve_path(self.root, target_path)
+        target_node = NodePath.resolve(self.root, target_path)
         if target_node is None:
             raise NameError("Target path '{}' not found".format(target_path))
 
@@ -31,17 +31,8 @@ class CommandInterpreter:
     def find_action(self, target: Node, path: NodePath) -> ActionNode:
         full_action_path = NodePath.join(self.actions_branch_name, path)
         while target is not None:
-            action_node = _resolve_path(target, full_action_path)
+            action_node = NodePath.resolve(target, full_action_path)
             if action_node is not None:
                 return action_node
             target = target.parent
         return None
-
-
-def _resolve_path(root: Node, path: NodePath) -> Node:
-    if len(path) == 0:
-        return root
-    node = root.get_node(name=path[0])
-    if node is None:
-        return None
-    return _resolve_path(node, path[1:])

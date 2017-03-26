@@ -1,6 +1,6 @@
 import unittest
 
-from ActionNode import Action
+from ActionNode import action
 from Node import Node
 from PyNode import PyNode
 
@@ -9,23 +9,23 @@ class PythonicNode(PyNode):
     def __init__(self):
         super().__init__()
 
-    @Action
+    @action
     def return_42(self):
         return 42
 
-    @Action
+    @action
     def add_one(self, value: Node):
         return value.value + 1
 
-    @Action
+    @action
     def return_args(self, *args: [Node]):
         return map(lambda n: n.value, args)
 
-    @Action
+    @action
     def return_target_value(self, target: Node):
         return target.value
 
-    @Action
+    @action
     def set_target_value(self, target: Node, new_value: Node):
         target.value = new_value.value + 3
 

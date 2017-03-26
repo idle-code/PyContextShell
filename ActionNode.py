@@ -1,4 +1,5 @@
 from PyNode import *
+from NodePath import *
 import functools
 
 
@@ -38,13 +39,13 @@ def NodeArgumentWrapper(function):
     return wrap_arguments
 
 
-def Action(method=None, path=None):
+def action(method=None, path=None):
     if not path:
         path = method.__name__
     path = NodePath.cast(path)
 
-    def decorator(method):
-        method = NodeArgumentWrapper(method)
+    def decorator(decorated_method):
+        decorated_method = NodeArgumentWrapper(decorated_method)
 
         @CreatorFunction
         def action_creator(parent_node: Node):
@@ -52,7 +53,7 @@ def Action(method=None, path=None):
             current_node = parent_node.create_path(NodePath.join(ActionNode.ActionsNodeName, path.base_path))
 
             # Bind method to instance, so it will become independent callable:
-            bound_method = types.MethodType(method, parent_node)
+            bound_method = types.MethodType(decorated_method, parent_node)
 
             if path.base_name in current_node:
                 # If sub-action created path to node beforehand - we need to replace it
@@ -61,7 +62,7 @@ def Action(method=None, path=None):
             else:
                 current_node.append_node(path.base_name, ActionNode(bound_method))
 
-            return method  # to restore original
+            return decorated_method  # to restore original
 
         return action_creator
 

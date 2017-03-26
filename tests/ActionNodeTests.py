@@ -6,7 +6,7 @@ from ActionNode import *
 class CustomNode(PyNode):
     def __init__(self):
         super().__init__()
-        self.action_value = "action"
+        self.sample_action_value = "sample_action"
         self.named_value = "named"
         self.nested_value = "nested"
         self.subaction_value = "subaction"
@@ -19,25 +19,25 @@ class CustomNode(PyNode):
             if not isinstance(arg, Node):
                 raise TypeError('arguments are required to be Node but one is ' + repr(arg))
 
-    @Action
-    def action(self, target: Node, *args: [Node]):
+    @action
+    def sample_action(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
-        return self.action_value
+        return self.sample_action_value
 
-    @Action(path='named')
+    @action(path='named')
     def named(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.named_value
 
-    @Action(path='very.much.nested')
+    @action(path='very.much.nested')
     def nested(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
         return self.nested_value
 
-    @Action(path='named.subaction')
+    @action(path='named.subaction')
     def subaction(self, target: Node, *args: [Node]):
         self._validate_args(target, args)
 
@@ -67,10 +67,10 @@ class ActionNodeTests(unittest.TestCase):
         self.assertEqual(result, method(self.node, 1, "test", None))
 
     def test_action_node(self):
-        self._test_node('action', 'action')
+        self._test_node('sample_action', 'sample_action')
 
     def test_action_method(self):
-        self._test_method(self.node.action, 'action')
+        self._test_method(self.node.sample_action, 'sample_action')
 
     def test_named_node(self):
         self._test_node('named', 'named')

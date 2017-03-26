@@ -1,6 +1,7 @@
 import unittest
 
 from IntNode import *
+from Node import *
 
 
 class IntNodeTests(unittest.TestCase):

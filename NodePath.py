@@ -1,3 +1,6 @@
+#from Node2 import Node
+
+
 class NodePath(list):
     separator = '.'
 
@@ -17,6 +20,36 @@ class NodePath(list):
         # if isinstance(path, NodePath):
         #     return path
         return NodePath(path)
+
+    # def resolve(root: Node, path) -> Node:
+    @staticmethod
+    def resolve(root, path):
+        path = NodePath.cast(path)
+        if path.is_absolute:
+            while root.parent is not None:
+                root = root.parent
+        if len(path) == 0:
+            return root
+        node = root.get_node(name=path[0])
+        if node is None:
+            return None
+        return NodePath.resolve(node, path[1:])
+
+
+    # def create_path(root: Node, path) -> Node:
+    @staticmethod
+    def create_path(root, path):
+        path = NodePath.cast(path)
+        if path.is_absolute:
+            raise NotImplementedError("Absolute path creation is not implemented")
+        if len(path) == 0:
+            return root
+        node = root.get_node(name=path[0])
+        if node is None:
+            from Node2 import Node  # TODO: move to the header when Node2 replaces Node
+            node = Node()
+            root.append(path[0], node)
+        return NodePath.create_path(node, path[1:])
 
     def __init__(self, representation=[], absolute=False):
         super().__init__()

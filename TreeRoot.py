@@ -1,5 +1,7 @@
 from Command import *
 from IntNode import *
+from Node import *
+from NodePath import NodePath
 
 
 def _to_path(value) -> NodePath:
@@ -12,7 +14,7 @@ class TreeRoot(PyNode):
     def __init__(self):
         super().__init__()
 
-    @Action
+    @action
     def create(self, target_node, name_node, value_node=None):
         name = name_node.value
         if not isinstance(name, str):
@@ -24,7 +26,7 @@ class TreeRoot(PyNode):
 
         target_node.append_node(name, Node(value))
 
-    @Action(path='create.int')
+    @action(path='create.int')
     def create_int(self, target_node, name_node, value_node=None):
         # TODO: create type-registration system (so methods as this won't be needed)
         name = name_node.value
@@ -37,41 +39,41 @@ class TreeRoot(PyNode):
 
         target_node.append_node(name, IntNode(value))
 
-    @Action
+    @action
     def get(self, target_node):
         return target_node.value
 
-    @Action
+    @action
     def set(self, target_node, value_node):
         target_node.value = value_node.value
 
-    @Action(path='list.all')
+    @action(path='list.all')
     def list_all(self, target_node):
         return [node for node in target_node.subnodes]
 
-    @Action(path='list.names')
+    @action(path='list.names')
     def list_names(self, target_node):
         return [name for name in target_node.subnode_names]
 
-    @Action
+    @action
     def list(self, target_node):
         return self.list_nodes(target_node)
 
-    @Action(path='list.nodes')
+    @action(path='list.nodes')
     def list_nodes(self, target_node):
         return [n for n in self.list_all(target_node) if not n['@name'].value.startswith('@')]
 
-    @Action(path='list.attributes')
+    @action(path='list.attributes')
     def list_attributes(self, target_node):
         return [n for n in self.list_all(target_node) if n['@name'].value.startswith('@')]
 
-    @Action(path='list.actions')
+    @action(path='list.actions')
     def list_actions(self, target_node):
         if ActionNode.ActionsNodeName in target_node.subnode_names:
             return self.list(target_node[ActionNode.ActionsNodeName])
         return []
 
-    @Action(path='list.tree')
+    @action(path='list.tree')
     def list_tree(self, target_node):
         paths = []
         for node in target_node.subnodes:
@@ -81,17 +83,17 @@ class TreeRoot(PyNode):
             paths.extend(self.list_tree(node))
         return paths
 
-    @Action
+    @action
     def delete(self, target_node, name_node):
         if not target_node.remove_node(name_node.value):
             raise NameError("Node {} does not exists".format(name_node.value))
 
-    @Action
+    @action
     def exists(self, target_node, name_node):
         name = name_node.value
         return name in target_node.subnode_names
 
-    @Action
+    @action
     def repr(self, target_node):
         return repr(target_node)
 

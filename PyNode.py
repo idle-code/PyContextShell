@@ -14,7 +14,7 @@ def is_creator(function):
 
 
 class PyNode(Node):
-    def __init__(self, value = None):
+    def __init__(self, value=None):
         super().__init__(value)
         self._populate_subnodes()
 

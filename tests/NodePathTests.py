@@ -1,4 +1,5 @@
 from NodePath import *
+from Node2 import *
 
 import unittest
 
@@ -109,6 +110,54 @@ class NodePathTests(unittest.TestCase):
         self.assertEqual('ra.bar.bar', str(rabarbar))
         self.assertEqual(3, len(rabarbar))
 
+
+class HelperMethodsTests(unittest.TestCase):
+    def setUp(self):
+        self.root = Node('root')
+        self.foo = Node('foo')
+        self.root.append('foo', self.foo)
+        self.bar = Node('bar')
+        self.foo.append('bar', self.bar)
+
+    def test_resolve_relative(self):
+        bar_path = NodePath('bar')
+        bar_node = NodePath.resolve(self.root, bar_path)
+        self.assertIsNone(bar_node)
+        bar_node = NodePath.resolve(self.foo, bar_path)
+        self.assertIs(self.bar, bar_node)
+
+    def test_resolve_absolute(self):
+        bar_path = NodePath('.foo.bar')
+        bar_node = NodePath.resolve(self.root, bar_path)
+        self.assertIs(self.bar, bar_node)
+        bar_node = NodePath.resolve(self.foo, bar_path)
+        self.assertIs(self.bar, bar_node)
+
+    def test_create_path_relative(self):
+        spam_path = NodePath('spam.baz')
+        baz_node = NodePath.create_path(self.foo, spam_path)
+        self.assertIsNotNone(baz_node)
+        spam_node = self.root['foo'].get_node('spam')
+        self.assertIsNotNone(spam_node)
+        self.assertIsNone(spam_node.value)
+        self.assertIsNotNone(spam_node.get_node('baz'))
+
+    def test_create_path_partially_existing(self):
+        spam_path = NodePath('foo.spam')
+        spam_node = NodePath.create_path(self.root, spam_path)
+        self.assertIsNotNone(spam_node)
+        self.assertIsNotNone(self.root['foo'].get_node('spam'))
+
+    def test_create_path_existing(self):
+        bar_path = NodePath('foo.bar')
+        bar_node = NodePath.create_path(self.root, bar_path)
+        self.assertIs(self.bar, bar_node)
+
+    def test_create_path_absolute(self):
+        # TODO: check if this is correct behaviour
+        spam_path = NodePath('.foo.spam')
+        with self.assertRaises(NotImplementedError):
+            NodePath.create_path(self.bar, spam_path)
 
 if __name__ == '__main__':
     unittest.main()

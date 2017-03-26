@@ -1,4 +1,5 @@
-from ActionNode import *
+from PyNode import PyNode
+from ActionNode import action
 
 
 class IntNode(PyNode):
@@ -7,7 +8,7 @@ class IntNode(PyNode):
         if not isinstance(value, int):
             raise TypeError("Int node can only store integer values")
 
-    @Action
+    @action
     def set(self, target_node, new_value):
         if not isinstance(new_value.value, int):
             raise TypeError("Int node can only store integer values")

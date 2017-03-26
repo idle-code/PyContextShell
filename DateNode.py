@@ -11,7 +11,7 @@ class DateNode(PyNode):
         self.append_node('month', VirtualNode(self.month))
         self.append_node('day', VirtualNode(self.day))
 
-    @Action
+    @action
     def get(self, target_node):
         now = datetime.date.today()
         return "{}-{}-{}".format(now.year, now.month, now.day)

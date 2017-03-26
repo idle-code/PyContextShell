@@ -7,7 +7,7 @@ import readline
 
 
 class TestNode(PyNode):
-    @Action
+    @action
     def action(self, target, *args):
         print(target)
         print(args)
