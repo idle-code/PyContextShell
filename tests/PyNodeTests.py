@@ -20,7 +20,8 @@ class CustomNode(PyNode):
 
 
 class PropertyAccessTests(unittest.TestCase):
-    """Check that properties with @node decorator are usable as normal properties"""
+    """Check that properties with @node decorator are still
+    usable as normal properties"""
     def setUp(self):
         self.node = CustomNode()
 
@@ -52,4 +53,3 @@ class NodeAccessTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

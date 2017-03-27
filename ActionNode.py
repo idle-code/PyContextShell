@@ -9,21 +9,18 @@ class ActionNode(Node):
 
     def __init__(self, callback=None):
         # TODO: check if passed prototype have right signature
-        if callback is None:
-            callback = self.__call__
-        else:
+        if callback is not None:
             self.__call__ = callback
         super().__init__(callback)
-        # self.value = callback
 
     def __call__(self, target, *arguments):
         callback = self.get()
         if callback is None:
-            raise NotImplemented('__call__ method not overridden or no callback provided')
+            raise NotImplementedError('__call__ method not overridden or no callback provided')
         return callback(target, *arguments)
 
 
-def NodeArgumentWrapper(function):
+def node_argument_wrapper(function):
     def wrap_arg(arg):
         if isinstance(arg, Node):
             return arg
@@ -46,7 +43,7 @@ def action(method=None, path=None):
     path = NodePath.cast(path)
 
     def decorator(decorated_method):
-        decorated_method = NodeArgumentWrapper(decorated_method)
+        decorated_method = node_argument_wrapper(decorated_method)
 
         @CreatorFunction
         def action_creator(parent_node: Node):

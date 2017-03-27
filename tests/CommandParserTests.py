@@ -76,13 +76,16 @@ class CommandParserTests(unittest.TestCase):
 
     def test_nested_name(self):
         cmd = self.parse("{action}")
+        self.assertIsInstance(cmd.name, Command)
         self.assertEqual("action", cmd.name.name)
 
     def test_nested_arguments(self):
         cmd = self.parse("action {foo} bar {spam: rabarbar}")
         self.assertEqual("action", cmd.name)
+        self.assertIsInstance(cmd.arguments[0], Command)
         self.assertEqual("foo", cmd.arguments[0].name)
         self.assertEqual("bar", cmd.arguments[1])
+        self.assertIsInstance(cmd.arguments[2], Command)
         self.assertEqual("spam", cmd.arguments[2].target)
         self.assertEqual("rabarbar", cmd.arguments[2].name)
 
