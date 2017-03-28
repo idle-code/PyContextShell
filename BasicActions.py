@@ -33,4 +33,15 @@ class RemoveAction(ActionNode):
         if len(arguments) != 1:
             raise ArgumentError("remove action expect single arguments")
         name_to_remove = arguments[0]
-        #target.remove(name_to_remove)
+        target.remove(name_to_remove)
+
+
+class CreateAction(ActionNode):
+    def __call__(self, target: Node, *arguments):
+        if len(arguments) < 1 or len(arguments) > 2:
+            raise ArgumentError("create action expect name and optional value")
+        name = arguments[0]
+        value = None
+        if len(arguments) == 2:
+            value = arguments[1]
+        target.append(name, Node(value))

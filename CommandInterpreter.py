@@ -5,9 +5,10 @@ from ActionNode import ActionNode
 
 
 class CommandInterpreter:
+    actions_branch_name = '@actions'
+
     def __init__(self, root: Node):
         self.root = root
-        self.actions_branch_name = '@actions'
 
     def execute(self, command: Command):
         target_path = NodePath.cast(self.evaluate(command.target))
@@ -29,7 +30,7 @@ class CommandInterpreter:
         return part
 
     def find_action(self, target: Node, path: NodePath) -> ActionNode:
-        full_action_path = NodePath.join(self.actions_branch_name, path)
+        full_action_path = NodePath.join(CommandInterpreter.actions_branch_name, path)
         while target is not None:
             action_node = NodePath.resolve(target, full_action_path)
             if action_node is not None:

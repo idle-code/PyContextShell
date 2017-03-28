@@ -1,10 +1,11 @@
 import unittest
 from Shell import *
+from TreeRoot2 import TreeRoot
 
 
 class ShellTests(unittest.TestCase):
     def setUp(self):
-        self.root = Node()
+        self.root = TreeRoot()
         self.shell = Shell(self.root)
 
     def test_default_state(self):
@@ -15,16 +16,16 @@ class ShellTests(unittest.TestCase):
         foo_value = self.shell.execute("foo: get")
         self.assertIsNone(foo_value)
 
-    def test_create_int(self):
-        self.shell.execute("create foo 123")
+    def test_create_string(self):
+        self.shell.execute("create foo rabarbar")
         foo_value = self.shell.execute("foo: get")
-        self.assertEqual(123, foo_value)
+        self.assertEqual('rabarbar', foo_value)
 
-    def test_set(self):
-        self.test_create_int()
-        self.shell.execute("foo: set 321")
+    def test_set_string(self):
+        self.test_create_string()
+        self.shell.execute("foo: set spam")
         foo_value = self.shell.execute("foo: get")
-        self.assertEqual(321, foo_value)
+        self.assertEqual('spam', foo_value)
 
 if __name__ == '__main__':
     unittest.main()

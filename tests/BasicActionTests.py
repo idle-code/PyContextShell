@@ -1,5 +1,4 @@
 import unittest
-from Node2 import *
 from BasicActions import *
 
 
@@ -90,6 +89,37 @@ class RemoveTests(ActionTests):
     def test_remove_no_argument(self):
         with self.assertRaises(ArgumentError):
             self.remove(self.root)
+
+
+class CreateTests(ActionTests):
+    def setUp(self):
+        super().setUp()
+        self.create = CreateAction()
+
+    def test_create_default_value(self):
+        self.assertFalse(self.root.contains('rabarbar'))
+        self.create(self.root, 'rabarbar')
+        self.assertTrue(self.root.contains('rabarbar'))
+        self.assertIsNone(self.root['rabarbar'].get())
+
+    def test_create_specified_value(self):
+        self.assertFalse(self.root.contains('rabarbar'))
+        self.create(self.root, 'rabarbar', 12)
+        self.assertTrue(self.root.contains('rabarbar'))
+        self.assertEqual(12, self.root['rabarbar'].get())
+
+    def test_create_existing(self):
+        with self.assertRaises(NameError):
+            self.create(self.root, 'foo')
+
+    def test_create_no_argument(self):
+        with self.assertRaises(ArgumentError):
+            self.create(self.root)
+
+    def test_create_too_many_arguments(self):
+        with self.assertRaises(ArgumentError):
+            self.create(self.root, 'name', 'val', 'more')
+
 
 if __name__ == '__main__':
     unittest.main()
