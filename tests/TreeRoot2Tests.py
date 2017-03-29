@@ -2,6 +2,8 @@ import unittest
 
 from CommandInterpreter import CommandInterpreter
 from TreeRoot2 import TreeRoot
+from NodePath import NodePath
+from Node2 import *
 
 
 class TreeRootTests(unittest.TestCase):
@@ -18,8 +20,21 @@ class TreeRootTests(unittest.TestCase):
         self.assertTrue(actions_node.contains('create'))
         self.assertTrue(actions_node.contains('remove'))
 
-    def test_name_attribute(self):
-        self.root.create('foo')
+
+class VirtualAttributeTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TreeRoot()
+        self.root.append('foo', Node(132))
+
+    def test_name(self):
+        self.assertTrue(self.root['foo'].contains('@name'))
+        foo_name = self.root['foo']['@name'].get()
+        self.assertEqual('foo', foo_name)
+
+    def test_path(self):
+        self.assertTrue(self.root['foo'].contains('@path'))
+        foo_path = self.root['foo']['@path'].get()
+        self.assertEqual(NodePath('.foo'), foo_path)
 
 
 if __name__ == '__main__':

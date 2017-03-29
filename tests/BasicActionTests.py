@@ -21,7 +21,7 @@ class GetTests(ActionTests):
         self.assertEqual("SPAM", self.get(self.root['foo']['spam']))
 
     def test_get_any_arguments(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.get(self.root, 1, 2, 3)
 
 
@@ -36,11 +36,11 @@ class SetTests(ActionTests):
         self.assertEqual(6, self.root['foo'].get())
 
     def test_set_no_argument(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.set(self.root['foo'])
 
     def test_set_too_many_arguments(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.set(self.root['foo'], 1, 2, 3)
 
 
@@ -60,7 +60,7 @@ class ListTests(ActionTests):
         self.assertListEqual([], bar_list)
 
     def test_list_any_arguments(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.list(self.root, 1, 2, 3)
 
 
@@ -87,7 +87,7 @@ class RemoveTests(ActionTests):
             self.remove(self.root, 'rabarbar')
 
     def test_remove_no_argument(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.remove(self.root)
 
 
@@ -113,11 +113,11 @@ class CreateTests(ActionTests):
             self.create(self.root, 'foo')
 
     def test_create_no_argument(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.create(self.root)
 
     def test_create_too_many_arguments(self):
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(TypeError):
             self.create(self.root, 'name', 'val', 'more')
 
 
