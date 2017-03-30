@@ -2,23 +2,7 @@ import unittest
 from CommandInterpreter import CommandInterpreter
 from Command import Command
 from Node2 import Node
-from ActionNode import ActionNode
-
-
-class GetAction(ActionNode):
-    def __init__(self):
-        super(GetAction, self).__init__()
-
-    def __call__(self, target: Node, *arguments):
-        return target.get()
-
-
-class SetAction(ActionNode):
-    def __init__(self):
-        super(SetAction, self).__init__()
-
-    def __call__(self, target: Node, *arguments):
-        target.set(arguments[0])
+from BasicActions import GetAction, SetAction
 
 
 class CommandInterpreterTests(unittest.TestCase):

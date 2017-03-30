@@ -2,41 +2,52 @@ from ActionNode import ActionNode
 from Node2 import Node
 
 
-def get(target: Node):
-    return target.get()
+class BasicActions:
+    @staticmethod
+    def get(target: Node):
+        return target.get()
 
-def set(target: Node, new_value):
-    target.set(new_value)
+    @staticmethod
+    def set(target: Node, new_value):
+        target.set(new_value)
 
-def list(target: Node):
-    return target.list()
+    @staticmethod
+    def exists(target: Node, name: str) -> bool:
+        return target.contains(name)
 
-def create(target: Node, name: str, value=None):
-    target.append(name, Node(value))
+    @staticmethod
+    def list(target: Node):
+        return target.list()
 
-def remove(target: Node, name_to_remove: str):
-    target.remove(name_to_remove)
+    @staticmethod
+    def create(target: Node, name: str, value=None):
+        target.append(name, Node(value))
+
+    @staticmethod
+    def remove(target: Node, name_to_remove: str):
+        target.remove(name_to_remove)
 
 
 class GetAction(ActionNode):
     def __init__(self):
-        super().__init__(get)
+        super().__init__(BasicActions.get)
 
 
 class SetAction(ActionNode):
     def __init__(self):
-        super().__init__(set)
+        super().__init__(BasicActions.set)
 
 
 class ListAction(ActionNode):
     def __init__(self):
-        super().__init__(list)
+        super().__init__(BasicActions.list)
 
 
 class RemoveAction(ActionNode):
     def __init__(self):
-        super().__init__(remove)
+        super().__init__(BasicActions.remove)
+
 
 class CreateAction(ActionNode):
     def __init__(self):
-        super().__init__(create)
+        super().__init__(BasicActions.create)

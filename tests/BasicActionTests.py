@@ -1,125 +1,112 @@
 import unittest
-from BasicActions import *
+from Node2 import *
+from BasicActions import BasicActions
 
 
 class ActionTests(unittest.TestCase):
     def setUp(self):
         self.root = Node()
-        self.root.append('foo', Node(1))
-        self.root.append('bar', Node(2))
-        self.root['foo'].append('spam', Node("SPAM"))
+        self.foo = Node(1)
+        self.root.append('foo', self.foo)
+        self.bar = Node(2)
+        self.root.append('bar', self.bar)
+        self.spam = Node("SPAM")
+        self.foo.append('spam', self.spam)
 
 
 class GetTests(ActionTests):
-    def setUp(self):
-        super().setUp()
-        self.get = GetAction()
-
     def test_get(self):
-        self.assertEqual(1, self.get(self.root['foo']))
-        self.assertEqual(2, self.get(self.root['bar']))
-        self.assertEqual("SPAM", self.get(self.root['foo']['spam']))
+        self.assertEqual(1, BasicActions.get(self.foo))
+        self.assertEqual(2, BasicActions.get(self.bar))
+        self.assertEqual("SPAM", BasicActions.get(self.spam))
 
     def test_get_any_arguments(self):
         with self.assertRaises(TypeError):
-            self.get(self.root, 1, 2, 3)
+            BasicActions.get(self.foo, 1, 2, 3)
 
 
 class SetTests(ActionTests):
-    def setUp(self):
-        super().setUp()
-        self.set = SetAction()
-
     def test_set(self):
-        self.assertEqual(1, self.root['foo'].get())
-        self.set(self.root['foo'], 6)
-        self.assertEqual(6, self.root['foo'].get())
+        self.assertEqual(1, BasicActions.get(self.foo))
+        BasicActions.set(self.foo, 6)
+        self.assertEqual(6, BasicActions.get(self.foo))
 
-    def test_set_no_argument(self):
+    def test_set_no_value(self):
         with self.assertRaises(TypeError):
-            self.set(self.root['foo'])
+            BasicActions.set(self.foo)
 
     def test_set_too_many_arguments(self):
         with self.assertRaises(TypeError):
-            self.set(self.root['foo'], 1, 2, 3)
+            BasicActions.set(self.foo, 1, 2, 3)
 
 
 class ListTests(ActionTests):
-    def setUp(self):
-        super().setUp()
-        self.list = ListAction()
-
     def test_list(self):
-        root_list = self.list(self.root)
+        root_list = BasicActions.list(self.root)
         self.assertListEqual(['foo', 'bar'], root_list)
 
-        foo_list = self.list(self.root['foo'])
+        foo_list = BasicActions.list(self.foo)
         self.assertListEqual(['spam'], foo_list)
 
-        bar_list = self.list(self.root['bar'])
+        bar_list = BasicActions.list(self.bar)
         self.assertListEqual([], bar_list)
 
     def test_list_any_arguments(self):
         with self.assertRaises(TypeError):
-            self.list(self.root, 1, 2, 3)
+            BasicActions.list(self.root, 1, 2, 3)
+
+
+class ExistsTests(ActionTests):
+    def test_exist(self):
+        self.assertTrue(BasicActions.exists(self.foo, 'spam'))
+
+    def test_doesnt_exist(self):
+        self.assertFalse(BasicActions.exists(self.root, 'rabarbar'))
 
 
 class RemoveTests(ActionTests):
-    def setUp(self):
-        super().setUp()
-        self.remove = RemoveAction()
-
     def test_remove_existing(self):
-        self.assertTrue(self.root.contains('bar'))
-        self.remove(self.root, 'bar')
-        self.assertFalse(self.root.contains('bar'))
-
-    @unittest.skip("Check if this behavior is necessary")
-    def test_remove_many_existing(self):
-        self.assertTrue(self.root.contains('foo'))
-        self.assertTrue(self.root.contains('bar'))
-        self.remove(self.root, 'foo', 'bar')
-        self.assertFalse(self.root.contains('foo'))
-        self.assertFalse(self.root.contains('bar'))
+        self.assertTrue(BasicActions.exists(self.root, 'bar'))
+        BasicActions.remove(self.root, 'bar')
+        self.assertFalse(BasicActions.exists(self.root, 'bar'))
 
     def test_remove_nonexistent(self):
         with self.assertRaises(NameError):
-            self.remove(self.root, 'rabarbar')
+            BasicActions.remove(self.root, 'rabarbar')
 
     def test_remove_no_argument(self):
         with self.assertRaises(TypeError):
-            self.remove(self.root)
+            BasicActions.remove(self.root)
+        with self.assertRaises(TypeError):
+            BasicActions.remove()
 
 
 class CreateTests(ActionTests):
-    def setUp(self):
-        super().setUp()
-        self.create = CreateAction()
-
     def test_create_default_value(self):
-        self.assertFalse(self.root.contains('rabarbar'))
-        self.create(self.root, 'rabarbar')
-        self.assertTrue(self.root.contains('rabarbar'))
-        self.assertIsNone(self.root['rabarbar'].get())
+        self.assertFalse(BasicActions.exists(self.root, 'rabarbar'))
+        BasicActions.create(self.root, 'rabarbar')
+        self.assertTrue(BasicActions.exists(self.root, 'rabarbar'))
+        self.assertIsNone(BasicActions.get(self.root.get_node('rabarbar')))
 
     def test_create_specified_value(self):
-        self.assertFalse(self.root.contains('rabarbar'))
-        self.create(self.root, 'rabarbar', 12)
-        self.assertTrue(self.root.contains('rabarbar'))
-        self.assertEqual(12, self.root['rabarbar'].get())
+        self.assertFalse(BasicActions.exists(self.root, 'rabarbar'))
+        BasicActions.create(self.root, 'rabarbar', 12)
+        self.assertTrue(BasicActions.exists(self.root, 'rabarbar'))
+        self.assertEqual(12, BasicActions.get(self.root.get_node('rabarbar')))
 
     def test_create_existing(self):
         with self.assertRaises(NameError):
-            self.create(self.root, 'foo')
+            BasicActions.create(self.root, 'foo')
 
     def test_create_no_argument(self):
         with self.assertRaises(TypeError):
-            self.create(self.root)
+            BasicActions.create(self.foo)
+        with self.assertRaises(TypeError):
+            BasicActions.create()
 
     def test_create_too_many_arguments(self):
         with self.assertRaises(TypeError):
-            self.create(self.root, 'name', 'val', 'more')
-
+            BasicActions.create(self.root, '.rabarbar', 'more', 'than', 1)
 
 if __name__ == '__main__':
     unittest.main()
