@@ -2,7 +2,6 @@ import unittest
 
 from TreeRoot2 import TreeRoot
 from NodePath import NodePath
-from Node2 import *
 
 
 class TreeRootViewTests(unittest.TestCase):
@@ -57,24 +56,52 @@ class TreeRootViewTests(unittest.TestCase):
         self.assertTrue(self.view.exists('.baz'))
 
 
-# class TreeRootTests(unittest.TestCase):
-#     def setUp(self):
-#         self.view = TreeRoot()
-#         self.view.create('.foo', 1)
-#         self.view.create('.foo.bar', 2)
+class TreeRootTests(unittest.TestCase):
+    def setUp(self):
+        self.tree = TreeRoot()
+        self.tree.create('.foo')
+        self.tree.create('.foo.bar')
 
-    # def test_find_action(self):
-    #     get_action_from_root = TreeRoot.find_action(self.view, '.', 'get')
-    #     self.assertIsNone(get_action_from_root)
-    #
-    #     get_action_from_foo = self.interpreter.find_action('.foo', 'get')
-    #     self.assertIs(get_action_from_root, get_action_from_foo)
-    #
-    #     get_action_from_bar = self.interpreter.find_action('.foo.bar', 'get')
-    #     self.assertIs(get_action_from_foo, get_action_from_bar)
+    def test_find_action(self):
+        get_action_from_root = TreeRoot._find_action(self.tree.root, 'get')
+        self.assertIsNotNone(get_action_from_root)
+
+    def test_find_action_multilevel(self):
+        get_action_from_foo = TreeRoot._find_action(self.tree.root['foo'], 'get')
+        self.assertIsNotNone(get_action_from_foo)
+
+        get_action_from_bar = TreeRoot._find_action(self.tree.root['foo']['bar'], 'get')
+        self.assertIs(get_action_from_foo, get_action_from_bar)
+
+    def test_find_action_from_actions(self):
+        get_action_from_actions = TreeRoot._find_action(self.tree.root[TreeRoot.actions_branch_name], 'get')
+        self.assertIsNotNone(get_action_from_actions)
+
+    def test_find_unknown_action(self):
+        unknown_action = TreeRoot._find_action(self.tree.root, 'unknown')
+        self.assertIsNone(unknown_action)
+
+    def test_resolve_relative(self):
+        bar_path = NodePath('bar')
+        bar_node = TreeRoot._resolve(self.tree.root, bar_path)
+        self.assertIsNone(bar_node)
+        bar_node = TreeRoot._resolve(self.tree.root['foo'], bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
+
+    def test_resolve_absolute(self):
+        bar_path = NodePath('.foo.bar')
+        bar_node = TreeRoot._resolve(self.tree.root, bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
+        bar_node = TreeRoot._resolve(self.tree.root['foo'], bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
+
+    def test_resolve_nonexistent(self):
+        unknown_path = NodePath('.unknown.path')
+        self.assertIsNone(TreeRoot._resolve(self.tree.root, unknown_path))
+        unknown_path.is_absolute = False
+        self.assertIsNone(TreeRoot._resolve(self.tree.root, unknown_path))
 
 
-#@unittest.skip("Not ready yet")
 class VirtualAttributeTests(unittest.TestCase):
     def setUp(self):
         self.view = TreeRoot()

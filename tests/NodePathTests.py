@@ -119,20 +119,6 @@ class HelperMethodsTests(unittest.TestCase):
         self.bar = Node('bar')
         self.foo.append('bar', self.bar)
 
-    def test_resolve_relative(self):
-        bar_path = NodePath('bar')
-        bar_node = NodePath.resolve(self.root, bar_path)
-        self.assertIsNone(bar_node)
-        bar_node = NodePath.resolve(self.foo, bar_path)
-        self.assertIs(self.bar, bar_node)
-
-    def test_resolve_absolute(self):
-        bar_path = NodePath('.foo.bar')
-        bar_node = NodePath.resolve(self.root, bar_path)
-        self.assertIs(self.bar, bar_node)
-        bar_node = NodePath.resolve(self.foo, bar_path)
-        self.assertIs(self.bar, bar_node)
-
     def test_create_path_relative(self):
         spam_path = NodePath('spam.baz')
         baz_node = NodePath.create_path(self.foo, spam_path)

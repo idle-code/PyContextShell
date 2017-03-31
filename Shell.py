@@ -1,5 +1,4 @@
 from TreeView import *
-from Node2 import *
 from NodePath import *
 from CommandParser import CommandParser
 from CommandInterpreter import CommandInterpreter

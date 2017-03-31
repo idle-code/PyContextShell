@@ -21,24 +21,10 @@ class NodePath(list):
         #     return path
         return NodePath(path)
 
-    # def resolve(root: Node, path) -> Node:
-    @staticmethod
-    def resolve(root, path):
-        path = NodePath.cast(path)
-        if path.is_absolute:
-            while root.parent is not None:
-                root = root.parent
-        if len(path) == 0:
-            return root
-        node = root.get_node(name=path[0])
-        if node is None:
-            return None
-        return NodePath.resolve(node, path[1:])
-
-
     # def create_path(root: Node, path) -> Node:
     @staticmethod
     def create_path(root, path):
+        # TODO: move somewhere else - this is Node-implementation dependant
         path = NodePath.cast(path)
         if path.is_absolute:
             raise NotImplementedError("Absolute path creation is not implemented")
