@@ -9,10 +9,9 @@ from Node2 import *
 class TreeRootViewTests(unittest.TestCase):
     def setUp(self):
         self.view = TreeRoot()
-
-    def tearDown(self):
-        for f in self.view.list('.'):
-            self.view.remove(f)
+        self.view.create('.foo', 1)
+        self.view.create('.foo.bar', 2)
+        self.view.create('.spam', "rabarbar")
 
     def test_get(self):
         self.assertEqual(1, self.view.get('.foo'))
@@ -20,22 +19,20 @@ class TreeRootViewTests(unittest.TestCase):
         self.assertEqual("rabarbar", self.view.get('.spam'))
 
     def test_create(self):
-        self.view.create('.foo')
-        self.assertTrue(self.view.exists('.foo'))
-        self.assertIsNone(self.view.get('.foo'))
+        self.view.create('.baz')
+        self.assertTrue(self.view.exists('.baz'))
+        self.assertIsNone(self.view.get('.baz'))
 
     def test_create_value(self):
-        self.view.create('.bar', 123)
-        self.assertTrue(self.view.exists('.bar'))
-        self.assertEqual(123, self.view.get('.bar'))
+        self.view.create('.baz', 123)
+        self.assertTrue(self.view.exists('.baz'))
+        self.assertEqual(123, self.view.get('.baz'))
 
     def test_create_existing(self):
-        self.view.create('.foo')
         with self.assertRaises(NameError):
             self.view.create('.foo')
 
     def test_remove(self):
-        self.view.create('.foo')
         self.assertTrue(self.view.exists('.foo'))
         self.view.remove('.foo')
         self.assertFalse(self.view.exists('.foo'))
@@ -45,9 +42,9 @@ class TreeRootViewTests(unittest.TestCase):
             self.view.remove('.unknown.path')
 
     def test_exists(self):
-        self.assertFalse(self.view.exists('.foo'))
-        self.view.create('.foo')
-        self.assertTrue(self.view.exists('.foo'))
+        self.assertFalse(self.view.exists('.baz'))
+        self.view.create('.baz')
+        self.assertTrue(self.view.exists('.baz'))
 
 
 @unittest.skip("CommandInterpreter might supersede this")

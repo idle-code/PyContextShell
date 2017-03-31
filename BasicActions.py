@@ -1,4 +1,3 @@
-from ActionNode import ActionNode
 from Node2 import Node
 
 
@@ -26,28 +25,3 @@ class BasicActions:
     @staticmethod
     def remove(target: Node, name_to_remove: str):
         target.remove(name_to_remove)
-
-
-class GetAction(ActionNode):
-    def __init__(self):
-        super().__init__(BasicActions.get)
-
-
-class SetAction(ActionNode):
-    def __init__(self):
-        super().__init__(BasicActions.set)
-
-
-class ListAction(ActionNode):
-    def __init__(self):
-        super().__init__(BasicActions.list)
-
-
-class RemoveAction(ActionNode):
-    def __init__(self):
-        super().__init__(BasicActions.remove)
-
-
-class CreateAction(ActionNode):
-    def __init__(self):
-        super().__init__(BasicActions.create)

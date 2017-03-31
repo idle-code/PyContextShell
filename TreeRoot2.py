@@ -1,21 +1,41 @@
 from NodePath import NodePath
-from CommandInterpreter import CommandInterpreter
 from BasicActions import *
+from ActionNode import ActionNode
 from TreeView import TreeView
 
 
 class TreeRoot(TreeView):
+    actions_branch_name = '@actions'
+
     def __init__(self):
         super().__init__()
         self.root = Node()
-        self.root.append(CommandInterpreter.actions_branch_name, Node())
-        actions_node = self.root[CommandInterpreter.actions_branch_name]
-        actions_node.append('get', GetAction())
-        actions_node.append('set', SetAction())
-        actions_node.append('list', ListAction())
-        actions_node.append('create', CreateAction())
-        actions_node.append('remove', RemoveAction())
+        self.root.append(TreeRoot.actions_branch_name, Node())
+        actions_node = self.root[TreeRoot.actions_branch_name]
+        actions_node.append('get', ActionNode(BasicActions.get))
+        actions_node.append('set', ActionNode(BasicActions.set))
+        actions_node.append('list', ActionNode(BasicActions.list))
+        actions_node.append('exists', ActionNode(BasicActions.exists))
+        actions_node.append('create', ActionNode(BasicActions.create))
+        actions_node.append('remove', ActionNode(BasicActions.remove))
 
-    def execute(self, target: NodePath, action, *arguments):
-        pass
+    def execute(self, target_path: NodePath, action_path: NodePath, *arguments):
+        target_node = NodePath.resolve(self.root, target_path)
+        if target_node is None:
+            raise NameError("Target '{}' not found".format(target_path))
 
+        action_node = self._find_action(target_node, action_path)
+        #action_node = NodePath.resolve(self.root, action_path)
+        if action_node is None:
+            raise NameError("Action '{}' not found for target path: '{}'".format(action_path, target_path))
+
+        return action_node(target_node, *arguments)
+
+    def _find_action(self, target: Node, action_path: NodePath) -> ActionNode:
+        full_action_path = NodePath.join(TreeRoot.actions_branch_name, action_path)
+        while target is not None:
+            action_node = NodePath.resolve(target, full_action_path)
+            if action_node is not None:
+                return action_node
+            target = target.parent
+        return None
