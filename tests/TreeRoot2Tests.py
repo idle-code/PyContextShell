@@ -1,6 +1,5 @@
 import unittest
 
-from CommandInterpreter import CommandInterpreter
 from TreeRoot2 import TreeRoot
 from NodePath import NodePath
 from Node2 import *
@@ -17,6 +16,17 @@ class TreeRootViewTests(unittest.TestCase):
         self.assertEqual(1, self.view.get('.foo'))
         self.assertEqual(2, self.view.get('.foo.bar'))
         self.assertEqual("rabarbar", self.view.get('.spam'))
+
+    def test_list(self):
+        root_elements = self.view.list('.')
+        self.assertListEqual([TreeRoot.actions_branch_name, 'foo', 'spam'], root_elements)
+
+    def test_list_empty(self):
+        self.assertListEqual([], self.view.list('.spam'))
+
+    def test_list_nonexistent(self):
+        with self.assertRaises(NameError):
+            self.view.list('.rabarbar')
 
     def test_create(self):
         self.view.create('.baz')
@@ -47,37 +57,47 @@ class TreeRootViewTests(unittest.TestCase):
         self.assertTrue(self.view.exists('.baz'))
 
 
-@unittest.skip("CommandInterpreter might supersede this")
-class TreeRootTests(unittest.TestCase):
-    def setUp(self):
-        self.root = TreeRoot()
+# class TreeRootTests(unittest.TestCase):
+#     def setUp(self):
+#         self.view = TreeRoot()
+#         self.view.create('.foo', 1)
+#         self.view.create('.foo.bar', 2)
 
-    def test_basic_methods_are_present(self):
-        action_path = NodePath(CommandInterpreter.actions_branch_name)
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'get')))
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'set')))
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'list')))
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'exists')))
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'create')))
-        self.assertTrue(self.root.exists(NodePath.join(action_path, 'remove')))
+    # def test_find_action(self):
+    #     get_action_from_root = TreeRoot.find_action(self.view, '.', 'get')
+    #     self.assertIsNone(get_action_from_root)
+    #
+    #     get_action_from_foo = self.interpreter.find_action('.foo', 'get')
+    #     self.assertIs(get_action_from_root, get_action_from_foo)
+    #
+    #     get_action_from_bar = self.interpreter.find_action('.foo.bar', 'get')
+    #     self.assertIs(get_action_from_foo, get_action_from_bar)
 
 
-@unittest.skip("Not ready yet")
+#@unittest.skip("Not ready yet")
 class VirtualAttributeTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
-        self.root.append('foo', Node(132))
+        self.view = TreeRoot()
+        self.view.create('.foo', 1)
+        self.view.create('.foo.bar', 2)
+        self.view.create('.baz', "SPAM")
 
     def test_name(self):
-        self.assertTrue(self.root['foo'].contains('@name'))
-        foo_name = self.root['foo']['@name'].get()
-        self.assertEqual('foo', foo_name)
+        self.assertTrue(self.view.exists('.foo.@name'))
+        self.assertEqual('foo', self.view.get('.foo.@name'))
 
     def test_path(self):
-        self.assertTrue(self.root['foo'].contains('@path'))
-        foo_path = self.root['foo']['@path'].get()
-        self.assertEqual(NodePath('.foo'), foo_path)
+        self.assertTrue(self.view.exists('.foo.bar.@path'))
+        self.assertEqual(NodePath('.foo.bar'), self.view.get('.foo.@path'))
 
+    def test_index(self):
+        self.assertTrue(self.view.exists('.foo.@index'))
+        self.assertTrue(self.view.exists('.foo.bar.@index'))
+        self.assertTrue(self.view.exists('.baz.@index'))
+        root_names = self.view.list('.')
+        root_indices = map(lambda name: self.view.get(NodePath.join(name, '@index')), root_names)
+        root_indices = list(root_indices)
+        self.assertListEqual([0, 1], root_indices)
 
 if __name__ == '__main__':
     unittest.main()

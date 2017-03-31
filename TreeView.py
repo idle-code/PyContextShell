@@ -3,7 +3,7 @@ from NodePath import NodePath
 
 class TreeView:
     def execute(self, target: NodePath, action, *arguments):
-        pass
+        raise NotImplementedError("TreeView.execute method was not overridden")
 
     def get(self, target):
         target = NodePath.cast(target)

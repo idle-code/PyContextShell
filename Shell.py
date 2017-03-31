@@ -1,3 +1,4 @@
+from TreeView import *
 from Node2 import *
 from NodePath import *
 from CommandParser import CommandParser
@@ -6,7 +7,7 @@ from CommandInterpreter import CommandInterpreter
 
 class Shell:
     """Makes interaction with user painless"""
-    def __init__(self, root: Node):
+    def __init__(self, root: TreeView):
         self.root = root
         self.interpreter = CommandInterpreter(self.root)
         self.parser = CommandParser()
@@ -22,11 +23,13 @@ class Shell:
 
     @staticmethod
     def pretty_print(result):
-        if isinstance(result, list):
-            for r in result:
-                if isinstance(r, Node):
-                    print("[{}] {}\t = {}".format(r['@index'], r["@name"], r))
-                else:
-                    print("[{}] {}".format(r['@index'], r))
-        else:
-            print(result)
+        print(result)
+        # TODO: Rewrite to support new list format (and attributes)
+        # if isinstance(result, list):
+        #     for r in result:
+        #         if isinstance(r, Node):
+        #             print("[{}] {}\t = {}".format(r['@index'], r["@name"], r))
+        #         else:
+        #             print("[{}] {}".format(r['@index'], r))
+        # else:
+        #     print(result)

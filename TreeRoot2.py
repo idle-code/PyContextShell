@@ -24,14 +24,14 @@ class TreeRoot(TreeView):
         if target_node is None:
             raise NameError("Target '{}' not found".format(target_path))
 
-        action_node = self._find_action(target_node, action_path)
-        #action_node = NodePath.resolve(self.root, action_path)
+        action_node = TreeRoot._find_action(target_node, action_path)
         if action_node is None:
             raise NameError("Action '{}' not found for target path: '{}'".format(action_path, target_path))
 
         return action_node(target_node, *arguments)
 
-    def _find_action(self, target: Node, action_path: NodePath) -> ActionNode:
+    @staticmethod
+    def _find_action(target: Node, action_path: NodePath) -> ActionNode:
         full_action_path = NodePath.join(TreeRoot.actions_branch_name, action_path)
         while target is not None:
             action_node = NodePath.resolve(target, full_action_path)

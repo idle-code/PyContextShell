@@ -13,16 +13,7 @@ class CommandInterpreterTests(unittest.TestCase):
         self.root.create('.foo.bar', 2)
         self.root.create('.spam', "test")
 
-    @unittest.skip("Move to TreeRoot")
-    def test_find_action(self):
-        get_action_from_root = self.interpreter.find_action('.', 'get')
-        self.assertIsNone(get_action_from_root)
 
-        get_action_from_foo = self.interpreter.find_action('.foo', 'get')
-        self.assertIs(get_action_from_root, get_action_from_foo)
-
-        get_action_from_bar = self.interpreter.find_action('.foo.bar', 'get')
-        self.assertIs(get_action_from_foo, get_action_from_bar)
 
     def test_execute_get(self):
         get_cmd = Command('get')

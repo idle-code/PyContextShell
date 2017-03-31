@@ -1,26 +1,13 @@
 #!/usr/bin/python3
-from TreeRoot import *
+from TreeRoot2 import *
 from Shell import *
-from AttributeNode import *
-from DateNode import *
 import readline
 
 
-class TestNode(PyNode):
-    @action
-    def action(self, target, *args):
-        print(target)
-        print(args)
-        return "FOOBAR"
-
-    @Attribute
-    def attribute(self):
-        return "I AM ATTRIUBTE"
-
 if __name__ == '__main__':
     tree = TreeRoot()
-    tree.append_node('tn', TestNode())
-    tree.append_node('today', DateNode())
+    tree.create('test_node', "TODO")
+    tree.create('tn', "2017-03-31")
     shell = Shell(tree)
     readline.parse_and_bind('tab: complete')
     #readline.set_completer(shell.completer_function)
