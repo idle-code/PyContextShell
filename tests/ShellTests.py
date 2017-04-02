@@ -1,6 +1,6 @@
 import unittest
 from Shell import *
-from TreeRoot2 import TreeRoot
+from TreeRoot import TreeRoot
 
 
 class ShellTests(unittest.TestCase):

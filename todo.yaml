@@ -10,10 +10,9 @@ Tree:
   - Read-only nodes
   - In-tree links support?
   - Easy creation of custom nodes from python classes
-    + Get rid of Commands.py
-    + Find a way to implement @name, @path and @parent for every Node
+    - Find a way to implement @name, @path and @parent for every Node
       ? Implement @parent virtual attribute (with in-tree links?)
-    - Decorators:
+    ? Decorators:
       + Sort after dynamic node creation
         ? Create nodes in order in which decorators were defined
       + Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
@@ -27,12 +26,11 @@ Tree:
         + Add (nested) path parameter
       - @VirtualNode - for on-request node generation (Node.append_node_generator)
   - Add 'Node.' prefix too all node-related actions
-  + Support NodePath as argument to Node.*node methods
   - Customizable search path (or virtually merged branches)
-  - Sessions
+  - Sessions/TreeViews
   - Server-client architecture
-  + Index addressing
-  - Anonymous nodes
+  - Index addressing
+    - Anonymous (without name) nodes
 
 Functionality:
   - System executables as actions
@@ -46,10 +44,10 @@ Functionality:
   - create.int
   - create.string
   - create.<type>
-  + list.attributes
-  + list.actions
-  + list.all
-  + list.nodes
+  - list.attributes
+  - list.actions
+  - list.all
+  - list.nodes
 
 Shell:
   - Autocompletion/suggestions

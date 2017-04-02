@@ -1,5 +1,5 @@
 from NodePath import *
-from Node2 import *
+from Node import *
 
 import unittest
 

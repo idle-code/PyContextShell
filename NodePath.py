@@ -32,7 +32,7 @@ class NodePath(list):
             return root
         node = root.get_node(name=path[0])
         if node is None:
-            from Node2 import Node  # TODO: move to the header when Node2 replaces Node
+            from Node import Node  # TODO: move to the header when Node2 replaces Node
             node = Node()
             root.append(path[0], node)
         return NodePath.create_path(node, path[1:])

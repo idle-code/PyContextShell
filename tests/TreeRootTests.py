@@ -1,102 +1,130 @@
 import unittest
 
-from TreeRoot import *
+from TreeRoot import TreeRoot
+from NodePath import NodePath
+
+
+class TreeRootViewTests(unittest.TestCase):
+    def setUp(self):
+        self.view = TreeRoot()
+        self.view.create('.foo', 1)
+        self.view.create('.foo.bar', 2)
+        self.view.create('.spam', "rabarbar")
+
+    def test_get(self):
+        self.assertEqual(1, self.view.get('.foo'))
+        self.assertEqual(2, self.view.get('.foo.bar'))
+        self.assertEqual("rabarbar", self.view.get('.spam'))
+
+    def test_list(self):
+        root_elements = self.view.list('.')
+        self.assertListEqual([TreeRoot.actions_branch_name, 'foo', 'spam'], root_elements)
+
+    def test_list_empty(self):
+        self.assertListEqual([], self.view.list('.spam'))
+
+    def test_list_nonexistent(self):
+        with self.assertRaises(NameError):
+            self.view.list('.rabarbar')
+
+    def test_create(self):
+        self.view.create('.baz')
+        self.assertTrue(self.view.exists('.baz'))
+        self.assertIsNone(self.view.get('.baz'))
+
+    def test_create_value(self):
+        self.view.create('.baz', 123)
+        self.assertTrue(self.view.exists('.baz'))
+        self.assertEqual(123, self.view.get('.baz'))
+
+    def test_create_existing(self):
+        with self.assertRaises(NameError):
+            self.view.create('.foo')
+
+    def test_remove(self):
+        self.assertTrue(self.view.exists('.foo'))
+        self.view.remove('.foo')
+        self.assertFalse(self.view.exists('.foo'))
+
+    def test_remove_nonexistent(self):
+        with self.assertRaises(NameError):
+            self.view.remove('.unknown.path')
+
+    def test_exists(self):
+        self.assertFalse(self.view.exists('.baz'))
+        self.view.create('.baz')
+        self.assertTrue(self.view.exists('.baz'))
 
 
 class TreeRootTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
+        self.tree = TreeRoot()
+        self.tree.create('.foo')
+        self.tree.create('.foo.bar')
 
-    @unittest.skip("FIXME")
-    def test_create_call(self):
-        self.root.call('.', 'create', 'foo')
-        self.assertTrue('foo' in self.root)
+    def test_find_action(self):
+        get_action_from_root = TreeRoot._find_action(self.tree.root, 'get')
+        self.assertIsNotNone(get_action_from_root)
 
-        self.root.call('.', 'create', 'bar', 123)
-        self.assertTrue(self.root.contains('bar'))
-        self.assertEqual(123, self.root.get(self.root['bar']))
+    def test_find_action_multilevel(self):
+        get_action_from_foo = TreeRoot._find_action(self.tree.root['foo'], 'get')
+        self.assertIsNotNone(get_action_from_foo)
 
-    def test_create_existing(self):
-        self.root.create(self.root, 'foo', 123)
-        with self.assertRaises(NameError):
-            self.root.create(self.root, 'foo')
+        get_action_from_bar = TreeRoot._find_action(self.tree.root['foo']['bar'], 'get')
+        self.assertIs(get_action_from_foo, get_action_from_bar)
 
-    @unittest.skip
-    def test_create(self):
-        self.root.create(self.root, 'foo', 123)
-        self.assertTrue(self.root.contains('foo'))
-        self.assertEqual(123, self.root.get(self.root['.foo']))
+    def test_find_action_from_actions(self):
+        get_action_from_actions = TreeRoot._find_action(self.tree.root[TreeRoot.actions_branch_name], 'get')
+        self.assertIsNotNone(get_action_from_actions)
 
-        self.root.create(self.root, 'foo_node', Node(123))
-        self.assertTrue(self.root.contains('foo_node'))
-        self.assertEqual(123, self.root.get(self.root['.foo_node']))
+    def test_find_unknown_action(self):
+        unknown_action = TreeRoot._find_action(self.tree.root, 'unknown')
+        self.assertIsNone(unknown_action)
 
-    def test_get(self):
-        self.root.create(self.root, 'foo', 123)
-        self.root.create(self.root, 'bar', "text")
-        self.root.create(self.root, 'spam')
+    def test_resolve_relative(self):
+        bar_path = NodePath('bar')
+        bar_node = TreeRoot._resolve(self.tree.root, bar_path)
+        self.assertIsNone(bar_node)
+        bar_node = TreeRoot._resolve(self.tree.root['foo'], bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
 
-        self.assertEqual(123, self.root.get(self.root['foo']))
-        self.assertEqual("text", self.root.get(self.root['bar']))
-        self.assertEqual(None, self.root.get(self.root['spam']))
+    def test_resolve_absolute(self):
+        bar_path = NodePath('.foo.bar')
+        bar_node = TreeRoot._resolve(self.tree.root, bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
+        bar_node = TreeRoot._resolve(self.tree.root['foo'], bar_path)
+        self.assertIs(self.tree.root['foo']['bar'], bar_node)
 
-    def test_set(self):
-        self.test_get()
-
-        self.root.set(self.root['foo'], 321)
-        self.assertEqual(321, self.root.get(self.root['foo']))
-
-    @unittest.skip
-    def test_name_attribute(self):
-        self.root.create(self.root, 'foo', 123)
-
-        self.assertEqual('foo', self.root.get(self.root['foo']['@name']))
-
-    @unittest.skip
-    def test_list(self):
-        self.test_get()
-
-        root_subnodes = self.root.list(self.root)
-        subnode_names = list(map(lambda n: n['@name'].value, root_subnodes))
-        self.assertListEqual(['foo', 'bar', 'spam'], subnode_names)
-
-    @unittest.skip
-    def test_exists(self):
-        self.test_get()
-
-        self.assertTrue(self.root.contains(self.root, 'foo'))
-        self.assertFalse(self.root.contains(self.root, 'invalid_key'))
-
-    @unittest.skip
-    def test_delete(self):
-        self.test_get()
-
-        self.assertTrue(self.root.contains(self.root, 'foo'))
-        self.root.delete(self.root, 'foo')
-        self.assertFalse(self.root.contains(self.root, 'foo'))
-
-    @unittest.skip
-    def test_delete_nonexistent(self):
-        self.assertFalse(self.root.contains(self.root, 'foo'))
-        with self.assertRaises(NameError):
-            self.root.delete(self.root, 'foo')
+    def test_resolve_nonexistent(self):
+        unknown_path = NodePath('.unknown.path')
+        self.assertIsNone(TreeRoot._resolve(self.tree.root, unknown_path))
+        unknown_path.is_absolute = False
+        self.assertIsNone(TreeRoot._resolve(self.tree.root, unknown_path))
 
 
-class ActionTests(unittest.TestCase):
+class VirtualAttributeTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
-        self.root.append('foo', Node('foo'))
-        self.root['foo'].append('bar', Node('bar'))
-        self.root.append('spam', Node(123))
+        self.view = TreeRoot()
+        self.view.create('.foo', 1)
+        self.view.create('.foo.bar', 2)
+        self.view.create('.baz', "SPAM")
 
+    def test_name(self):
+        self.assertTrue(self.view.exists('.foo.@name'))
+        self.assertEqual('foo', self.view.get('.foo.@name'))
 
-class ListActionTests(ActionTests):
-    @unittest.skip
-    def test_list_nodes(self):
-        nodes = self.root.list(self.root)
-        self.assertEqual(2, len(nodes))
-        self.assertListEqual(nodes, [self.root['foo'], self.root['spam']])
+    def test_path(self):
+        self.assertTrue(self.view.exists('.foo.bar.@path'))
+        self.assertEqual(NodePath('.foo.bar'), self.view.get('.foo.@path'))
+
+    def test_index(self):
+        self.assertTrue(self.view.exists('.foo.@index'))
+        self.assertTrue(self.view.exists('.foo.bar.@index'))
+        self.assertTrue(self.view.exists('.baz.@index'))
+        root_names = self.view.list('.')
+        root_indices = map(lambda name: self.view.get(NodePath.join(name, '@index')), root_names)
+        root_indices = list(root_indices)
+        self.assertListEqual([0, 1], root_indices)
 
 if __name__ == '__main__':
     unittest.main()
-

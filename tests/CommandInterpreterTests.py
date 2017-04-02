@@ -1,7 +1,7 @@
 import unittest
 from CommandInterpreter import CommandInterpreter
 from Command import Command
-from TreeRoot2 import TreeRoot
+from TreeRoot import TreeRoot
 
 
 class CommandInterpreterTests(unittest.TestCase):

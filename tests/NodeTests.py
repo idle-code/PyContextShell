@@ -1,5 +1,5 @@
 import unittest
-from Node2 import Node
+from Node import Node
 
 
 class NodeValueTests(unittest.TestCase):

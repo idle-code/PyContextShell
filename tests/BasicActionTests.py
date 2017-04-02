@@ -1,5 +1,5 @@
 import unittest
-from Node2 import *
+from Node import *
 from BasicActions import BasicActions
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from TreeRoot2 import *
+from TreeRoot import *
 from Shell import *
 import readline
 
