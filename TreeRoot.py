@@ -1,23 +1,26 @@
 from NodePath import NodePath
 from BasicActions import *
 from ActionNode import ActionNode
-from TreeView import TreeView
+from Session import Session
 
 
-class TreeRoot(TreeView):
+class TreeRoot(Session):
     actions_branch_name = '@actions'
 
     def __init__(self):
         super().__init__()
         self.root = Node()
-        self.root.append(TreeRoot.actions_branch_name, Node())
+        self.start()
+
+    def start(self):
+        self.root.append(Node(), TreeRoot.actions_branch_name)
         actions_node = self.root[TreeRoot.actions_branch_name]
-        actions_node.append('get', ActionNode(BasicActions.get))
-        actions_node.append('set', ActionNode(BasicActions.set))
-        actions_node.append('list', ActionNode(BasicActions.list))
-        actions_node.append('exists', ActionNode(BasicActions.exists))
-        actions_node.append('create', ActionNode(BasicActions.create))
-        actions_node.append('remove', ActionNode(BasicActions.remove))
+        actions_node.append(ActionNode(BasicActions.get), 'get')
+        actions_node.append(ActionNode(BasicActions.set), 'set')
+        actions_node.append(ActionNode(BasicActions.list), 'list')
+        actions_node.append(ActionNode(BasicActions.exists), 'exists')
+        actions_node.append(ActionNode(BasicActions.create), 'create')
+        actions_node.append(ActionNode(BasicActions.remove), 'remove')
 
     def execute(self, target_path: NodePath, action_path: NodePath, *arguments):
         target_node = TreeRoot._resolve(self.root, target_path)

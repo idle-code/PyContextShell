@@ -1,7 +1,13 @@
 from NodePath import NodePath
 
 
-class TreeView:
+class Session:
+    def start(self):
+        pass
+
+    def finish(self):
+        pass
+
     def execute(self, target: NodePath, action, *arguments):
         raise NotImplementedError("TreeView.execute method was not overridden")
 

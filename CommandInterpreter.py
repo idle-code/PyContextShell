@@ -1,12 +1,12 @@
 from Command import Command
 from NodePath import NodePath
-from TreeView import TreeView
+from Session import Session
 
 
 class CommandInterpreter:
     actions_branch_name = '@actions'
 
-    def __init__(self, root: TreeView):
+    def __init__(self, root: Session):
         self.root = root
 
     def execute(self, command: Command):

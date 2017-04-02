@@ -13,8 +13,6 @@ class CommandInterpreterTests(unittest.TestCase):
         self.root.create('.foo.bar', 2)
         self.root.create('.spam', "test")
 
-
-
     def test_execute_get(self):
         get_cmd = Command('get')
         get_cmd.target = '.foo'

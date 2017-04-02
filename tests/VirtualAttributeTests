@@ -1,0 +1,32 @@
+import unittest
+
+from NodePath import NodePath
+from TreeRoot import TreeRoot
+
+
+class VirtualAttributeTests(unittest.TestCase):
+    def setUp(self):
+        self.view = TreeRoot()
+        self.view.create('.foo', 1)
+        self.view.create('.foo.bar', 2)
+        self.view.create('.baz', "SPAM")
+
+    @unittest.skip("Not needed?")
+    def test_name(self):
+        self.assertTrue(self.view.exists('.foo.@name'))
+        self.assertEqual('foo', self.view.get('.foo.@name'))
+
+    @unittest.skip("Not needed?")
+    def test_path(self):
+        self.assertTrue(self.view.exists('.foo.bar.@path'))
+        self.assertEqual(NodePath('.foo.bar'), self.view.get('.foo.@path'))
+
+    @unittest.skip("Not needed?")
+    def test_index(self):
+        self.assertTrue(self.view.exists('.foo.@index'))
+        self.assertTrue(self.view.exists('.foo.bar.@index'))
+        self.assertTrue(self.view.exists('.baz.@index'))
+        root_names = self.view.list('.')
+        root_indices = map(lambda name: self.view.get(NodePath.join(name, '@index')), root_names)
+        root_indices = list(root_indices)
+        self.assertListEqual([0, 1], root_indices)

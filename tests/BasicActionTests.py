@@ -7,11 +7,11 @@ class ActionTests(unittest.TestCase):
     def setUp(self):
         self.root = Node()
         self.foo = Node(1)
-        self.root.append('foo', self.foo)
+        self.root.append(self.foo, 'foo')
         self.bar = Node(2)
-        self.root.append('bar', self.bar)
+        self.root.append(self.bar, 'bar')
         self.spam = Node("SPAM")
-        self.foo.append('spam', self.spam)
+        self.foo.append(self.spam, 'spam')
 
 
 class GetTests(ActionTests):

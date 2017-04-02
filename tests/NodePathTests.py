@@ -115,9 +115,9 @@ class HelperMethodsTests(unittest.TestCase):
     def setUp(self):
         self.root = Node('root')
         self.foo = Node('foo')
-        self.root.append('foo', self.foo)
+        self.root.append(self.foo, 'foo')
         self.bar = Node('bar')
-        self.foo.append('bar', self.bar)
+        self.foo.append(self.bar, 'bar')
 
     def test_create_path_relative(self):
         spam_path = NodePath('spam.baz')

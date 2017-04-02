@@ -34,7 +34,7 @@ class NodePath(list):
         if node is None:
             from Node import Node  # TODO: move to the header when Node2 replaces Node
             node = Node()
-            root.append(path[0], node)
+            root.append(node, path[0])
         return NodePath.create_path(node, path[1:])
 
     def __init__(self, representation=[], absolute=False):

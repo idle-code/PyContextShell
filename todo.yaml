@@ -48,6 +48,10 @@ Functionality:
   - list.actions
   - list.all
   - list.nodes
+  - select/selected
+    - temporary/session storage
+    - links
+    - anonymous keys
 
 Shell:
   - Autocompletion/suggestions

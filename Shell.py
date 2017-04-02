@@ -1,4 +1,4 @@
-from TreeView import *
+from Session import *
 from NodePath import *
 from CommandParser import CommandParser
 from CommandInterpreter import CommandInterpreter
@@ -6,7 +6,7 @@ from CommandInterpreter import CommandInterpreter
 
 class Shell:
     """Makes interaction with user painless"""
-    def __init__(self, root: TreeView):
+    def __init__(self, root: Session):
         self.root = root
         self.interpreter = CommandInterpreter(self.root)
         self.parser = CommandParser()

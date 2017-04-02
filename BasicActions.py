@@ -20,7 +20,7 @@ class BasicActions:
 
     @staticmethod
     def create(target: Node, name: str, value=None):
-        target.append(name, Node(value))
+        target.append(Node(value), name)
 
     @staticmethod
     def remove(target: Node, name_to_remove: str):

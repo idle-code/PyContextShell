@@ -27,5 +27,38 @@ class ShellTests(unittest.TestCase):
         foo_value = self.shell.execute("foo: get")
         self.assertEqual('spam', foo_value)
 
+
+class ShellCompletionTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TreeRoot()
+        self.shell = Shell(self.root)
+
+    def completion_on(self, command: str, cursor_position: str=None):
+        pass
+
+    @unittest.skip("Enable when shell completion will be desirable")
+    def test_action_list(self):
+        available_actions = self.completion_on("")
+        expected_actions = [
+            'get',
+            'set',
+            'list',
+            'exists',
+            'create',
+            'remove']
+        expected_actions = map(
+            lambda n: NodePath([TreeRoot.actions_branch_name, n], absolute=True),
+            expected_actions)
+        self.assertListEqual(expected_actions, available_actions)
+
+    @unittest.skip("Enable when shell completion will be desirable")
+    def test_partial_action_completion(self):
+        available_actions = self.completion_on("l")
+        expected_actions = ['list']
+        expected_actions = map(
+            lambda n: NodePath([TreeRoot.actions_branch_name, n], absolute=True),
+            expected_actions)
+        self.assertListEqual(expected_actions, available_actions)
+
 if __name__ == '__main__':
     unittest.main()
