@@ -6,7 +6,7 @@ from TemporarySession import *
 
 class TemporarySessionTests(unittest.TestCase):
     def setUp(self):
-        self.path = NodePath('.@temp')
+        self.path = NodePath('.temp')
         self.session = TemporarySession(TreeRoot(), self.path)
 
     def test_start(self):

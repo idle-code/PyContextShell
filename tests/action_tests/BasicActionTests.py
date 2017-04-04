@@ -1,6 +1,7 @@
 import unittest
+
 from Node import *
-from BasicActions import BasicActions
+from actions.BasicActions import BasicActions
 
 
 class ActionTests(unittest.TestCase):

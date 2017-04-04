@@ -5,6 +5,7 @@ from NodePath import NodePath
 
 
 class SessionTests(unittest.TestCase):
+    # TODO: this could be a base-class for all sessions
     def setUp(self):
         self.session = TreeRoot()
         self.session.create('.foo', 1)
@@ -18,7 +19,7 @@ class SessionTests(unittest.TestCase):
 
     def test_list(self):
         root_elements = self.session.list('.')
-        self.assertListEqual([TreeRoot.actions_branch_name, 'foo', 'spam'], root_elements)
+        self.assertListEqual(['foo', 'spam'], root_elements)
 
     def test_list_empty(self):
         self.assertListEqual([], self.session.list('.spam'))
@@ -101,6 +102,21 @@ class TreeRootTests(unittest.TestCase):
         unknown_path.is_absolute = False
         self.assertIsNone(TreeRoot._resolve(self.tree.root, unknown_path))
 
+    def test_install_action_none(self):
+        with self.assertRaises(ValueError):
+            self.tree.install_action(None)
+
+    def test_install_action(self):
+        from ActionNode import ActionNode
+        action = ActionNode('act', lambda x: x)
+        self.tree.install_action(action)
+        self.assertIsNotNone(TreeRoot._find_action(self.tree.root, 'act'))
+
+    def test_install_action_nested(self):
+        from ActionNode import ActionNode
+        action = ActionNode('foo.bar', lambda x: x)
+        self.tree.install_action(action)
+        self.assertIsNotNone(TreeRoot._find_action(self.tree.root, 'foo.bar'))
 
 if __name__ == '__main__':
     unittest.main()

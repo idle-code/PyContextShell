@@ -14,5 +14,5 @@ class TemporarySession(Session):
         self.remove(self.temp_path)
 
     def execute(self, target: NodePath, action, *arguments):
-        # Forward all actions to the backend
+        # Forward all action_tests to the backend
         return self.backend.execute(target, action, *arguments)

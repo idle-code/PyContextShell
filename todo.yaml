@@ -25,7 +25,7 @@ Tree:
         + Add method rewrite to work with bare python classes
         + Add (nested) path parameter
       - @VirtualNode - for on-request node generation (Node.append_node_generator)
-  - Add 'Node.' prefix too all node-related actions
+  - Add 'Node.' prefix too all node-related action_tests
   - Customizable search path (or virtually merged branches)
   - Sessions/TreeViews
   - Server-client architecture
@@ -33,25 +33,26 @@ Tree:
     - Anonymous (without name) nodes
 
 Functionality:
-  - System executables as actions
+  - System executables as action_tests
   - File-to-node mapping
-  - select and selected actions
+  - select and selected action_tests
   - Date/Time types
     - System time reading
   - Filesystem mapping
-    - copy, cut and paste actions (using select(ed) action?)
+    - copy, cut and paste action_tests (using select(ed) action?)
     - mime-type based file typing
   - create.int
   - create.string
+  - create.link
   - create.<type>
   - list.attributes
-  - list.actions
+  - list.action_tests
   - list.all
   - list.nodes
   - select/selected
     - temporary/session storage
     - links
-    - anonymous keys
+    + anonymous keys
 
 Shell:
   - Autocompletion/suggestions

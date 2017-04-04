@@ -1,11 +1,9 @@
-from NodePath import NodePath
-from BasicActions import *
-from ActionNode import ActionNode
 from Session import Session
+from actions.BasicActions import *
 
 
 class TreeRoot(Session):
-    actions_branch_name = '@actions'
+    actions_branch_name = '@action_tests'
 
     def __init__(self):
         super().__init__()
@@ -14,13 +12,22 @@ class TreeRoot(Session):
 
     def start(self):
         self.root.append(Node(), TreeRoot.actions_branch_name)
-        actions_node = self.root[TreeRoot.actions_branch_name]
-        actions_node.append(ActionNode(BasicActions.get), 'get')
-        actions_node.append(ActionNode(BasicActions.set), 'set')
-        actions_node.append(ActionNode(BasicActions.list), 'list')
-        actions_node.append(ActionNode(BasicActions.exists), 'exists')
-        actions_node.append(ActionNode(BasicActions.create), 'create')
-        actions_node.append(ActionNode(BasicActions.remove), 'remove')
+        self._install_actions()
+
+    def _install_actions(self):
+        self.install_action(ActionNode('get', BasicActions.get))
+        self.install_action(ActionNode('set', BasicActions.set))
+        self.install_action(ListAction())
+        self.install_action(ActionNode('exists', BasicActions.exists))
+        self.install_action(ActionNode('create', BasicActions.create))
+        self.install_action(ActionNode('remove', BasicActions.remove))
+
+    def install_action(self, action_node: ActionNode):
+        if action_node is None:
+            raise ValueError("No action to install provided")
+        action_path = NodePath.join(TreeRoot.actions_branch_name, action_node.path)
+        action_parent = NodePath.create_path(self.root, action_path.base_path)
+        action_parent.append(action_node, action_path.base_name)
 
     def execute(self, target_path: NodePath, action_path: NodePath, *arguments):
         target_node = TreeRoot._resolve(self.root, target_path)
