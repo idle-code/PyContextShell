@@ -19,8 +19,8 @@ class TreeRoot(Session):
         self.install_action(SetAction())
         self.install_action(ListAction())
         self.install_action(ExistsAction())
-        self.install_action(ActionNode('create', BasicActions.create))
-        self.install_action(ActionNode('remove', BasicActions.remove))
+        self.install_action(CreateAction())
+        self.install_action(RemoveAction())
 
     def install_action(self, action_node: ActionNode):
         if action_node is None:

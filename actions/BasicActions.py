@@ -50,6 +50,23 @@ class ExistsAction(ActionNode):
     def __call__(self, target: Node, node_name: str) -> bool:
         return target.contains(node_name)
 
+
+class CreateAction(ActionNode):
+    def __init__(self):
+        super().__init__(path='create')
+
+    def __call__(self, target: Node, name: str, value=None):
+        target.append(Node(value), name)
+
+
+class RemoveAction(ActionNode):
+    def __init__(self):
+        super().__init__(path='remove')
+
+    def __call__(self, target: Node, node_name: str):
+        target.remove(node_name)
+
+
 class ListAction(ActionNode):
     def __init__(self):
         super().__init__(path='list')
