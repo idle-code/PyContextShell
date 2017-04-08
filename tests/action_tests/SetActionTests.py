@@ -32,6 +32,10 @@ class SetActionTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.set(self.root['empty'], 23)
 
+    def test_no_arguments(self):
+        with self.assertRaises(TypeError):
+            self.set(self.root['integer'])
+
     def test_too_many_arguments(self):
         with self.assertRaises(TypeError):
             self.set(self.root['integer'], 1, 2, 3)

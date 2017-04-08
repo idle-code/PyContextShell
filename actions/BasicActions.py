@@ -43,6 +43,13 @@ class SetAction(ActionNode):
         target.set(new_value)
 
 
+class ExistsAction(ActionNode):
+    def __init__(self):
+        super().__init__(path='exists')
+
+    def __call__(self, target: Node, node_name: str) -> bool:
+        return target.contains(node_name)
+
 class ListAction(ActionNode):
     def __init__(self):
         super().__init__(path='list')
