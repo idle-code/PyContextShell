@@ -1,5 +1,6 @@
 from ActionNode import *
 
+
 class BasicActions:
     @staticmethod
     def get(target: Node):
@@ -26,8 +27,24 @@ class BasicActions:
         target.remove(name_to_remove)
 
 
+class GetAction(ActionNode):
+    def __init__(self):
+        super().__init__(path='get')
+
+    def __call__(self, target: Node):
+        return target.get()
+
+
+class SetAction(ActionNode):
+    def __init__(self):
+        super().__init__(path='set')
+
+    def __call__(self, target: Node, new_value):
+        target.set(new_value)
+
+
 class ListAction(ActionNode):
-    def __init__(self=None):
+    def __init__(self):
         super().__init__(path='list')
 
     def __call__(self, target: Node):

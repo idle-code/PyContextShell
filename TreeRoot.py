@@ -15,8 +15,8 @@ class TreeRoot(Session):
         self._install_actions()
 
     def _install_actions(self):
-        self.install_action(ActionNode('get', BasicActions.get))
-        self.install_action(ActionNode('set', BasicActions.set))
+        self.install_action(GetAction())
+        self.install_action(SetAction())
         self.install_action(ListAction())
         self.install_action(ActionNode('exists', BasicActions.exists))
         self.install_action(ActionNode('create', BasicActions.create))
