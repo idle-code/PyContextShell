@@ -2,7 +2,6 @@ import unittest
 
 from Node import Node
 from NodePath import NodePath
-from TreeRoot import TreeRoot
 from actions.BasicActions import ListAction
 
 
@@ -14,54 +13,30 @@ class ListActionTests(unittest.TestCase):
 
         self.list = ListAction()
 
-    def test_list_all_empty(self):
+    def test_action_names(self):
+        self.assertEqual(NodePath('list'), self.list.path)
+        self.assertEqual(NodePath('all'), self.list.list_all.path)
+        self.assertEqual(NodePath('nodes'), self.list.list_nodes.path)
+        self.assertEqual(NodePath('attributes'), self.list.list_attributes.path)
+
+    def test_all_empty(self):
         empty_list = self.list.list_all(Node())
         self.assertListEqual([], empty_list)
 
-    def test_list_all_nodes_and_attributes(self):
+    def test_all_nodes_and_attributes(self):
         root_list = self.list.list_all(self.root)
         self.assertListEqual(['@attribute', 'empty'], root_list)
 
-    def test_list_nodes(self):
+    def test_nodes(self):
         root_list = self.list.list_nodes(self.root)
         self.assertListEqual(['empty'], root_list)
 
-    def test_list_attributes(self):
+    def test_attributes(self):
         root_list = self.list.list_attributes(self.root)
         self.assertListEqual(['@attribute'], root_list)
 
-    def test_list_default(self):
+    def test_default(self):
         root_list = self.list(self.root)
-        self.assertListEqual(['empty'], root_list)
-
-
-class ListActionNodeTests(unittest.TestCase):
-    def setUp(self):
-        self.root = TreeRoot()
-        self.root.create('.test')
-        self.root.create('.test.@attribute', 'AAA')
-        self.root.create('.test.empty', '')
-
-        # Note: ListAction should be already present in TreeRoot
-
-    def test_list_all_empty(self):
-        empty_list = self.root.execute('.test.empty', NodePath('list.all'))
-        self.assertListEqual([], empty_list)
-
-    def test_list_all_nodes_and_attributes(self):
-        root_list = self.root.execute('.test', NodePath('list.all'))
-        self.assertListEqual(['@attribute', 'empty'], root_list)
-
-    def test_list_nodes(self):
-        root_list = self.root.execute('.test', NodePath('list.nodes'))
-        self.assertListEqual(['empty'], root_list)
-
-    def test_list_attributes(self):
-        root_list = self.root.execute('.test', NodePath('list.attributes'))
-        self.assertListEqual(['@attribute'], root_list)
-
-    def test_list_default(self):
-        root_list = self.root.execute('.test', NodePath('list'))
         self.assertListEqual(['empty'], root_list)
 
 
