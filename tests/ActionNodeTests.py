@@ -66,12 +66,12 @@ class ActionNodeTests(unittest.TestCase):
 
     def test_path(self):
         act = ActionNode(path='foo', callback=lambda x: x)
-        self.assertEquals(NodePath('foo'), act.path)
+        self.assertEqual(NodePath('foo'), act.path)
 
     def test_path_nested(self):
         action_path = NodePath('foo.bar')
         act = ActionNode(path=action_path, callback=lambda x: x)
-        self.assertEquals(NodePath('foo.bar'), act.path)
+        self.assertEqual(NodePath('foo.bar'), act.path)
 
 
 if __name__ == '__main__':

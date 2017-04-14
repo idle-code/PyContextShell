@@ -1,31 +1,19 @@
-Tree:
-  - Self-awareness - .contexttree (or similar) branch
+Tree backend:
   - Serialization to file
     - Values
     - Actions
   - Type safety
     - Action parameter tree (generation?)
     - Action argument validation according to parameter tree
-  + Removal of nodes (just test delete action)
   - Read-only nodes
   - In-tree links support?
   - Easy creation of custom nodes from python classes
-    - Find a way to implement @name, @path and @parent for every Node
-      ? Implement @parent virtual attribute (with in-tree links?)
-    ? Decorators:
-      + Sort after dynamic node creation
-        ? Create nodes in order in which decorators were defined
-      + Take care of automatic parameter encapsulation (e.g. from Node<int> to just bare int)
-      + @Attribute decorator
-        - Add attribute rewrite to work with bare python classes (use @CreatorFunction to do this?)
-        - Add (nested) path parameter
-      ? @Subnode decorator
-      + @Action decorator
-        + Support for subactions
-        + Add method rewrite to work with bare python classes
-        + Add (nested) path parameter
-      - @VirtualNode - for on-request node generation (Node.append_node_generator)
-  - Add 'Node.' prefix too all node-related action_tests
+    + @action decorator
+  - Virtual attributes:
+    - @name
+    - @path
+    - @parent
+  - Add 'Node.' prefix too all node-related actions
   - Customizable search path (or virtually merged branches)
   - Sessions/TreeViews
   - Server-client architecture
@@ -33,22 +21,31 @@ Tree:
     - Anonymous (without name) nodes
 
 Functionality:
-  - System executables as action_tests
-  - File-to-node mapping
-  - select and selected action_tests
-  - Date/Time types
+  - Sessions:
+    - Temporary
+      - select(ed)
+      - copy/cut/paste
+    - Transaction
+      - system settings update
+    - Network transport
+    - Security/permissions
+    - Filesystem mapping?
+    - virtual attributes?
+  - Self-awareness - .contexttree (or similar) branch
+  - Date/Time node
     - System time reading
   - Filesystem mapping
-    - copy, cut and paste action_tests (using select(ed) action?)
+    - System executables as actions
+    - copy, cut and paste actions (using select(ed) action?)
     - mime-type based file typing
   - create.int
   - create.string
   - create.link
   - create.<type>
-  - list.attributes
-  - list.action_tests
-  - list.all
-  - list.nodes
+  + list.attributes
+  - list.actions
+  + list.all
+  + list.nodes
   - select/selected
     - temporary/session storage
     - links

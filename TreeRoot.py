@@ -3,7 +3,7 @@ from actions.BasicActions import *
 
 
 class TreeRoot(Session):
-    actions_branch_name = '@action_tests'
+    actions_branch_name = '@actions'
 
     def __init__(self):
         super().__init__()

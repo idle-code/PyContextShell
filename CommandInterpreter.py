@@ -4,8 +4,6 @@ from Session import Session
 
 
 class CommandInterpreter:
-    actions_branch_name = '@action_tests'
-
     def __init__(self, root: Session):
         self.root = root
 
