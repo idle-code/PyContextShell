@@ -9,7 +9,7 @@ Tree backend:
   - In-tree links support?
   - Easy creation of custom nodes from python classes
     + @action decorator
-  - Virtual attributes:
+  - Virtual attributes
     - @name
     - @path
     - @parent
@@ -25,6 +25,7 @@ Functionality:
     - Temporary
       - select(ed)
       - copy/cut/paste
+      - user session separation
     - Transaction
       - system settings update
     - Network transport
