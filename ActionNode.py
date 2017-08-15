@@ -32,7 +32,7 @@ class ActionNode(Node):
                 action_parent = NodePath.create_path(self, field.path.base_path)
                 action_parent.append(new_action, field.path.base_name)
 
-    def __call__(self, target: Node, *arguments):
+    def __call__(self, target: NodePath, *arguments):
         callback = self.get()
         if callback is None:
             raise NotImplementedError('__call__ method not overridden or no callback provided')

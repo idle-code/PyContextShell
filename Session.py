@@ -8,7 +8,7 @@ class Session:
     def finish(self):
         pass
 
-    def execute(self, target: NodePath, action, *arguments):
+    def execute(self, target: NodePath, action: str, *arguments):
         raise NotImplementedError("Session.execute method was not overridden")
 
     def get(self, target: NodePath):

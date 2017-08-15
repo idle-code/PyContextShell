@@ -17,4 +17,3 @@ class CommandInterpreter:
         if isinstance(part, Command):
             return self.execute(part)
         return part
-
