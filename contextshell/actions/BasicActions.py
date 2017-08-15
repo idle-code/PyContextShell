@@ -1,4 +1,4 @@
-from ActionNode import *
+from contextshell.ActionNode import *
 
 
 class GetAction(ActionNode):

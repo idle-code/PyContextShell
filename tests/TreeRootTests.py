@@ -1,7 +1,7 @@
 import unittest
 
-from TreeRoot import TreeRoot
-from NodePath import NodePath
+from contextshell.NodePath import NodePath
+from contextshell.TreeRoot import TreeRoot
 
 
 class SessionTests(unittest.TestCase):
@@ -107,13 +107,13 @@ class TreeRootTests(unittest.TestCase):
             self.tree.install_action(None)
 
     def test_install_action(self):
-        from ActionNode import ActionNode
+        from contextshell.ActionNode import ActionNode
         action = ActionNode('act', lambda x: x)
         self.tree.install_action(action)
         self.assertIsNotNone(TreeRoot._find_action(self.tree.root, 'act'))
 
     def test_install_action_nested(self):
-        from ActionNode import ActionNode
+        from contextshell.ActionNode import ActionNode
         action = ActionNode('foo.bar', lambda x: x)
         self.tree.install_action(action)
         self.assertIsNotNone(TreeRoot._find_action(self.tree.root, 'foo.bar'))

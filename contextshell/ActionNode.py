@@ -1,5 +1,5 @@
-from Node import Node
-from NodePath import NodePath
+from contextshell.NodePath import NodePath
+from contextshell.Node import Node
 
 
 class ActionNode(Node):

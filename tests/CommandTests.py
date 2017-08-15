@@ -1,5 +1,6 @@
 import unittest
-from Command import Command
+
+from contextshell.Command import Command
 
 
 class CommandTests(unittest.TestCase):

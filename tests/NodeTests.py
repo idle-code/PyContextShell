@@ -1,5 +1,6 @@
 import unittest
-from Node import Node
+
+from contextshell.Node import Node
 
 
 class ValueTests(unittest.TestCase):

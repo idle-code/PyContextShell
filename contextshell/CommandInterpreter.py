@@ -1,6 +1,7 @@
-from Command import Command
-from NodePath import NodePath
-from Session import Session
+from contextshell.Command import Command
+from contextshell.Session import Session
+
+from contextshell.NodePath import NodePath
 
 
 class CommandInterpreter:

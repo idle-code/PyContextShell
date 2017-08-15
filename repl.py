@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-from TreeRoot import *
-from Shell import *
 import readline
 
+from TreeRoot import *
+
+from contextshell.Shell import *
 
 if __name__ == '__main__':
     tree = TreeRoot()

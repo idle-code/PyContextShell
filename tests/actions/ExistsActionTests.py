@@ -1,8 +1,8 @@
 import unittest
 
-from Node import Node
-from NodePath import NodePath
-from actions.BasicActions import ExistsAction
+from contextshell.NodePath import NodePath
+from contextshell.actions.BasicActions import ExistsAction
+from contextshell.Node import Node
 
 
 class ExistsActionTests(unittest.TestCase):

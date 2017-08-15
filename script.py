@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-from TreeRoot import *
-from Shell import *
-
 import sys
+
+from TreeRoot import *
+
+from contextshell.Shell import *
 
 if len(sys.argv) < 2:
     raise ValueError('Script requires single argument')

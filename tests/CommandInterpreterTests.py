@@ -1,7 +1,8 @@
 import unittest
-from CommandInterpreter import CommandInterpreter
-from Command import Command
-from TreeRoot import TreeRoot
+
+from contextshell.Command import Command
+from contextshell.TreeRoot import TreeRoot
+from contextshell.CommandInterpreter import CommandInterpreter
 
 
 class CommandInterpreterTests(unittest.TestCase):

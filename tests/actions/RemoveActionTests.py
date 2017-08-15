@@ -1,8 +1,9 @@
 import unittest
 
-from Node import Node
-from NodePath import NodePath
-from actions.BasicActions import RemoveAction
+from contextshell.NodePath import NodePath
+from contextshell.actions.BasicActions import RemoveAction
+
+from contextshell.Node import Node
 
 
 class RemoveActionTests(unittest.TestCase):

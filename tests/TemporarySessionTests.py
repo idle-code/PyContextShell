@@ -1,7 +1,7 @@
 import unittest
 
-from TreeRoot import TreeRoot
 from TemporarySession import *
+from contextshell.TreeRoot import TreeRoot
 
 
 class TemporarySessionTests(unittest.TestCase):

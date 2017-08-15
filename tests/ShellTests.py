@@ -1,6 +1,8 @@
 import unittest
-from Shell import *
-from TreeRoot import TreeRoot
+
+from contextshell.TreeRoot import TreeRoot
+
+from contextshell.Shell import *
 
 
 class ShellTests(unittest.TestCase):

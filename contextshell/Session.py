@@ -1,4 +1,4 @@
-from NodePath import NodePath
+from contextshell.NodePath import NodePath
 
 
 class Session:

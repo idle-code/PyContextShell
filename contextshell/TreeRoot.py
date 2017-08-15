@@ -1,5 +1,6 @@
-from Session import Session
-from actions.BasicActions import *
+from contextshell.Session import Session
+
+from contextshell.actions.BasicActions import *
 
 
 class TreeRoot(Session):

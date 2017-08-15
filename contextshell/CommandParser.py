@@ -1,4 +1,4 @@
-from Command import Command
+from contextshell.Command import Command
 
 
 def tokenize(text: str) -> [str]:

@@ -1,7 +1,7 @@
 import unittest
+from contextshell.NodePath import NodePath
 
-from ActionNode import *
-from NodePath import NodePath
+from contextshell.ActionNode import *
 
 
 def sum_function(target: Node, number: int):

@@ -1,7 +1,7 @@
-from NodePath import *
-from Node import *
-
 import unittest
+
+from contextshell.NodePath import *
+from contextshell.Node import *
 
 
 class NodePathTests(unittest.TestCase):

@@ -1,11 +1,12 @@
 import unittest
-from CommandParser import CommandParser
-from Command import Command
+
+from contextshell.Command import Command
+from contextshell.CommandParser import CommandParser
 
 
 class CommandTokenizerTests(unittest.TestCase):
     def tok_test(self, text: str, expected_tokens: list):
-        from CommandParser import tokenize
+        from contextshell.CommandParser import tokenize
         self.assertListEqual(expected_tokens, tokenize(text))
 
     def test_empty(self):

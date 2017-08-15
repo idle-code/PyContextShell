@@ -1,5 +1,5 @@
-from Node import Node
-from Session import *
+from contextshell.Session import *
+from contextshell.Node import Node
 
 
 class TemporarySession(Session):

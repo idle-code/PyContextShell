@@ -1,7 +1,8 @@
-from Session import *
-from NodePath import *
-from CommandParser import CommandParser
-from CommandInterpreter import CommandInterpreter
+from contextshell.CommandInterpreter import CommandInterpreter
+from contextshell.CommandParser import CommandParser
+from contextshell.Session import *
+
+from contextshell.NodePath import *
 
 
 class Shell:
