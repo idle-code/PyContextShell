@@ -1,9 +1,9 @@
-from contextshell.Session import Session
+from contextshell.SessionLayer import SessionLayer
 
 from contextshell.actions.BasicActions import *
 
 
-class TreeRoot(Session):
+class TreeRoot(SessionLayer):
     actions_branch_name = '@actions'
 
     def __init__(self):

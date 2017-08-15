@@ -1,9 +1,9 @@
-from contextshell.Session import *
+from contextshell.SessionLayer import *
 from contextshell.Node import Node
 
 
-class TemporarySession(Session):
-    def __init__(self, underlying_session: Session, temp_path: NodePath):
+class TemporarySessionLayer(SessionLayer):
+    def __init__(self, underlying_session: SessionLayer, temp_path: NodePath):
         self.backend = underlying_session
         self.temp_path = temp_path
         self.temp_node = Node()

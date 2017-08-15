@@ -1,9 +1,8 @@
 import unittest
 
 from contextshell.NodePath import NodePath
-from contextshell.actions.BasicActions import SetAction
-
 from contextshell.Node import Node
+from contextshell.actions.BasicActions import SetAction
 
 
 class SetActionTests(unittest.TestCase):

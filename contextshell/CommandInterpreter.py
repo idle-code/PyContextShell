@@ -1,11 +1,11 @@
 from contextshell.Command import Command
-from contextshell.Session import Session
+from contextshell.SessionLayer import SessionLayer
 
 from contextshell.NodePath import NodePath
 
 
 class CommandInterpreter:
-    def __init__(self, root: Session):
+    def __init__(self, root: SessionLayer):
         self.root = root
 
     def execute(self, command: Command):

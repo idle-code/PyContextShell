@@ -7,7 +7,7 @@ from contextshell.TreeRoot import TreeRoot
 class TemporarySessionTests(unittest.TestCase):
     def setUp(self):
         self.path = NodePath('.temp')
-        self.session = TemporarySession(TreeRoot(), self.path)
+        self.session = TemporarySessionLayer(TreeRoot(), self.path)
 
     def test_start(self):
         self.assertTrue(self.session.exists(self.path))
@@ -31,13 +31,13 @@ class TemporaryStorageSessionTests(unittest.TestCase):
         self.path = NodePath('.temp')
         self.base = TreeRoot()
         self.base.create('.existing')
-        self.first = TemporarySession(self.base, self.path)
-        self.second = TemporarySession(self.base, self.path)
+        self.first = TemporarySessionLayer(self.base, self.path)
+        self.second = TemporarySessionLayer(self.base, self.path)
 
     def test_existing_path(self):
         pass  # TODO: how this session should behave?
         self.assertTrue(self.base.exists('.existing'))
-        session = TemporarySession(self.base, '.existing')
+        session = TemporarySessionLayer(self.base, '.existing')
 
     def test_virtual_node_exists(self):
         self.assertFalse(self.base.exists(self.path))
