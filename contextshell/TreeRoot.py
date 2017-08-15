@@ -1,4 +1,4 @@
-from contextshell.SessionLayer import SessionLayer
+from SessionLayer import SessionLayer
 
 from contextshell.actions.BasicActions import *
 

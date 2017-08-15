@@ -1,4 +1,4 @@
-from contextshell.SessionLayer import SessionLayer
+from SessionLayer import SessionLayer
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 
@@ -41,7 +41,7 @@ class StorageLayer(SessionLayer):
             raise NameError("Cannot remove node without parent")
         parent_node.remove(path.base_name)
 
-    def list(self, path: NodePath):
+    def list(self, path: NodePath) -> [str]:
         node = StorageLayer._resolve(self.root, path)
         if node is None:
             raise NameError("Node to list doesn't exists: {}".format(path))

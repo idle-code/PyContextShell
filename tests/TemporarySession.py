@@ -1,4 +1,4 @@
-from contextshell.SessionLayer import *
+from SessionLayer import *
 from contextshell.Node import Node
 
 

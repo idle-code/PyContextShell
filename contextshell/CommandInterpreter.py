@@ -1,6 +1,5 @@
+from SessionLayer import SessionLayer
 from contextshell.Command import Command
-from contextshell.SessionLayer import SessionLayer
-
 from contextshell.NodePath import NodePath
 
 
