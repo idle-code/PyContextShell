@@ -1,15 +1,14 @@
 import unittest
-
+from unittest.mock import MagicMock
 from contextshell.NodePath import NodePath
 from contextshell.actions.BasicActions import RemoveAction
-
-from contextshell.Node import Node
 
 
 class RemoveActionTests(unittest.TestCase):
     def setUp(self):
-        self.root = Node()
-        self.root.append(Node(123), 'existing')
+        self.session = MagicMock()
+        self.session.exists = MagicMock()
+        self.session.remove = MagicMock()
 
         self.remove = RemoveAction()
 
@@ -17,22 +16,15 @@ class RemoveActionTests(unittest.TestCase):
         self.assertEqual(NodePath('remove'), self.remove.path)
 
     def test_existing(self):
-        self.assertTrue(self.root.contains('existing'))
-        self.remove(self.root, 'existing')
-        self.assertFalse(self.root.contains('existing'))
+        self.session.exists.return_value = True
+        self.remove(self.session, '.', 'existing')
+        self.session.exists.assert_called_once_with(NodePath('.existing'))
+        self.session.remove.assert_called_once_with(NodePath('.existing'))
 
     def test_nonexistent(self):
-        self.assertFalse(self.root.contains('unknown'))
+        self.session.exists.return_value = False
         with self.assertRaises(NameError):
-            self.remove(self.root, 'unknown')
-
-    def test_surplus_arguments(self):
-        with self.assertRaises(TypeError):
-            self.remove(self.root, 'existing', 'name')
-
-    def test_no_argument(self):
-        with self.assertRaises(TypeError):
-            self.remove(self.root)
+            self.remove(self.session, '.', 'unknown')
 
 
 if __name__ == '__main__':

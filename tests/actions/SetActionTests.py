@@ -1,16 +1,14 @@
 import unittest
-
+from unittest.mock import MagicMock
 from contextshell.NodePath import NodePath
-from contextshell.Node import Node
 from contextshell.actions.BasicActions import SetAction
 
 
 class SetActionTests(unittest.TestCase):
     def setUp(self):
-        self.root = Node()
-        self.root.append(Node(123), 'integer')
-        self.root.append(Node('foobar'), 'string')
-        self.root.append(Node(), 'empty')
+        self.session = MagicMock()
+        self.session.get = MagicMock()
+        self.session.set = MagicMock()
 
         self.set = SetAction()
 
@@ -18,27 +16,25 @@ class SetActionTests(unittest.TestCase):
         self.assertEqual(NodePath('set'), self.set.path)
 
     def test_normal_usage(self):
-        self.set(self.root['integer'], 321)
-        self.assertEqual(321, self.root['integer'].get())
-        self.set(self.root['string'], 'barfoo')
-        self.assertEqual('barfoo', self.root['string'].get())
+        self.session.get.return_value = 123
+        self.set(self.session, 'integer', 321)
+        self.session.set.assert_called_once_with('integer', 321)
+
+        self.session.get.return_value = 'foobar'
+        self.session.set.reset_mock()
+        self.set(self.session, 'string', 'barfoo')
+        self.session.set.assert_called_once_with('string', 'barfoo')
 
     def test_different_type(self):
+        self.session.get.return_value = 123
         with self.assertRaises(TypeError):
-            self.set(self.root['integer'], 'string')
+            self.set(self.session, 'integer', 'string')
 
-    def test_set_none(self):
+    def test_set_none_type(self):
         # This behaviour is subject to change
+        self.session.get.return_value = None
         with self.assertRaises(TypeError):
-            self.set(self.root['empty'], 23)
-
-    def test_no_arguments(self):
-        with self.assertRaises(TypeError):
-            self.set(self.root['integer'])
-
-    def test_too_many_arguments(self):
-        with self.assertRaises(TypeError):
-            self.set(self.root['integer'], 1, 2, 3)
+            self.set(self.session, 'empty', 23)
 
 
 if __name__ == '__main__':

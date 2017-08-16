@@ -1,19 +1,25 @@
 from contextshell.NodePath import NodePath
 from contextshell.Node import Node
-
+from contextshell.session_stack.SessionLayer import SessionLayer
+import inspect
 
 class ActionNode(Node):
     def __init__(self, path, callback=None):
         # TODO: check if passed prototype have right signature
         if callback is not None:
+            if inspect.ismethod(callback):
+                callback = callback.__get__(self, ActionNode)
             self.__call__ = callback
+            print(self.__call__)
+        else:
+            callback = type(self).__call__.__get__(self, ActionNode)
         super().__init__(callback)
 
         if path is None:
             raise ValueError("Action have to have a path")
         self._path = NodePath.cast(path)
         if self._path.is_absolute:
-            raise ValueError("Node path cannot be absolute")
+            raise ValueError("Action path cannot be absolute")
         self._populate_subnodes()
 
     @property
@@ -32,11 +38,11 @@ class ActionNode(Node):
                 action_parent = NodePath.create_path(self, field.path.base_path)
                 action_parent.append(new_action, field.path.base_name)
 
-    def __call__(self, target: NodePath, *arguments):
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
         callback = self.get()
         if callback is None:
             raise NotImplementedError('__call__ method not overridden or no callback provided')
-        return callback(target, *arguments)
+        return callback(session, target, *arguments)
 
 
 def action(function_to_wrap=None, path=None):

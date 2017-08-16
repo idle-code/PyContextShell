@@ -1,15 +1,13 @@
 import unittest
-
+from unittest.mock import MagicMock
 from contextshell.NodePath import NodePath
 from contextshell.actions.BasicActions import ListAction
-from contextshell.Node import Node
 
 
 class ListActionTests(unittest.TestCase):
     def setUp(self):
-        self.root = Node()
-        self.root.append(Node('AAA'), '@attribute')
-        self.root.append(Node(), 'empty')
+        self.session = MagicMock()
+        self.session.list = MagicMock(return_value=['@attribute', 'empty'])
 
         self.list = ListAction()
 
@@ -20,23 +18,28 @@ class ListActionTests(unittest.TestCase):
         self.assertEqual(NodePath('attributes'), self.list.list_attributes.path)
 
     def test_all_empty(self):
-        empty_list = self.list.list_all(Node())
+        self.session.list.return_value = []
+        empty_list = self.list.list_all(self.session, '.')
         self.assertListEqual([], empty_list)
 
     def test_all_nodes_and_attributes(self):
-        root_list = self.list.list_all(self.root)
+        root_list = self.list.list_all(self.session, '.')
+        self.session.list.assert_called_once_with('.')
         self.assertListEqual(['@attribute', 'empty'], root_list)
 
     def test_nodes(self):
-        root_list = self.list.list_nodes(self.root)
+        root_list = self.list.list_nodes(self.session, '.')
+        self.session.list.assert_called_once_with('.')
         self.assertListEqual(['empty'], root_list)
 
     def test_attributes(self):
-        root_list = self.list.list_attributes(self.root)
+        root_list = self.list.list_attributes(self.session, '.')
+        self.session.list.assert_called_once_with('.')
         self.assertListEqual(['@attribute'], root_list)
 
     def test_default(self):
-        root_list = self.list(self.root)
+        root_list = self.list(self.session, '.')
+        self.session.list.assert_called_once_with('.')
         self.assertListEqual(['empty'], root_list)
 
 

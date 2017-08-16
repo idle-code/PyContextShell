@@ -1,16 +1,13 @@
 import unittest
-
+from unittest.mock import MagicMock
 from contextshell.NodePath import NodePath
 from contextshell.actions.BasicActions import ExistsAction
-from contextshell.Node import Node
 
 
 class ExistsActionTests(unittest.TestCase):
     def setUp(self):
-        self.root = Node()
-        self.root.append(Node(123), 'integer')
-        self.root.append(Node('foobar'), 'string')
-        self.root.append(Node(), 'empty')
+        self.session = MagicMock()
+        self.session.exists = MagicMock()
 
         self.exists = ExistsAction()
 
@@ -18,19 +15,14 @@ class ExistsActionTests(unittest.TestCase):
         self.assertEqual(NodePath('exists'), self.exists.path)
 
     def test_existing(self):
-        self.assertTrue(self.exists(self.root, 'integer'))
-        self.assertTrue(self.exists(self.root, 'empty'))
+        self.session.exists.return_value = True
+        self.assertTrue(self.exists(self.session, '.', 'integer'))
+        self.session.exists.assert_called_once_with(NodePath('.integer'))
 
     def test_nonexistent(self):
-        self.assertFalse(self.exists(self.root, 'unknown'))
-
-    def test_surplus_arguments(self):
-        with self.assertRaises(TypeError):
-            self.exists(self.root, 'unknown', 'name')
-
-    def test_no_argument(self):
-        with self.assertRaises(TypeError):
-            self.exists(self.root)
+        self.session.exists.return_value = False
+        self.assertFalse(self.exists(self.session, '.', 'unknown'))
+        self.session.exists.assert_called_once_with(NodePath('.unknown'))
 
 
 if __name__ == '__main__':

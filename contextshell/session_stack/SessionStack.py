@@ -4,6 +4,7 @@ from contextshell.session_stack.SessionLayer import SessionLayer
 
 class SessionStack(SessionLayer):
     def __init__(self, storage_layer: SessionLayer):
+        super(SessionStack, self).__init__()
         if storage_layer is None:
             raise ValueError("Storage layer must be provided for session stack")
         self.layers = [storage_layer]

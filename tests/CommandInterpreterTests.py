@@ -7,12 +7,13 @@ from contextshell.CommandInterpreter import CommandInterpreter
 
 class CommandInterpreterTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
-        self.interpreter = CommandInterpreter(self.root)
+        root = TreeRoot()
+        self.session = root.create_session()
+        self.interpreter = CommandInterpreter(self.session)
 
-        self.root.create('.foo', 1)
-        self.root.create('.foo.bar', 2)
-        self.root.create('.spam', "test")
+        self.session.create('.foo', 1)
+        self.session.create('.foo.bar', 2)
+        self.session.create('.spam', "test")
 
     def test_execute_get(self):
         get_cmd = Command('get')
@@ -32,15 +33,15 @@ class CommandInterpreterTests(unittest.TestCase):
         set_cmd = Command('set')
         set_cmd.target = 'foo'
         set_cmd.arguments = [3]
-        self.interpreter.root.get('.foo')
-        self.assertEqual(1, self.interpreter.root.get('.foo'))
+        self.interpreter.session.get('.foo')
+        self.assertEqual(1, self.interpreter.session.get('.foo'))
         self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.root.get('.foo'))
+        self.assertEqual(3, self.interpreter.session.get('.foo'))
 
-        self.assertEqual(2, self.interpreter.root.get('.foo.bar'))
+        self.assertEqual(2, self.interpreter.session.get('.foo.bar'))
         set_cmd.target = '.foo.bar'
         self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.root.get('.foo.bar'))
+        self.assertEqual(3, self.interpreter.session.get('.foo.bar'))
 
     def test_unknown_target(self):
         get_cmd = Command('get')
@@ -54,7 +55,7 @@ class CommandInterpreterTests(unittest.TestCase):
             self.interpreter.execute(unknown_cmd)
 
     def test_recursive_target_evaluation(self):
-        self.root.create('.foo.name', "foo")
+        self.session.create('.foo.name', "foo")
 
         get_name_cmd = Command('get')
         get_name_cmd.target = '.foo.name'
@@ -65,10 +66,10 @@ class CommandInterpreterTests(unittest.TestCase):
         # Execute:
         #   {foo.name: get}: get
         foo_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(foo_val, self.root.get('.foo'))
+        self.assertEqual(foo_val, self.session.get('.foo'))
 
     def test_recursive_action_evaluation(self):
-        self.root.create('.foo.action', "get")
+        self.session.create('.foo.action', "get")
 
         get_action_cmd = Command('get')
         get_action_cmd.target = '.foo.action'
@@ -78,10 +79,10 @@ class CommandInterpreterTests(unittest.TestCase):
         # Execute:
         #   foo: {foo.action: get}
         foo_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(foo_val, self.root.get('.foo'))
+        self.assertEqual(foo_val, self.session.get('.foo'))
 
     def test_recursive_argument_evaluation(self):
-        self.root.create('.foo.value', 123)
+        self.session.create('.foo.value', 123)
 
         get_value_cmd = Command('get')
         get_value_cmd.target = '.foo.value'
@@ -93,7 +94,7 @@ class CommandInterpreterTests(unittest.TestCase):
         # Execute:
         #   foo: set {foo.value: get}
         self.interpreter.execute(set_cmd)
-        self.assertEqual(123, self.root.get('.foo'))
+        self.assertEqual(123, self.session.get('.foo'))
 
 if __name__ == '__main__':
     unittest.main()
