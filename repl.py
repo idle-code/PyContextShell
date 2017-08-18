@@ -1,15 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.6
 import readline
 
-from TreeRoot import *
-
+from contextshell.TreeRoot import *
 from contextshell.Shell import *
 
 if __name__ == '__main__':
     tree = TreeRoot()
-    tree.create('test_node', "TODO")
-    tree.create('tn', "2017-03-31")
-    shell = Shell(tree)
+    session = tree.create_session()
+    session.create('test_node', "TODO")
+    session.create('tn', "2017-03-31")
+    shell = Shell(session)
     readline.parse_and_bind('tab: complete')
     #readline.set_completer(shell.completer_function)
     readline.set_completer_delims(' \t.')

@@ -1,4 +1,4 @@
-import NodePath
+from contextshell.NodePath import NodePath
 from contextshell.session_stack.SessionLayer import SessionLayer
 
 

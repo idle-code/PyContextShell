@@ -1,14 +1,13 @@
 import unittest
 
 from contextshell.TreeRoot import TreeRoot
-
 from contextshell.Shell import *
 
 
 class ShellTests(unittest.TestCase):
     def setUp(self):
         self.root = TreeRoot()
-        self.shell = Shell(self.root)
+        self.shell = Shell(self.root.create_session())
 
     def test_default_state(self):
         self.assertEqual(NodePath(absolute=True), self.shell.current_path)
@@ -33,7 +32,7 @@ class ShellTests(unittest.TestCase):
 class ShellCompletionTests(unittest.TestCase):
     def setUp(self):
         self.root = TreeRoot()
-        self.shell = Shell(self.root)
+        self.shell = Shell(self.root.create_session())
 
     def completion_on(self, command: str, cursor_position: str=None):
         pass

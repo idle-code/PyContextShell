@@ -27,9 +27,7 @@ class CommandInterpreter:
         prefixed_action_path = NodePath.join(CommandInterpreter.actions_branch_name, action_path)
         while True:
             candidate_action_path = NodePath.join(target_path, prefixed_action_path)
-            print("Checking:", candidate_action_path)
             if self.session.exists(candidate_action_path):
-                print("List:", self.session.list(candidate_action_path.base_path))
                 return self.session.get(candidate_action_path)
             if len(target_path) == 0:
                 break

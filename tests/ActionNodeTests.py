@@ -3,7 +3,7 @@ from StorageLayer import StorageLayer
 from contextshell.ActionNode import *
 
 
-def sum_function(self, session: SessionLayer, target: NodePath, number: int):
+def sum_function(session: SessionLayer, target: NodePath, number: int):
     return session.get(target) + number
 
 

@@ -63,4 +63,6 @@ target/
 
 *~
 Session.vim
-.idea
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/*.iws

@@ -7,11 +7,11 @@ class ActionNode(Node):
     def __init__(self, path, callback=None):
         # TODO: check if passed prototype have right signature
         if callback is not None:
-            if inspect.ismethod(callback):
-                callback = callback.__get__(self, ActionNode)
+            # TODO: write test for passed method binding?:
+            # if inspect.ismethod(callback):
+            #     callback = callback.__get__(self, ActionNode)
             self.__call__ = callback
-            print(self.__call__)
-        else:
+        elif type(self).__call__ is not ActionNode.__call__:
             callback = type(self).__call__.__get__(self, ActionNode)
         super().__init__(callback)
 
@@ -41,7 +41,7 @@ class ActionNode(Node):
     def __call__(self, session: SessionLayer, target: NodePath, *arguments):
         callback = self.get()
         if callback is None:
-            raise NotImplementedError('__call__ method not overridden or no callback provided')
+            raise NotImplementedError("__call__ method not overridden or no callback provided")
         return callback(session, target, *arguments)
 
 
