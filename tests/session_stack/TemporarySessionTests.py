@@ -1,6 +1,6 @@
 import unittest
 
-from TemporarySession import *
+from contextshell.session_stack.TemporarySession import *
 from contextshell.TreeRoot import TreeRoot
 
 
