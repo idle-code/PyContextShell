@@ -1,5 +1,6 @@
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.SessionLayer import SessionLayer
+from typing import List
 
 
 class SessionStack(SessionLayer):
@@ -42,7 +43,7 @@ class SessionStack(SessionLayer):
     def set(self, path: NodePath, new_value):
         return self.top.set(path, new_value)
 
-    def list(self, path: NodePath) -> [str]:
+    def list(self, path: NodePath) -> List[str]:
         return self.top.list(path)
 
     def exists(self, path: NodePath) -> bool:

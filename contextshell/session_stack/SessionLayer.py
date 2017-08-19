@@ -1,24 +1,26 @@
 from contextshell.NodePath import NodePath
+from typing import List
 
 
 class SessionLayer:
     def __init__(self):
         self.next_layer: 'SessionLayer' = None
 
-    # TODO: use context manager for automatic start/exit
+    # CHECK: use context manager for automatic start/exit
     def start(self, underlying_layer: 'SessionLayer'):
         self.next_layer = underlying_layer
 
     def finish(self):
         pass
 
+    # TODO: make sure paths passed to those methods are absolute
     def get(self, path: NodePath):
         return self.next_layer.get(path)
 
     def set(self, path: NodePath, new_value):
         return self.next_layer.set(path, new_value)
 
-    def list(self, path: NodePath) -> [str]:
+    def list(self, path: NodePath) -> List[str]:  # CHECK: should list return a list of NodePaths instead?
         return self.next_layer.list(path)
 
     def exists(self, path: NodePath) -> bool:

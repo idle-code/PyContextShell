@@ -1,7 +1,8 @@
 from contextshell.Command import Command
+from typing import List
 
 
-def tokenize(text: str) -> [str]:
+def tokenize(text: str) -> List[str]:
     tokens = []
     tok = ''
 

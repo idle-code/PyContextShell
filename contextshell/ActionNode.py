@@ -10,7 +10,8 @@ class ActionNode(Node):
             # TODO: write test for passed method binding?:
             # if inspect.ismethod(callback):
             #     callback = callback.__get__(self, ActionNode)
-            self.__call__ = callback
+            #self.__call__ = callback
+            pass
         elif type(self).__call__ is not ActionNode.__call__:
             callback = type(self).__call__.__get__(self, ActionNode)
         super().__init__(callback)
