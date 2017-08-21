@@ -32,10 +32,25 @@ class VirtualMappingLayerTests(unittest.TestCase):
         # self.assertFalse(self.session.exists(self.virtual_path))
 
     def test_node_create(self):
-        foo_path = NodePath.join(self.virtual_path, 'foo')
-        self.assertFalse(self.session.exists(foo_path), "{} exists".format(foo_path))
-        self.session.create(foo_path, 123)
-        self.assertTrue(self.session.exists(foo_path), "{} doesn't exists".format(foo_path))
+        virtual_foo_path = NodePath.join(self.virtual_path, 'foo')
+        backing_foo_path = NodePath.join(self.backing_path, 'foo')
+        self.assertFalse(self.session.exists(virtual_foo_path), "{} exists".format(virtual_foo_path))
+        self.assertFalse(self.session.exists(backing_foo_path), "{} exists".format(backing_foo_path))
+        self.session.create(virtual_foo_path, 123)
+        self.assertTrue(self.session.exists(virtual_foo_path), "{} doesn't exists".format(virtual_foo_path))
+        self.assertTrue(self.session.exists(backing_foo_path), "{} doesn't exists".format(backing_foo_path))
+
+    def test_node_remove(self):
+        raise NotImplementedError()
+
+    def test_node_exists(self):
+        raise NotImplementedError()
+
+    def test_node_get(self):
+        raise NotImplementedError()
+
+    def test_node_set(self):
+        raise NotImplementedError()
 
 
 @unittest.skip

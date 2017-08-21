@@ -1,5 +1,6 @@
 from contextshell.ActionNode import *
 from contextshell.session_stack.SessionLayer import SessionLayer
+from typing import List
 
 
 class GetAction(ActionNode):
@@ -62,18 +63,26 @@ class ListAction(ActionNode):
 
     @action(path='all')
     def list_all(self, session: SessionLayer, target: NodePath):
-        return session.list(target)
+        target_nodes = session.list(target)
+        return ListAction._make_output_relative_to(target_nodes, target)
 
     @action(path='nodes')
     def list_nodes(self, session: SessionLayer, target: NodePath):
         target_nodes = session.list(target)
-        return [n for n in target_nodes if not ListAction._is_attribute(n)]
+        target_nodes = filter(lambda path: not ListAction._is_attribute(path), target_nodes)
+        return ListAction._make_output_relative_to(target_nodes, target)
 
     @action(path='attributes')
     def list_attributes(self, session: SessionLayer, target: NodePath):
         target_nodes = session.list(target)
-        return [n for n in target_nodes if ListAction._is_attribute(n)]
+        target_nodes = filter(lambda path: ListAction._is_attribute(path), target_nodes)
+        return ListAction._make_output_relative_to(target_nodes, target)
 
     @staticmethod
-    def _is_attribute(name: str):
-        return name.startswith('@')
+    def _make_output_relative_to(target_list: List[NodePath], target: NodePath):
+        target_list = map(lambda path: NodePath.join(target, path), target_list)
+        return list(target_list)
+
+    @staticmethod
+    def _is_attribute(name: NodePath):
+        return name.base_name.startswith('@')

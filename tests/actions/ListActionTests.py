@@ -7,7 +7,7 @@ from contextshell.actions.BasicActions import ListAction
 class ListActionTests(unittest.TestCase):
     def setUp(self):
         self.session = MagicMock()
-        self.session.list = MagicMock(return_value=['@attribute', 'empty'])
+        self.session.list = MagicMock(return_value=list(map(NodePath.cast, ['@attribute', 'empty'])))
 
         self.list = ListAction()
 
@@ -17,30 +17,30 @@ class ListActionTests(unittest.TestCase):
         self.assertEqual(NodePath('nodes'), self.list.list_nodes.path)
         self.assertEqual(NodePath('attributes'), self.list.list_attributes.path)
 
+    def _compare_output(self, actual_list, expected_list):
+        expected_path_list = list(map(NodePath.cast, expected_list))
+        self.assertEqual(actual_list, expected_path_list)
+        for path in actual_list:
+            self.assertTrue(path.is_absolute, "'{}' is not absolute".format(path))
+
     def test_all_empty(self):
         self.session.list.return_value = []
-        empty_list = self.list.list_all(self.session, '.')
-        self.assertListEqual([], empty_list)
+        self._compare_output(self.list.list_all(self.session, '.'), [])
 
     def test_all_nodes_and_attributes(self):
-        root_list = self.list.list_all(self.session, '.')
+        self._compare_output(self.list.list_all(self.session, '.'), ['.@attribute', '.empty'])
         self.session.list.assert_called_once_with('.')
-        self.assertListEqual(['@attribute', 'empty'], root_list)
 
     def test_nodes(self):
-        root_list = self.list.list_nodes(self.session, '.')
+        self._compare_output(self.list.list_nodes(self.session, '.'), ['.empty'])
         self.session.list.assert_called_once_with('.')
-        self.assertListEqual(['empty'], root_list)
 
     def test_attributes(self):
-        root_list = self.list.list_attributes(self.session, '.')
+        self._compare_output(self.list.list_attributes(self.session, '.'), ['.@attribute'])
         self.session.list.assert_called_once_with('.')
-        self.assertListEqual(['@attribute'], root_list)
 
     def test_default(self):
-        root_list = self.list(self.session, '.')
-        self.session.list.assert_called_once_with('.')
-        self.assertListEqual(['empty'], root_list)
+        self.test_nodes()
 
 
 if __name__ == '__main__':

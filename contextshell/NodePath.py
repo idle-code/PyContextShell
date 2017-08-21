@@ -89,6 +89,7 @@ class NodePath(list):
         self.extend(new_path)
 
     def __eq__(self, other: 'NodePath'):
+        other = NodePath.cast(other)
         return self.is_absolute == other.is_absolute and self[:] == other[:]
 
     def __ne__(self, other: 'NodePath'):
@@ -99,3 +100,6 @@ class NodePath(list):
         if self.is_absolute:
             return NodePath.separator + text_representation
         return text_representation
+
+    def __repr__(self):
+        return "NodePath('{}', absolute={})".format(self, self.is_absolute)

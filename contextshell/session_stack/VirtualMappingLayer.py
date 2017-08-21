@@ -16,8 +16,8 @@ class VirtualMappingLayer(SessionLayer):
 
     def _rewrite_path(self, path: NodePath):
         path = NodePath.cast(path)
-        if path[:len(self.virtual_path)] == self.virtual_path:
-            return NodePath.join(self.backing_path, path[len(self.virtual_path):])
+        if self.virtual_path.is_parent_of(path):
+            return NodePath.join(self.backing_path, path.relative_to(self.virtual_path))
         else:
             return path
 
@@ -27,7 +27,7 @@ class VirtualMappingLayer(SessionLayer):
     # def set(self, path: NodePath, new_value):
     #     return self.next_layer.set(path, new_value)
 
-    def list(self, path: NodePath) -> List[str]:  # CHECK: should list return a list of NodePaths instead?
+    def list(self, path: NodePath) -> List[NodePath]:
         return self.next_layer.list(self._rewrite_path(path)) + [self.virtual_path]
 
     def exists(self, path: NodePath) -> bool:
