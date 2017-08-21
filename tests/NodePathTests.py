@@ -73,8 +73,8 @@ class NodePathTests(unittest.TestCase):
         casted = NodePath.cast(foobar)
         foobar.append('baz')
 
-        self.assertListEqual(['foo', 'bar', 'baz'], foobar)
-        self.assertListEqual(['foo', 'bar'], casted)
+        self.assertEqual(NodePath.cast(['foo', 'bar', 'baz']), foobar)
+        self.assertEqual(NodePath.cast(['foo', 'bar']), casted)
 
     def test_cast_index(self):
         number = NodePath.cast(13)
@@ -109,6 +109,62 @@ class NodePathTests(unittest.TestCase):
         rabarbar = NodePath.join('ra', 'bar', 'bar')
         self.assertEqual('ra.bar.bar', str(rabarbar))
         self.assertEqual(3, len(rabarbar))
+
+    def test_compare(self):
+        foo = NodePath.cast('.foo')
+        foobar = NodePath.cast('.foo.bar')
+        self.assertNotEqual(foo, foobar)
+        another_foo = NodePath.cast('.foo')
+        self.assertEqual(foo, another_foo)
+
+    def test_compare_absolute_relative(self):
+        absolute_foo = NodePath.cast('.foo.bar')
+        self.assertTrue(absolute_foo.is_absolute)
+        relative_foo = NodePath.cast('foo.bar')
+        self.assertFalse(relative_foo.is_absolute)
+
+        self.assertNotEqual(absolute_foo, relative_foo)
+        another_absolute_foo = NodePath.cast('.foo.bar')
+        self.assertEqual(absolute_foo, another_absolute_foo)
+
+    def test_is_parent_of(self):
+        foo = NodePath.cast('.foo')
+        foobar = NodePath.cast('.foo.bar')
+        self.assertTrue(foo.is_parent_of(foobar))
+        self.assertFalse(foobar.is_parent_of(foo))
+
+    def test_is_parent_of_relative(self):
+        foo = NodePath.cast('foo')
+        foobar = NodePath.cast('foo.bar')
+        self.assertTrue(foo.is_parent_of(foobar))
+        self.assertFalse(foobar.is_parent_of(foo))
+
+    def test_is_parent_of_absolute_relative(self):
+        foo = NodePath.cast('.foo')
+        foobar = NodePath.cast('foo.bar')
+        with self.assertRaises(ValueError):
+            foo.is_parent_of(foobar)
+        with self.assertRaises(ValueError):
+            foobar.is_parent_of(foo)
+
+    def test_relative_to(self):
+        foo = NodePath.cast('.foo')
+        foobar = NodePath.cast('.foo.bar')
+        bar = foobar.relative_to(foo)
+        self.assertFalse(bar.is_absolute)
+        self.assertEqual(NodePath('bar'), bar)
+
+    def test_relative_to_nonrelative(self):
+        foo = NodePath.cast('.spam.foo')
+        foobar = NodePath.cast('foo.bar')
+        with self.assertRaises(ValueError):
+            foobar.relative_to(foo)
+
+    def test_relative_to_absolute_relative(self):
+        foo = NodePath.cast('.foo')
+        foobar = NodePath.cast('foo.bar')
+        with self.assertRaises(ValueError):
+            foobar.relative_to(foo)
 
 
 class HelperMethodsTests(unittest.TestCase):
