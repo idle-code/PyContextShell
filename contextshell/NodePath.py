@@ -53,7 +53,7 @@ class NodePath(list):
     @property
     def base_path(self):
         """Returns sub-path consisting of all but last element"""
-        return NodePath(self[:-1])
+        return NodePath(self[:-1], absolute=self.is_absolute)
 
     @property
     def base_name(self):
@@ -64,7 +64,7 @@ class NodePath(list):
         """Checks if provided path prefix matches self"""
         other = NodePath.cast(other)
         if self.is_absolute != other.is_absolute:
-            raise ValueError("Cannot compare absolute and relative paths")
+            raise ValueError("Cannot compare absolute and relative paths: {} and {}".format(self, other))
         return NodePath(other[:len(self)], absolute=other.is_absolute) == self
 
     def relative_to(self, other) -> 'NodePath':

@@ -74,7 +74,7 @@ class SessionStackTests(unittest.TestCase):
         self._test_forwarding('set', None, '.foo', 321)
 
     def test_list_forwarding(self):
-        self._test_forwarding('list', ['foo', 'bar'], '.')
+        self._test_forwarding('list', [NodePath('.foo'), NodePath('.bar')], '.')
 
     def test_exists_forwarding(self):
         self._test_forwarding('exists', False, '.spam')

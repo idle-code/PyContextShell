@@ -1,5 +1,6 @@
 import unittest
 
+from contextshell.NodePath import NodePath
 from contextshell.Node import Node
 from contextshell.session_stack.StorageLayer import StorageLayer
 
@@ -53,7 +54,7 @@ class StorageLayerTests(unittest.TestCase):
 
     def test_list(self):
         root_elements = self.storage_layer.list('.')
-        self.assertListEqual(['foo', 'bar'], root_elements)
+        self.assertListEqual([NodePath('.foo'), NodePath('.bar')], root_elements)
 
     def test_list_empty(self):
         self.assertListEqual([], self.storage_layer.list('.foo'))

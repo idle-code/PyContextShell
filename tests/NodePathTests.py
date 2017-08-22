@@ -31,11 +31,19 @@ class NodePathTests(unittest.TestCase):
         abc = NodePath('a.b.c')
         self.assertEqual('c', abc.base_name)
 
+    def test_basepath_relative(self):
+        abc = NodePath('a.b.c')
         base_path = abc.base_path
         self.assertEqual(2, len(base_path))
-        self.assertFalse(base_path.is_absolute)
+        self.assertEqual(abc.is_absolute, base_path.is_absolute)
         self.assertEqual('a.b', str(base_path))
-        self.assertEqual('b', base_path.base_name)
+
+    def test_basepath_absolute(self):
+        abc = NodePath('.a.b.c')
+        base_path = abc.base_path
+        self.assertEqual(2, len(base_path))
+        self.assertEqual(abc.is_absolute, base_path.is_absolute)
+        self.assertEqual('.a.b', str(base_path))
 
     def test_index(self):
         ab2c = NodePath(['a', 'b', 2, 'c'])

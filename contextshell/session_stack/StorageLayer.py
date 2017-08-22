@@ -45,7 +45,8 @@ class StorageLayer(SessionLayer):
         node = StorageLayer._resolve(self.root, path)
         if node is None:
             raise NameError("Node to list doesn't exists: {}".format(path))
-        return node.list()
+        node_names = node.list()
+        return list(map(lambda n: NodePath.join(path, n), node_names))
 
     def get(self, path: NodePath):
         node = StorageLayer._resolve(self.root, path)
