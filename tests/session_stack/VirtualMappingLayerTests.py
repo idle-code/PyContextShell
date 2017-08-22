@@ -50,34 +50,43 @@ class VirtualMappingLayerTests(unittest.TestCase):
             self.assertTrue(self.backing_path.is_parent_of(path),
                             "{} is not under {}".format(path, self.backing_path))
 
-    def test_node_create(self):
+    def test_create(self):
         self.storage_layer.remove(self.backing_foo_path)
 
         self.session.create(self.virtual_foo_path, 123)
         self.assertTrue(self.session.exists(self.virtual_foo_path))
         self.assertTrue(self.storage_layer.exists(self.backing_foo_path))
 
-    def test_node_remove(self):
+    def test_remove(self):
         self.session.remove(self.virtual_foo_path)
         self.assertFalse(self.session.exists(self.virtual_foo_path))
         self.assertFalse(self.storage_layer.exists(self.backing_foo_path))
 
-    def test_node_exists(self):
+    def test_shadow_virtual_path(self):
+        raise NotImplementedError("Backing path should be removed too?")
+
+    def test_shadow_backing_path(self):
+        raise NotImplementedError("What will happen?")
+
+    def test_exists(self):
         self.assertTrue(self.session.exists(self.virtual_foo_path))
         self.storage_layer.remove(self.backing_foo_path)
         self.assertFalse(self.session.exists(self.virtual_foo_path))
 
-    def test_node_get(self):
+    def test_get(self):
         backing_foo_val = self.storage_layer.get(self.backing_foo_path)
         virtual_foo_val = self.session.get(self.virtual_foo_path)
         self.assertEqual(backing_foo_val, virtual_foo_val)
 
-    def test_node_set(self):
+    def test_set(self):
         self.session.set(self.virtual_foo_path, 321)
         backing_foo_val = self.storage_layer.get(self.backing_foo_path)
         virtual_foo_val = self.session.get(self.virtual_foo_path)
         self.assertEqual(backing_foo_val, 321)
         self.assertEqual(virtual_foo_val, 321)
+
+    def test_shadow_by_virtual(self):
+        raise NotImplementedError("Test if virtual node will shadow existing one")
 
 
 class VirtualMappingLayerSessionSeparationTests(unittest.TestCase):
@@ -104,44 +113,19 @@ class VirtualMappingLayerSessionSeparationTests(unittest.TestCase):
 
     def _create_session_stack(self, backing_path: NodePath) -> SessionLayer:
         session_stack = SessionStack(self.storage_layer)
-        session_stack.push(VirtualMappingLayer(self.common_path, self.second_backing_path))
+        session_stack.push(VirtualMappingLayer(self.common_path, backing_path))
         session_stack.start(None)
         return session_stack
 
+    def test_get(self):
+        self.assertEqual("First", self.first_session.get(self.common_path))
+        self.assertEqual("Second", self.second_session.get(self.common_path))
 
-@unittest.skip
-class TemporaryStorageSessionTests(unittest.TestCase):
-    def setUp(self):
-        self.path = NodePath('.temp')
-        self.base = TreeRoot()
-        self.base.create('.existing')
-        self.first = VirtualMappingLayer(self.base, self.path)
-        self.second = VirtualMappingLayer(self.base, self.path)
-
-    def test_existing_path(self):
-        pass  # TODO: how this session should behave?
-        self.assertTrue(self.base.exists('.existing'))
-        session = VirtualMappingLayer(self.base, '.existing')
-
-    def test_virtual_node_exists(self):
-        self.assertFalse(self.base.exists(self.path))
-        self.assertTrue(self.first.exists(self.path))
-        self.assertTrue(self.second.exists(self.path))
-
-    def test_independent_create(self):
-        node_path = NodePath.join(self.path, 'node')
-
-        self.assertFalse(self.first.exists(node_path))
-        self.assertFalse(self.second.exists(node_path))
-        self.first.create(node_path, 123)
-        self.assertTrue(self.first.exists(node_path))
-        self.assertFalse(self.second.exists(node_path))
-
-        self.second.create(node_path, 321)
-        self.assertTrue(self.second.exists(node_path))
-
-        self.assertEqual(123, self.first.get(node_path))
-        self.assertEqual(321, self.second.get(node_path))
+    def test_create(self):
+        self.first_session.create(NodePath.join(self.common_path, 'foo'), 1)
+        self.second_session.create(NodePath.join(self.common_path, 'foo'), 2)
+        self.assertEqual(1, self.storage_layer.get(NodePath.join(self.first_backing_path, 'foo')))
+        self.assertEqual(2, self.storage_layer.get(NodePath.join(self.second_backing_path, 'foo')))
 
 
 if __name__ == '__main__':
