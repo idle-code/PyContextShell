@@ -22,6 +22,7 @@ Tree backend:
 
 Functionality:
   - Sessions:
+    + Virtual mapping node - kind of a link
     - Temporary
       - select(ed)
       - copy/cut/paste
@@ -39,6 +40,10 @@ Functionality:
     - System executables as actions
     - copy, cut and paste actions (using select(ed) action?)
     - mime-type based file typing
+  - Types support
+    - Introspection commands
+      - is
+      - typeof
   - create.int
   - create.string
   - create.link

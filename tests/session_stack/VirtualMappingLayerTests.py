@@ -16,7 +16,7 @@ class VirtualMappingLayerTests(unittest.TestCase):
         # Create backing and test nodes
         session = root.create_session()
         session.start(None)  # TODO: move start to the constructor or use contextmanager
-        session.create(self.backing_path)
+        session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, 123)
         self.assertTrue(session.exists(self.backing_path))
         self.assertTrue(session.exists(self.backing_foo_path))
@@ -62,11 +62,10 @@ class VirtualMappingLayerTests(unittest.TestCase):
         self.assertFalse(self.session.exists(self.virtual_foo_path))
         self.assertFalse(self.storage_layer.exists(self.backing_foo_path))
 
-    def test_shadow_virtual_path(self):
-        raise NotImplementedError("Backing path should be removed too?")
-
-    def test_shadow_backing_path(self):
-        raise NotImplementedError("What will happen?")
+    def test_remove_virtual_path(self):
+        self.session.remove(self.virtual_path)
+        self.assertFalse(self.session.exists(self.virtual_path))
+        self.assertFalse(self.storage_layer.exists(self.backing_path))
 
     def test_exists(self):
         self.assertTrue(self.session.exists(self.virtual_foo_path))
@@ -86,7 +85,11 @@ class VirtualMappingLayerTests(unittest.TestCase):
         self.assertEqual(virtual_foo_val, 321)
 
     def test_shadow_by_virtual(self):
-        raise NotImplementedError("Test if virtual node will shadow existing one")
+        self.storage_layer.create(self.virtual_path, "shadowed")
+        shadowed_value = self.storage_layer.get(self.virtual_path)
+        self.assertEqual("shadowed", shadowed_value)
+        backing_value = self.session.get(self.virtual_path)
+        self.assertEqual("backing", backing_value)
 
 
 class VirtualMappingLayerSessionSeparationTests(unittest.TestCase):
