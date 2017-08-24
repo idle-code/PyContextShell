@@ -22,7 +22,11 @@ class Shell:
 
     @staticmethod
     def pretty_print(result):
-        print(result)
+        if isinstance(result, list):
+            for elem in result:
+                print(elem)
+        else:
+            print(result)
         # TODO: Rewrite to support new list format (and attributes)
         # if isinstance(result, list):
         #     for r in result:

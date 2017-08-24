@@ -3,6 +3,8 @@ from typing import List
 
 
 class VirtualMappingLayer(SessionLayer):
+    """Layer responsible for creating hard aliases of nodes in tree"""
+
     def __init__(self, virtual_path: NodePath, backing_path: NodePath):
         super().__init__()
         self.virtual_path = virtual_path
