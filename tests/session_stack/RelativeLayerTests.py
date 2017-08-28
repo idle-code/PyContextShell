@@ -43,16 +43,12 @@ class RelativeLayerTests(unittest.TestCase):
         current_path = self.session.get(self.backing_path)
         self.assertEqual(current_path, NodePath('.'))
 
-    #@unittest.skip("How shell should behave here?")
     def test_set_current_path_relative(self):
         self.session.set(self.backing_path, NodePath('second'))
         current_path = self.session.get(self.backing_path)
         self.assertEqual(current_path, NodePath('second'))
-        #with self.assertRaises(NameError):
-        self.session.get(NodePath('second'))
-        # Should setting current path to relative be an error?
-        # or just ignore this value
-        raise NotImplementedError()
+        with self.assertRaises(NameError):
+            self.session.get(NodePath('second'))
 
     def test_absolute_get(self):
         foo_value = self.session.get(NodePath('.first.second.foo'))

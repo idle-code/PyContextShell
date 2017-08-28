@@ -14,18 +14,18 @@ class ShellTests(unittest.TestCase):
 
     def test_create_empty(self):
         self.shell.execute("create foo")
-        foo_value = self.shell.execute("foo: get")
+        foo_value = self.shell.execute(".foo: get")
         self.assertIsNone(foo_value)
 
     def test_create_string(self):
         self.shell.execute("create foo rabarbar")
-        foo_value = self.shell.execute("foo: get")
+        foo_value = self.shell.execute(".foo: get")
         self.assertEqual('rabarbar', foo_value)
 
     def test_set_string(self):
         self.test_create_string()
-        self.shell.execute("foo: set spam")
-        foo_value = self.shell.execute("foo: get")
+        self.shell.execute(".foo: set spam")
+        foo_value = self.shell.execute(".foo: get")
         self.assertEqual('spam', foo_value)
 
 

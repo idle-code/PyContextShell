@@ -31,7 +31,7 @@ class CommandInterpreterTests(unittest.TestCase):
 
     def test_execute_set(self):
         set_cmd = Command('set')
-        set_cmd.target = 'foo'
+        set_cmd.target = '.foo'
         set_cmd.arguments = [3]
         self.interpreter.session.get('.foo')
         self.assertEqual(1, self.interpreter.session.get('.foo'))
@@ -55,7 +55,7 @@ class CommandInterpreterTests(unittest.TestCase):
             self.interpreter.execute(unknown_cmd)
 
     def test_recursive_target_evaluation(self):
-        self.session.create('.foo.name', "foo")
+        self.session.create('.foo.name', ".foo")
 
         get_name_cmd = Command('get')
         get_name_cmd.target = '.foo.name'

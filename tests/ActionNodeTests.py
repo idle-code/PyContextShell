@@ -30,39 +30,39 @@ class ActionNodeTests(unittest.TestCase):
     def test_empty_action(self):
         self.empty_node = ActionNode('diff', callback=None)
         with self.assertRaises(NotImplementedError):
-            self.empty_node(self.session, 'foo', 1, 2, 3)
+            self.empty_node(self.session, '.foo', 1, 2, 3)
 
     def test_from_function(self):
         sum_node = ActionNode('diff', callback=sum_function)
-        six = sum_node(self.session, 'foo', 3)
+        six = sum_node(self.session, '.foo', 3)
         self.assertEqual(6, six)
 
-        six = sum_node.get()(self.session, 'foo', 3)
+        six = sum_node.get()(self.session, '.foo', 3)
         self.assertEqual(6, six)
 
     def test_from_subclass(self):
-        two = self.diff_node(self.session, 'foo', 1)
+        two = self.diff_node(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
-        two = self.diff_node.get()(self.session, 'foo', 1)
+        two = self.diff_node.get()(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
     def test_action_decorator(self):
         self.assertEqual(NodePath('diff'), self.diff_node.diff.path)
 
-        two = self.diff_node.diff(self.session, 'foo', 1)
+        two = self.diff_node.diff(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
-        two = self.diff_node.diff.get()(self.session, 'foo', 1)
+        two = self.diff_node.diff.get()(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
     def test_action_decorator_with_path(self):
         self.assertEqual(NodePath('my.diff'), self.diff_node.my_diff.path)
 
-        two = self.diff_node.my_diff(self.session, 'foo', 1)
+        two = self.diff_node.my_diff(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
-        two = self.diff_node.my_diff.get()(self.session, 'foo', 1)
+        two = self.diff_node.my_diff.get()(self.session, '.foo', 1)
         self.assertEqual(2, two)
 
     def test_none_path(self):

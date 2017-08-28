@@ -12,6 +12,14 @@ class StorageLayerTests(unittest.TestCase):
         self.root.append(Node(123), "bar")
         self.storage_layer = StorageLayer(self.root)
 
+    def test_resolve_absolute(self):
+        foo_node = self.storage_layer.resolve(NodePath('.foo'))
+        self.assertIs(foo_node, self.root['foo'])
+
+    def test_resolve_relative(self):
+        with self.assertRaises(NameError):
+            self.storage_layer.resolve(NodePath('foo'))
+
     def test_create(self):
         self.storage_layer.create('.spam')
         self.assertTrue(self.root.contains('spam'))
@@ -65,7 +73,7 @@ class StorageLayerTests(unittest.TestCase):
 
     def test_get(self):
         self.assertEqual("foo", self.storage_layer.get('.foo'))
-        self.assertEqual(123, self.storage_layer.get('bar'))
+        self.assertEqual(123, self.storage_layer.get('.bar'))
 
     def test_get_nonexistent(self):
         with self.assertRaises(NameError):
@@ -77,7 +85,7 @@ class StorageLayerTests(unittest.TestCase):
         self.assertEqual("FOO", self.root['foo'].get())
 
         self.assertEqual(123, self.root['bar'].get())
-        self.storage_layer.set('bar', 321)
+        self.storage_layer.set('.bar', 321)
         self.assertEqual(321, self.root['bar'].get())
 
     def test_set_nonexistent(self):
