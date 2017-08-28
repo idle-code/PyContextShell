@@ -18,6 +18,7 @@ class LinkResolvingLayerTests(unittest.TestCase):
         session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, "foo")
+        # TODO: create link by create.link action
         session.create(self.link_path, self.backing_path)  # Creates absolute link
         self.assertTrue(session.exists(self.backing_path))
         self.assertTrue(session.exists(self.link_path))
@@ -81,7 +82,7 @@ class LinkResolvingLayerTests(unittest.TestCase):
         self.assertEqual('bar', self.session.get(backing_bar_path))
         self.assertEqual('bar', self.storage_layer.get(backing_bar_path))
 
-    @unittest.skip("Write when command handling will be available")
+    @unittest.skip("Write when create.link action will be available")
     def test_create_link(self):
         raise NotImplementedError()
 

@@ -23,25 +23,97 @@ class RelativeLayerTests(unittest.TestCase):
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
         session_stack = SessionStack(self.storage_layer)
-        session_stack.push(RelativeLayer(NodePath('.')))
+        self.backing_path = NodePath('.current_path')
+        session_stack.push(RelativeLayer(self.backing_path, start_path=NodePath('.first')))
         self.session = session_stack
         self.session.start(None)
 
     def tearDown(self):
         self.session.finish()
 
-    def test_current_path(self):
+    def test_current_path_exists(self):
+        self.assertTrue(self.session.exists(self.backing_path))
+
+    def test_get_current_path(self):
+        current_path = self.session.get(self.backing_path)
+        self.assertEqual(current_path, NodePath(".first"))
+
+    def test_set_current_path(self):
+        self.session.set(self.backing_path, NodePath('.'))
+        current_path = self.session.get(self.backing_path)
+        self.assertEqual(current_path, NodePath('.'))
+
+    #@unittest.skip("How shell should behave here?")
+    def test_set_current_path_relative(self):
+        self.session.set(self.backing_path, NodePath('second'))
+        current_path = self.session.get(self.backing_path)
+        self.assertEqual(current_path, NodePath('second'))
+        #with self.assertRaises(NameError):
+        self.session.get(NodePath('second'))
+        # Should setting current path to relative be an error?
+        # or just ignore this value
         raise NotImplementedError()
 
     def test_absolute_get(self):
-        raise NotImplementedError()
+        foo_value = self.session.get(NodePath('.first.second.foo'))
+        self.assertEqual('foo2', foo_value)
 
     def test_relative_get(self):
-        raise NotImplementedError()
+        foo_value = self.session.get(NodePath('foo'))
+        self.assertEqual('foo1', foo_value)
 
-    def test_relative_arguments(self):
-        """Check if action arguments are rewritten as well"""
-        raise NotImplementedError()
+    def test_relative_get_after_change(self):
+        self.session.set(self.backing_path, NodePath('.first.second.third'))
+        current_path = self.session.get(self.backing_path)
+
+        foo_value = self.session.get(NodePath('foo'))
+        self.assertEqual('foo3', foo_value)
+
+    def test_absolute_set(self):
+        self.session.set(NodePath('.first.second.foo'), 'foobar')
+        foo_value = self.storage_layer.get(NodePath('.first.second.foo'))
+        self.assertEqual('foobar', foo_value)
+
+    def test_relative_set(self):
+        self.session.set(NodePath('second.foo'), 'foobar')
+        foo_value = self.storage_layer.get(NodePath('.first.second.foo'))
+        self.assertEqual('foobar', foo_value)
+
+    def test_absolute_list(self):
+        first_nodes = self.session.list(NodePath('.first'))
+        expected_nodes = [NodePath('.first.second'),
+                          NodePath('.first.foo')]
+        self.assertListEqual(expected_nodes, first_nodes)
+
+    def test_relative_list(self):
+        second_nodes = self.session.list(NodePath('second'))
+        expected_nodes = [NodePath('.first.second.third'),
+                          NodePath('.first.second.foo')]
+        self.assertListEqual(expected_nodes, second_nodes)
+
+    def test_absolute_exists(self):
+        self.assertTrue(self.session.exists(NodePath('.first.foo')))
+        self.assertFalse(self.session.exists(NodePath('.first.bar')))
+
+    def test_relative_exists(self):
+        self.assertTrue(self.session.exists(NodePath('second')))
+        self.assertFalse(self.session.exists(NodePath('second.bar')))
+
+    def test_absolute_create(self):
+        self.session.create(NodePath(".first.second.bar"), 'bar')
+        self.assertEqual('bar', self.storage_layer.get(NodePath('.first.second.bar')))
+
+    def test_relative_create(self):
+        self.session.create(NodePath("second.bar"), 'bar')
+        self.assertEqual('bar', self.storage_layer.get(NodePath('.first.second.bar')))
+
+    def test_absolute_remove(self):
+        self.session.remove(NodePath(".first.second.foo"))
+        self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
+
+    def test_relative_remove(self):
+        self.session.remove(NodePath("second.foo"))
+        self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
 
 
 if __name__ == '__main__':
