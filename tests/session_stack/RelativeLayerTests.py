@@ -112,5 +112,14 @@ class RelativeLayerTests(unittest.TestCase):
         self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
 
 
+@unittest.skip
+class RelativeLayerActionsTests(unittest.TestCase):
+    def test_cd(self):
+        raise NotImplementedError()
+
+    def test_pwd(self):
+        raise NotImplementedError()
+
+
 if __name__ == '__main__':
     unittest.main()

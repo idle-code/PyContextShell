@@ -82,8 +82,15 @@ class LinkResolvingLayerTests(unittest.TestCase):
         self.assertEqual('bar', self.session.get(backing_bar_path))
         self.assertEqual('bar', self.storage_layer.get(backing_bar_path))
 
+
+@unittest.skip
+class LinkResolvingLayerActionsTests(unittest.TestCase):
     @unittest.skip("Write when create.link action will be available")
     def test_create_link(self):
+        raise NotImplementedError()
+
+    @unittest.skip("Implement when action for reading link content will be available")
+    def test_read_link(self):
         raise NotImplementedError()
 
 
