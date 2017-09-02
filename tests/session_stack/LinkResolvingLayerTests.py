@@ -15,24 +15,18 @@ class LinkResolvingLayerTests(unittest.TestCase):
         root = TreeRoot()
         # Create backing and test nodes
         session = root.create_session()
-        session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, "foo")
         # TODO: create link by create.link action
         session.create(self.link_path, self.backing_path)  # Creates absolute link
         self.assertTrue(session.exists(self.backing_path))
         self.assertTrue(session.exists(self.link_path))
-        session.finish()
 
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
         session_stack = SessionStack(self.storage_layer)
         session_stack.push(LinkResolvingLayer())
         self.session = session_stack
-        self.session.start(None)
-
-    def tearDown(self):
-        self.session.finish()
 
     def test_get(self):
         link_value = self.session.get(self.link_path)

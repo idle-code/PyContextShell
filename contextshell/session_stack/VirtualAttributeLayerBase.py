@@ -9,7 +9,7 @@ class VirtualAttributeLayerBase(SessionLayer):
         super().__init__()
         self.attribute_name = '@' + name
 
-    def get_value(self, path: NodePath):
+    def on_get(self, path: NodePath):
         raise NotImplementedError()
 
     def set_value(self, path: NodePath, new_value):
@@ -21,7 +21,7 @@ class VirtualAttributeLayerBase(SessionLayer):
     def get(self, path: NodePath):
         if path.base_name == self.attribute_name:
             if self.applies_to(path.base_path):
-                return self.get_value(path.base_path)
+                return self.on_get(path.base_path)
         return self.next_layer.get(path)
 
     def set(self, path: NodePath, new_value):

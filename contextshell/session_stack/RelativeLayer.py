@@ -12,11 +12,9 @@ class RelativeLayer(SessionLayer):
 
     @property
     def current(self):
+        if not self.exists(self.backing_path):
+            self.create(self.backing_path, self.start_path)
         return self.get(self.backing_path)
-
-    def start(self, underlying_layer: 'SessionLayer'):
-        super().start(underlying_layer)
-        self.create(self.backing_path, self.start_path)
 
     def _rewrite_path(self, path: NodePath):
         path = NodePath.cast(path)

@@ -10,7 +10,6 @@ class RelativeLayerTests(unittest.TestCase):
         root = TreeRoot()
         # Create backing and test nodes
         session = root.create_session()
-        session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(NodePath(".first"), 1)
         session.create(NodePath(".first.second"), 2)
         session.create(NodePath(".first.second.third"), 3)
@@ -18,7 +17,6 @@ class RelativeLayerTests(unittest.TestCase):
         session.create(NodePath(".first.second.foo"), 'foo2')
         session.create(NodePath(".first.foo"), 'foo1')
         session.create(NodePath(".foo"), 'foo0')
-        session.finish()
 
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
@@ -26,10 +24,6 @@ class RelativeLayerTests(unittest.TestCase):
         self.backing_path = NodePath('.current_path')
         session_stack.push(RelativeLayer(self.backing_path, start_path=NodePath('.first')))
         self.session = session_stack
-        self.session.start(None)
-
-    def tearDown(self):
-        self.session.finish()
 
     def test_current_path_exists(self):
         self.assertTrue(self.session.exists(self.backing_path))
@@ -112,8 +106,12 @@ class RelativeLayerTests(unittest.TestCase):
         self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
 
 
-@unittest.skip
+@unittest.skip("TODO next")
 class RelativeLayerActionsTests(unittest.TestCase):
+    def setUp(self):
+        self.root = TreeRoot()
+        self.session = TreeRoot.create_session()
+
     def test_cd(self):
         raise NotImplementedError()
 

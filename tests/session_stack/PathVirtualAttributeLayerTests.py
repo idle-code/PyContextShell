@@ -13,20 +13,14 @@ class PathVirtualAttributeLayerTests(unittest.TestCase):
         root = TreeRoot()
         # Create backing and test nodes
         session = root.create_session()
-        session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(self.foo_path, "foo")
         self.assertTrue(session.exists(self.foo_path))
-        session.finish()
 
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
         session_stack = SessionStack(self.storage_layer)
         session_stack.push(PathVirtualAttributeLayer())
         self.session = session_stack
-        self.session.start(None)
-
-    def tearDown(self):
-        self.session.finish()
 
     def test_get(self):
         path_value = self.session.get(self.foo_path_path)

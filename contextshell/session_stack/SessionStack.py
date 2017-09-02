@@ -10,28 +10,18 @@ class SessionStack(SessionLayer):
             raise ValueError("Storage layer must be provided for session stack")
         self.layers = [storage_layer]
 
-    def start(self, underlying_layer: SessionLayer):
-        if underlying_layer is not None:
-            raise ValueError("Session stack cannot be on top on another one")
-
-        previous_layer = None
-        for layer in self.layers:
-            layer.start(previous_layer)
-            previous_layer = layer
-
     def push(self, layer: SessionLayer):
         if layer is None:
             raise ValueError("No layer to push provided")
+        layer.next_layer = self.top
         self.layers.append(layer)
 
     def pop(self) -> SessionLayer:
         if len(self.layers) == 1:
             raise RuntimeError("Storage layer cannot be removed from stack")
-        return self.layers.pop()
-
-    def finish(self):
-        for layer in reversed(self.layers):
-            layer.finish()
+        removed_layer = self.layers.pop()
+        removed_layer.next_layer = None
+        return removed_layer
 
     @property
     def top(self) -> SessionLayer:

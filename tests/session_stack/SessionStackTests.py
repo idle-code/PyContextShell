@@ -16,34 +16,11 @@ class SessionStackTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             SessionStack(None)
 
-    def test_start(self):
-        self.storage_mock.start = MagicMock()
-        self.stack.start(None)
-        self.storage_mock.start.assert_called_once_with(None)
+    def test_push(self):
+        layer = MagicMock()
+        self.stack.push(layer)
 
-    def test_start_order(self):
-        self.stack.push(self.mock_manager.top)
-        self.stack.start(None)
-
-        expected_call_order = [
-            call.storage.start(None),
-            call.top.start(self.storage_mock)
-        ]
-        self.assertListEqual(expected_call_order, self.mock_manager.mock_calls)
-
-    def test_start_with_bottom_layer(self):
-        with self.assertRaises(ValueError):
-            self.stack.start(MagicMock())
-
-    def test_finish_order(self):
-        self.stack.push(self.mock_manager.top)
-        self.stack.finish()
-
-        expected_call_order = [
-            call.top.finish(),
-            call.storage.finish()
-        ]
-        self.assertListEqual(expected_call_order, self.mock_manager.mock_calls)
+        self.assertIsNotNone(layer.next_layer)
 
     def test_push_none(self):
         with self.assertRaises(ValueError):
@@ -55,6 +32,7 @@ class SessionStackTests(unittest.TestCase):
 
         popped_layer = self.stack.pop()
         self.assertIs(popped_layer, layer)
+        self.assertIsNone(popped_layer.next_layer)
 
     def test_pop_bottom(self):
         with self.assertRaises(RuntimeError):

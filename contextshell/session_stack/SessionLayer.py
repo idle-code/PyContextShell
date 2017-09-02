@@ -6,13 +6,6 @@ class SessionLayer:
     def __init__(self):
         self.next_layer: 'SessionLayer' = None
 
-    # CHECK: use context manager for automatic start/exit
-    def start(self, underlying_layer: 'SessionLayer'):
-        self.next_layer = underlying_layer
-
-    def finish(self):
-        pass
-
     # TODO: make sure paths passed to those methods are absolute
     def get(self, path: NodePath):
         return self.next_layer.get(path)

@@ -15,23 +15,17 @@ class VirtualMappingLayerTests(unittest.TestCase):
         root = TreeRoot()
         # Create backing and test nodes
         session = root.create_session()
-        session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, 123)
         self.assertTrue(session.exists(self.backing_path))
         self.assertTrue(session.exists(self.backing_foo_path))
         self.assertFalse(session.exists(self.virtual_foo_path))
-        session.finish()
 
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
         session_stack = SessionStack(self.storage_layer)
         session_stack.push(VirtualMappingLayer(self.virtual_path, self.backing_path))
         self.session = session_stack
-        self.session.start(None)
-
-    def tearDown(self):
-        self.session.finish()
 
     def test_list_virtual_parent(self):
         self.assertIn(self.virtual_path, self.session.list(self.virtual_path.base_path))
@@ -101,13 +95,11 @@ class VirtualMappingLayerSessionSeparationTests(unittest.TestCase):
         root = TreeRoot()
         # Create backing and test nodes
         session = root.create_session()
-        session.start(None)  # TODO: move start to the constructor or use contextmanager
         session.create(self.first_backing_path.base_path)
         session.create(self.first_backing_path, "First")
         session.create(self.second_backing_path, "Second")
         self.assertTrue(session.exists(self.first_backing_path))
         self.assertTrue(session.exists(self.second_backing_path))
-        session.finish()
 
         # Setup session stack (to push TemporarySession on top)
         self.storage_layer = root.create_session()
@@ -117,7 +109,6 @@ class VirtualMappingLayerSessionSeparationTests(unittest.TestCase):
     def _create_session_stack(self, backing_path: NodePath) -> SessionLayer:
         session_stack = SessionStack(self.storage_layer)
         session_stack.push(VirtualMappingLayer(self.common_path, backing_path))
-        session_stack.start(None)
         return session_stack
 
     def test_get(self):

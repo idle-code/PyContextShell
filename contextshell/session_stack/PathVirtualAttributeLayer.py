@@ -11,5 +11,5 @@ class PathVirtualAttributeLayer(VirtualAttributeLayerBase):
     def applies_to(self, path: NodePath) -> bool:
         return True
 
-    def get_value(self, path: NodePath):
+    def on_get(self, path: NodePath):
         return path
