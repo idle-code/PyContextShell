@@ -2,18 +2,20 @@ import unittest
 
 from contextshell.session_stack.RelativeLayer import *
 from contextshell.session_stack.SessionStack import *
-from contextshell.TreeRoot import TreeRoot
 from tests.session_stack.SessionLayerTestsBase import TestBases
 
 
 class BasicSessionLayerTests(TestBases.SessionLayerTestsBase):
+    backing_path = NodePath('.current_path')
+    start_path = NodePath('.foo')
+
     def prepare_layer(self, session: SessionLayer) -> SessionLayer:
-        backing_path = NodePath('.current_path')
-        start_path = NodePath('.foo')
-        return RelativeLayer(backing_path, start_path)
+        return RelativeLayer(self.backing_path, self.start_path)
 
 
 class RelativeLayerTests(TestBases.LayerTestsBase):
+    current_path = NodePath('.current_path')
+
     def prepare_layer(self, session: SessionLayer) -> SessionLayer:
         session.create(NodePath(".first"), 1)
         session.create(NodePath(".first.second"), 2)
@@ -23,7 +25,6 @@ class RelativeLayerTests(TestBases.LayerTestsBase):
         session.create(NodePath(".first.foo"), 'foo1')
         session.create(NodePath(".foo"), 'foo0')
 
-        self.current_path = NodePath('.current_path')
         return RelativeLayer(self.current_path, NodePath('.first'))
 
     def test_current_path_exists(self):
