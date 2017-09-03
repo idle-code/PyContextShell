@@ -6,20 +6,25 @@ from contextshell.session_stack.SessionLayer import SessionLayer
 
 
 class TestBases:
-    class SessionLayerTestsBase(unittest.TestCase):
+    class LayerTestsBase(unittest.TestCase):
         def setUp(self):
-            self.existing_path = NodePath('.foo')
-            self.missing_path = NodePath('.bar')
-
             tree = TreeRoot()
             self.storage_layer = tree.create_session()
-            self.storage_layer.create(self.existing_path, 'foo')
 
-            self.tested_layer = tree.create_session()
-            self.tested_layer.push(self.prepare_layer(self.tested_layer))
+            session = tree.create_session()
+            session.push(self.prepare_layer(session))
+            self.tested_layer: SessionLayer = session.top
 
         def prepare_layer(self, session: SessionLayer) -> SessionLayer:
             raise NotImplementedError()
+
+    class SessionLayerTestsBase(LayerTestsBase):
+        def setUp(self):
+            super().setUp()
+            self.existing_path = NodePath('.foo')
+            self.missing_path = NodePath('.bar')
+
+            self.storage_layer.create(self.existing_path, 'foo')
 
         def test_create(self):
             self.tested_layer.create(self.missing_path)
