@@ -31,6 +31,13 @@ class NodePathTests(unittest.TestCase):
         abc = NodePath('a.b.c')
         self.assertEqual('c', abc.base_name)
 
+    def test_root_basename(self):
+        root = NodePath('.')
+        self.assertIsNone(root.base_name)
+
+        root = NodePath()
+        self.assertIsNone(root.base_name)
+
     def test_basepath_relative(self):
         abc = NodePath('a.b.c')
         base_path = abc.base_path

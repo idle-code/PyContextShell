@@ -58,6 +58,8 @@ class NodePath(list):
     @property
     def base_name(self):
         """Returns last path element"""
+        if len(self) == 0:
+            return None
         return self[-1]
 
     def is_parent_of(self, other: 'NodePath') -> bool:

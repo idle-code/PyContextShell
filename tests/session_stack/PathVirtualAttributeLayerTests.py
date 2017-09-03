@@ -2,55 +2,51 @@ import unittest
 
 from contextshell.session_stack.PathVirtualAttributeLayer import *
 from contextshell.session_stack.SessionStack import *
-from contextshell.TreeRoot import TreeRoot
+from tests.session_stack.SessionLayerTestsBase import TestBases
 
 
-class PathVirtualAttributeLayerTests(unittest.TestCase):
-    def setUp(self):
-        self.foo_path = NodePath('.foo')
-        self.foo_path_path = NodePath.join(self.foo_path, '@path')
+class BasicPathVirtualAttributeLayerTests(TestBases.SessionLayerTestsBase):
+    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+        return PathVirtualAttributeLayer()
 
-        root = TreeRoot()
-        # Create backing and test nodes
-        session = root.create_session()
+
+class PathVirtualAttributeLayerTests(TestBases.LayerTestsBase):
+    foo_path = NodePath('.foo')
+    foo_path_path = NodePath.join(foo_path, '@path')
+
+    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
         session.create(self.foo_path, "foo")
-        self.assertTrue(session.exists(self.foo_path))
-
-        # Setup session stack (to push TemporarySession on top)
-        self.storage_layer = root.create_session()
-        session_stack = SessionStack(self.storage_layer)
-        session_stack.push(PathVirtualAttributeLayer())
-        self.session = session_stack
-
-    def test_get(self):
-        path_value = self.session.get(self.foo_path_path)
-        self.assertEqual(NodePath('.foo'), path_value)
-
-        path_value = self.session.get(NodePath('.@path'))
-        self.assertEqual(NodePath('.'), path_value)
+        return PathVirtualAttributeLayer()
 
     def test_get_virtual(self):
-        path_value = self.session.get(NodePath.join(self.foo_path_path, '@path'))
+        path_value = self.tested_layer.get(self.foo_path_path)
+        self.assertEqual(NodePath('.foo'), path_value)
+
+        path_value = self.tested_layer.get(NodePath('.@path'))
+        self.assertEqual(NodePath('.'), path_value)
+
+    def test_get_virtual_virtual(self):
+        path_value = self.tested_layer.get(NodePath.join(self.foo_path_path, '@path'))
         self.assertEqual(NodePath('.foo.@path'), path_value)
 
-    def test_set(self):
+    def test_set_virtual(self):
         with self.assertRaises(RuntimeError):
-            self.session.set(self.foo_path_path, NodePath('.bar'))
+            self.tested_layer.set(self.foo_path_path, NodePath('.bar'))
 
-    def test_remove(self):
+    def test_remove_virtual(self):
         with self.assertRaises(RuntimeError):
-            self.session.remove(self.foo_path_path)
+            self.tested_layer.remove(self.foo_path_path)
 
-    def test_list(self):
-        foo_nodes = self.session.list(self.foo_path)
-        self.assertListEqual([self.foo_path_path], foo_nodes)
+    def test_list_virtual_parent(self):
+        foo_nodes = self.tested_layer.list(self.foo_path)
+        self.assertIn(self.foo_path_path, foo_nodes)
 
-    def test_exists(self):
-        self.assertTrue(self.session.exists(self.foo_path_path))
+    def test_virtual_exists(self):
+        self.assertTrue(self.tested_layer.exists(self.foo_path_path))
 
-    def test_create(self):
+    def test_create_virtual(self):
         with self.assertRaises(RuntimeError):
-            self.session.create(self.foo_path_path, 123)
+            self.tested_layer.create(self.foo_path_path, 123)
 
     # TODO: check shadowing of existing attributes
 
