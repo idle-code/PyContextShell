@@ -13,7 +13,7 @@ class SessionLayer:
     def set(self, path: NodePath, new_value):
         return self.next_layer.set(path, new_value)
 
-    def list(self, path: NodePath) -> List[str]:  # CHECK: should list return a list of NodePaths instead?
+    def list(self, path: NodePath) -> List[NodePath]:
         return self.next_layer.list(path)
 
     def exists(self, path: NodePath) -> bool:

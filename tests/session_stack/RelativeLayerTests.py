@@ -3,8 +3,17 @@ import unittest
 from contextshell.session_stack.RelativeLayer import *
 from contextshell.session_stack.SessionStack import *
 from contextshell.TreeRoot import TreeRoot
+from tests.session_stack.SessionLayerTestsBase import TestBases
 
 
+class BasicSessionLayerTests(TestBases.SessionLayerTestsBase):
+    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+        backing_path = NodePath('.current_path')
+        start_path = NodePath('.foo')
+        return RelativeLayer(backing_path, start_path)
+
+
+@unittest.skip("Fix when VirtualNodeLayer will be available")
 class RelativeLayerTests(unittest.TestCase):
     def setUp(self):
         root = TreeRoot()
@@ -22,7 +31,7 @@ class RelativeLayerTests(unittest.TestCase):
         self.storage_layer = root.create_session()
         session_stack = SessionStack(self.storage_layer)
         self.backing_path = NodePath('.current_path')
-        session_stack.push(RelativeLayer(self.backing_path, start_path=NodePath('.first')))
+        session_stack.push(RelativeLayer(self.backing_path, NodePath('.first')))
         self.session = session_stack
 
     def test_current_path_exists(self):

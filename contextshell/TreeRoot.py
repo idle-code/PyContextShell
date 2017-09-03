@@ -28,6 +28,6 @@ class TreeRoot:
         action_parent = NodePath.create_path(self.root, action_path.base_path)
         action_parent.append(action_node, action_path.base_name)
 
-    def create_session(self) -> SessionLayer:
+    def create_session(self) -> SessionStack:
         stack = SessionStack(StorageLayer(self.root))
         return stack

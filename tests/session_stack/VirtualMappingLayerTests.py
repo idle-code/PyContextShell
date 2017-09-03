@@ -3,6 +3,15 @@ import unittest
 from contextshell.session_stack.VirtualMappingLayer import *
 from contextshell.session_stack.SessionStack import *
 from contextshell.TreeRoot import TreeRoot
+from tests.session_stack.SessionLayerTestsBase import TestBases
+
+
+class BasicVirtualMappingLayerTests(TestBases.SessionLayerTestsBase):
+    def prepare_layer(self, session: SessionLayer) -> VirtualMappingLayer:
+        virtual_path = NodePath('.virtual')
+        backing_path = NodePath('.backing_node')
+        session.create(backing_path)
+        return VirtualMappingLayer(virtual_path, backing_path)
 
 
 class VirtualMappingLayerTests(unittest.TestCase):
