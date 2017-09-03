@@ -31,7 +31,6 @@ class VirtualNodeLayerTests(unittest.TestCase):
         session_stack.push(TestedVirtualNodeLayer(self.virtual_path))
         self.session = session_stack
 
-    @unittest.skip("TODO")
     def test_get_virtual(self):
         pass
 
