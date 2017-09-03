@@ -2,7 +2,7 @@ import unittest
 
 from contextshell.session_stack.PathVirtualAttributeLayer import *
 from contextshell.session_stack.SessionStack import *
-from tests.session_stack.SessionLayerTestsBase import TestBases
+from tests.session_stack.TestBases import TestBases
 
 
 class BasicPathVirtualAttributeLayerTests(TestBases.SessionLayerTestsBase):

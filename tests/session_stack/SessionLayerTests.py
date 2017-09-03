@@ -1,6 +1,6 @@
 import unittest
 from contextshell.session_stack.SessionLayer import SessionLayer
-from tests.session_stack.SessionLayerTestsBase import TestBases
+from tests.session_stack.TestBases import TestBases
 
 
 class SessionLayerTests(TestBases.SessionLayerTestsBase):
