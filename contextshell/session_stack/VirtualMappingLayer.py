@@ -11,11 +11,6 @@ class VirtualMappingLayer(SessionLayer):
         self.backing_path = backing_path
         # TODO: validate that both paths are absolute and backing path exists
 
-    # def start(self, underlying_layer: 'SessionLayer'):
-    #     super().start(underlying_layer)
-    #     # if not self.next_layer.exists(self.backing_path):
-    #     #     raise RuntimeError("Backing path doesn't exists")
-
     def _rewrite_path(self, path: NodePath) -> NodePath:
         path = NodePath.cast(path)
         if self.virtual_path.is_parent_of(path):

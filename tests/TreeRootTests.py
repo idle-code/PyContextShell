@@ -64,5 +64,10 @@ class TreeRootTests(unittest.TestCase):
         self.tree.install_action(action)
         self.assertTrue(self.session.exists('.@actions.foo.bar'))
 
+    def test_install_action_in_path(self):
+        action = ActionNode('foo.bar', lambda x: x)
+        self.tree.install_action(action, 'foo')
+        self.assertTrue(self.session.exists('.foo.@actions.foo.bar'))
+
 if __name__ == '__main__':
     unittest.main()

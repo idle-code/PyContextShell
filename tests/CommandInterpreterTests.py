@@ -1,8 +1,14 @@
 import unittest
 
+from contextshell.Node import Node
+from contextshell.NodePath import NodePath
+from contextshell.session_stack.SessionStack import SessionStack
+from contextshell.session_stack.StorageLayer import StorageLayer
+from contextshell.session_stack.SessionLayer import SessionLayer
 from contextshell.Command import Command
 from contextshell.TreeRoot import TreeRoot
 from contextshell.CommandInterpreter import CommandInterpreter
+from contextshell.ActionNode import ActionNode
 
 
 class CommandInterpreterTests(unittest.TestCase):
@@ -96,5 +102,54 @@ class CommandInterpreterTests(unittest.TestCase):
         self.interpreter.execute(set_cmd)
         self.assertEqual(123, self.session.get('.foo'))
 
+
+class CommandLookupTests(unittest.TestCase):
+    class ReturnAction(ActionNode):
+        def __init__(self, name: str, return_value):
+            super().__init__(NodePath(name))
+            self.return_value = return_value
+
+        def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+            return self.return_value
+
+    def setUp(self):
+        root = TreeRoot()
+        self.session = root.create_session()
+        self.interpreter = CommandInterpreter(self.session)
+
+        self.session.create('.foo', 1)
+        self.session.create('.foo.bar', 2)
+        root.install_action(CommandLookupTests.ReturnAction('num', 'ROOT'))
+        root.install_action(CommandLookupTests.ReturnAction('num', 'FOO'), 'foo')
+        root.install_action(CommandLookupTests.ReturnAction('num', 'BAR'), 'foo.bar')
+        root.install_action(CommandLookupTests.ReturnAction('sesnum', 'SESSION'), 'session')
+
+    def test_hierarchy_lookup(self):
+        num_cmd = Command('num')
+        num_cmd.target = NodePath('.')
+        self.assertEqual(self.interpreter.execute(num_cmd), 'ROOT')
+
+        num_cmd.target = NodePath('.foo')
+        self.assertEqual(self.interpreter.execute(num_cmd), 'FOO')
+
+        num_cmd.target = NodePath('.foo.bar')
+        self.assertEqual(self.interpreter.execute(num_cmd), 'BAR')
+
+        num_cmd.target = NodePath('.session')
+        self.assertEqual(self.interpreter.execute(num_cmd), 'ROOT')
+
+    def test_alternative_lookup(self):
+        sesnum_cmd = Command('sesnum')
+        sesnum_cmd.target = NodePath('.')
+        self.assertEqual(self.interpreter.execute(sesnum_cmd), 'SESSION')
+
+        sesnum_cmd.target = NodePath('.foo.bar')
+        self.assertEqual(self.interpreter.execute(sesnum_cmd), 'SESSION')
+
+        sesnum_cmd.target = NodePath('.session')
+        self.assertEqual(self.interpreter.execute(sesnum_cmd), 'SESSION')
+
+
 if __name__ == '__main__':
     unittest.main()
+

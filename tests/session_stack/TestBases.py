@@ -1,5 +1,6 @@
 import unittest
 
+from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.TreeRoot import TreeRoot
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.SessionLayer import SessionLayer
@@ -11,12 +12,17 @@ class TestBases:
             tree = TreeRoot()
             self.storage_layer = tree.create_session()
 
-            session = tree.create_session()
-            session.push(self.prepare_layer(session))
-            self.tested_layer: SessionLayer = session.top
+            self.session = tree.create_session()
+            self.session.push(self.prepare_layer(self.session))
+            self.tested_layer: SessionLayer = self.session.top
 
         def prepare_layer(self, session: SessionLayer) -> SessionLayer:
             raise NotImplementedError()
+
+    class LayerActionsTestsBase(LayerTestsBase):
+        def setUp(self):
+            super().setUp()
+            self.interpreter = CommandInterpreter(self.session)
 
     class SessionLayerTestsBase(LayerTestsBase):
         def setUp(self):

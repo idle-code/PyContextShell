@@ -1,13 +1,17 @@
+from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.NodePath import NodePath
 from contextshell.session_stack.VirtualNodeLayer import VirtualNodeLayer
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
+from contextshell.ActionNode import ActionNode
 from typing import List
 
 
 class RelativeLayer(VirtualNodeLayer):
     """Layer responsible for providing relative navigation in tree"""
+    session_current_path = NodePath.join(SessionStorageLayer.session_path, 'current_path')
 
-    def __init__(self, backing_path: NodePath, start_path: NodePath):
-        super().__init__(backing_path)
+    def __init__(self, start_path: NodePath):
+        super().__init__(self.session_current_path)
         self.current_path: NodePath = NodePath.cast(start_path)
 
     def on_get(self):
@@ -47,3 +51,23 @@ class RelativeLayer(VirtualNodeLayer):
 
     def remove(self, path: NodePath):
         return super().remove(self._rewrite_path(path))
+
+
+class PwdAction(ActionNode):
+    def __init__(self):
+        super().__init__(NodePath('pwd'))
+
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        return session.get(RelativeLayer.session_current_path)
+
+
+class CdAction(ActionNode):
+    def __init__(self):
+        super().__init__(NodePath('cd'))
+
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        path = target
+        if len(arguments) == 1:
+            path = NodePath.cast(arguments[0])
+            # TODO: check if there is more arguments?
+        session.set(RelativeLayer.session_current_path, path)

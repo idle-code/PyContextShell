@@ -1,10 +1,12 @@
 from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from contextshell.Command import Command
 from contextshell.NodePath import NodePath
 
 
 class CommandInterpreter:
     actions_branch_name = '@actions'  # TODO: define in single place (see TreeRoot)
+    session_lookup_path = SessionStorageLayer.session_path
 
     def __init__(self, session: SessionLayer):
         self.session = session
@@ -32,4 +34,9 @@ class CommandInterpreter:
             if len(target_path) == 0:
                 break
             target_path = target_path.base_path
+
+        candidate_action_path = NodePath.join(self.session_lookup_path, prefixed_action_path)
+        if self.session.exists(candidate_action_path):
+            return self.session.get(candidate_action_path)
+
         return None
