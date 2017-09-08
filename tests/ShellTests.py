@@ -2,15 +2,15 @@ import unittest
 
 from contextshell.TreeRoot import TreeRoot
 from contextshell.Shell import *
+from contextshell.session_stack.SessionManager import SessionManager
 
 
 class ShellTests(unittest.TestCase):
     def setUp(self):
         self.root = TreeRoot()
-        self.shell = Shell(self.root.create_session())
+        manager = SessionManager(self.root)
 
-    def test_default_state(self):
-        self.assertEqual(NodePath(absolute=True), self.shell.current_path)
+        self.shell = Shell(manager.create_session())
 
     def test_create_empty(self):
         self.shell.execute("create foo")
@@ -32,7 +32,9 @@ class ShellTests(unittest.TestCase):
 class ShellCompletionTests(unittest.TestCase):
     def setUp(self):
         self.root = TreeRoot()
-        self.shell = Shell(self.root.create_session())
+        manager = SessionManager(self.root)
+
+        self.shell = Shell(manager.create_session())
 
     def completion_on(self, command: str, cursor_position: str=None):
         pass

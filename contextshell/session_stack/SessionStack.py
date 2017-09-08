@@ -33,7 +33,7 @@ class SessionStack(SessionLayer):
     def set(self, path: NodePath, new_value):
         return self.top.set(path, new_value)
 
-    def list(self, path: NodePath) -> List[str]:
+    def list(self, path: NodePath) -> List[NodePath]:
         return self.top.list(path)
 
     def exists(self, path: NodePath) -> bool:

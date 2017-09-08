@@ -4,15 +4,17 @@ from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.TreeRoot import TreeRoot
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.SessionManager import SessionManager
 
 
 class TestBases:
     class LayerTestsBase(unittest.TestCase):
         def setUp(self):
             tree = TreeRoot()
-            self.storage_layer = tree.create_session()
+            manager = SessionManager(tree)
+            self.storage_layer = manager.create_session()
 
-            self.session = tree.create_session()
+            self.session = manager.create_session()
             self.session.push(self.prepare_layer(self.session))
             self.tested_layer: SessionLayer = self.session.top
 

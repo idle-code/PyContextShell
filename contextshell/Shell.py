@@ -10,14 +10,14 @@ class Shell:
         self.session = session
         self.interpreter = CommandInterpreter(self.session)
         self.parser = CommandParser()
-        self.current_path = NodePath(absolute=True)
 
     def execute(self, command_line: str):
         command = self.parser.parse(command_line)
         if command is None:
             return None
+        # TODO: remove when RelativeLayer is fully operational
         if command.target is None:
-            command.target = str(self.current_path)
+            command.target = NodePath('.')
         return self.interpreter.execute(command)
 
     @staticmethod

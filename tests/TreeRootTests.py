@@ -2,12 +2,13 @@ import unittest
 
 from contextshell.ActionNode import ActionNode
 from contextshell.TreeRoot import TreeRoot
+from contextshell.session_stack.SessionManager import SessionManager
 
 
 class TreeRootTests(unittest.TestCase):
     def setUp(self):
         self.tree = TreeRoot()
-        self.session = self.tree.create_session()
+        self.session = SessionManager(self.tree).create_session()
         self.session.create('.foo')
         self.session.create('.foo.bar')
 
