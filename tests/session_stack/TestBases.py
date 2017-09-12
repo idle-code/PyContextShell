@@ -1,22 +1,21 @@
 import unittest
 
 from contextshell.CommandInterpreter import CommandInterpreter
-from contextshell.TreeRoot import TreeRoot
+from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.SessionLayer import SessionLayer
-from contextshell.session_stack.SessionManager import SessionManager
+from contextshell.session_stack.Session import Session
+from contextshell.session_stack.StorageLayer import StorageLayer
 
 
 class TestBases:
     class LayerTestsBase(unittest.TestCase):
         def setUp(self):
-            tree = TreeRoot()
-            manager = SessionManager(tree)
-            self.storage_layer = manager.create_session()
-
-            self.session = manager.create_session()
-            self.session.push(self.prepare_layer(self.session))
-            self.tested_layer: SessionLayer = self.session.top
+            root = Node()
+            self.storage_layer = StorageLayer(root)
+            self.session = Session(self.storage_layer)
+            self.tested_layer = self.prepare_layer(self.session)
+            self.session.push(self.tested_layer)
 
         def prepare_layer(self, session: SessionLayer) -> SessionLayer:
             raise NotImplementedError()

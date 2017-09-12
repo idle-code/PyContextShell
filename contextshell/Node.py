@@ -41,7 +41,7 @@ class Node:
         node._parent = self
         self._subnodes.append((name, node))
 
-    def get_node(self, name: str=None, index: int=None):
+    def get_node(self, name: str=None, index: int=None) -> 'Node':
         """Return subnode with provided name"""
         if name is not None:
             for p in self._subnodes:
@@ -54,7 +54,7 @@ class Node:
             raise NameError("No name or index provided")
         return None
 
-    def __getitem__(self, name_or_index):
+    def __getitem__(self, name_or_index) -> 'Node':
         if isinstance(name_or_index, int):
             node = self.get_node(index=name_or_index)
         else:
@@ -63,7 +63,7 @@ class Node:
             raise KeyError(name_or_index)
         return node
 
-    def remove(self, name: str=None, index=None):
+    def remove(self, name: str=None, index=None) -> 'Node':
         """Remove subnode with provided name"""
         node_to_remove = self.get_node(name=name, index=index)
         if node_to_remove is None:

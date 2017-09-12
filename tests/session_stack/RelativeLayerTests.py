@@ -86,7 +86,7 @@ class RelativeLayerTests(TestBases.LayerTestsBase):
         self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
 
 
-@unittest.skip("Fix when SessionManager will be able to register session actions")
+@unittest.skip("Fix when Session will be able to register actions")
 class RelativeLayerActionsTests(TestBases.LayerActionsTestsBase):
     def prepare_layer(self, session: SessionLayer) -> SessionLayer:
         session.create(NodePath(".first"), 1)

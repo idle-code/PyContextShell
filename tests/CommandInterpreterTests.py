@@ -116,14 +116,14 @@ class CommandLookupTests(unittest.TestCase):
         root = TreeRoot()
         manager = SessionManager(root)
         self.session = manager.create_session()
-        self.interpreter = manager.create_interpreter()
+        self.interpreter = CommandInterpreter(self.session)
 
         self.session.create('.foo', 1)
         self.session.create('.foo.bar', 2)
-        root.install_action(CommandLookupTests.ReturnAction('num', 'ROOT'))
-        root.install_action(CommandLookupTests.ReturnAction('num', 'FOO'), 'foo')
-        root.install_action(CommandLookupTests.ReturnAction('num', 'BAR'), 'foo.bar')
-        root.install_action(CommandLookupTests.ReturnAction('sesnum', 'SESSION'), 'session')
+        self.session.install_action(CommandLookupTests.ReturnAction('num', 'ROOT'))
+        self.session.install_action(CommandLookupTests.ReturnAction('num', 'FOO'), '.foo')
+        self.session.install_action(CommandLookupTests.ReturnAction('num', 'BAR'), '.foo.bar')
+        self.session.install_action(CommandLookupTests.ReturnAction('sesnum', 'SESSION'), '.session')
 
     def test_hierarchy_lookup(self):
         num_cmd = Command('num')
