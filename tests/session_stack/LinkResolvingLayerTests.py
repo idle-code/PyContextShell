@@ -1,5 +1,6 @@
 import unittest
 
+from contextshell.Command import Command
 from contextshell.session_stack.LinkResolvingLayer import *
 from contextshell.session_stack.SessionStack import *
 from tests.session_stack.TestBases import TestBases
@@ -72,14 +73,50 @@ class LinkResolvingLayerTests(TestBases.LayerTestsBase):
         self.assertEqual('bar', self.storage_layer.get(backing_bar_path))
 
 
-@unittest.skip("TODO: when session actions will be available")
-class LinkResolvingLayerActionsTests(unittest.TestCase):
-    @unittest.skip("Write when create.link action will be available")
+class LinkResolvingLayerActionsTests(TestBases.LayerActionsTestsBase):
+    link_path = NodePath('.link')
+    link_foo_path = NodePath('.link.foo')
+    backing_path = NodePath('.backing_node')
+    backing_foo_path = NodePath('.backing_node.foo')
+
+    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+        session.create(self.backing_path, "backing")
+        session.create(self.backing_foo_path, "foo")
+        return LinkResolvingLayer()
+
+    def exec(self, target: NodePath, action: NodePath, *args):
+        cmd = Command(action)
+        cmd.target = NodePath.cast(target)
+        cmd.arguments = args
+        return self.interpreter.execute(cmd)
+
     def test_create_link(self):
-        raise NotImplementedError()
+        self.exec('.', 'create.link', self.link_path, self.backing_path)
+
+        self.assertTrue(self.tested_layer.exists(self.link_path))
+
+    def test_create_existing_link(self):
+        self.tested_layer.create(self.link_path)
+
+        with self.assertRaises(RuntimeError):
+            self.exec('.', 'create.link', self.link_path, self.backing_path)
+
+    def test_create_single_argument(self):
+        with self.assertRaises(RuntimeError):
+            self.exec('.', 'create.link', self.link_path)
+
+    def test_is_link(self):
+        self.exec('.', 'create.link', self.link_path, self.backing_path)
+
+        self.assertFalse(self.exec(self.backing_path, 'is.link'))
+        self.assertTrue(self.exec(self.link_path, 'is.link'))
+
 
     @unittest.skip("Implement when action for reading link content will be available")
     def test_read_link(self):
+        raise NotImplementedError()
+
+    def test_read_nonexistent_link(self):
         raise NotImplementedError()
 
 

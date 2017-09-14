@@ -14,6 +14,10 @@ class RelativeLayer(VirtualNodeLayer):
         super().__init__(self.session_current_path)
         self.current_path: NodePath = NodePath.cast(start_path)
 
+    @property
+    def session_actions(self):
+        return [PwdAction(), CdAction()]
+
     def on_get(self):
         return self.current_path
 
@@ -69,5 +73,6 @@ class CdAction(ActionNode):
         path = target
         if len(arguments) == 1:
             path = NodePath.cast(arguments[0])
+            print("Setting path to:", path)
             # TODO: check if there is more arguments?
         session.set(RelativeLayer.session_current_path, path)

@@ -86,7 +86,6 @@ class RelativeLayerTests(TestBases.LayerTestsBase):
         self.assertFalse(self.storage_layer.exists(NodePath('.first.second.foo')))
 
 
-@unittest.skip("Fix when Session will be able to register actions")
 class RelativeLayerActionsTests(TestBases.LayerActionsTestsBase):
     def prepare_layer(self, session: SessionLayer) -> SessionLayer:
         session.create(NodePath(".first"), 1)
@@ -116,12 +115,12 @@ class RelativeLayerActionsTests(TestBases.LayerActionsTestsBase):
 
     def test_cd_argument_absolute(self):
         cd_cmd = Command('cd')
-        cd_cmd.arguments = '.first.second'
+        cd_cmd.arguments = ['.first.second']
         self._test_if_cd_succeeded(cd_cmd)
 
     def test_cd_argument_relative(self):
         cd_cmd = Command('cd')
-        cd_cmd.arguments = 'second'
+        cd_cmd.arguments = ['second']
         self._test_if_cd_succeeded(cd_cmd)
 
     def test_pwd(self):
@@ -134,6 +133,11 @@ class RelativeLayerActionsTests(TestBases.LayerActionsTestsBase):
         pwd_cmd = Command('pwd')
         second_path = self.interpreter.execute(pwd_cmd)
         self.assertEqual(NodePath('.first.second'), second_path)
+
+    def test_actions_returned(self):
+        action_types = list(map(lambda a: type(a), self.tested_layer.session_actions))
+        self.assertListEqual(action_types,
+                             [PwdAction, CdAction])
 
 
 if __name__ == '__main__':

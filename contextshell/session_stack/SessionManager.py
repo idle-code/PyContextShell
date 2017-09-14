@@ -32,8 +32,8 @@ class SessionManager:
         session_backend_path = self._create_temporary_node()
         session.push(SessionStorageLayer(session_backend_path))
 
-        session.install_action(PwdAction(), SessionStorageLayer.session_path)
-        session.install_action(CdAction(), SessionStorageLayer.session_path)
+        # session.install_action(PwdAction(), SessionStorageLayer.session_path)
+        # session.install_action(CdAction(), SessionStorageLayer.session_path)
         session.push(RelativeLayer(NodePath('.')))
         return session
 

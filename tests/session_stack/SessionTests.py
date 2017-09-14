@@ -3,24 +3,29 @@ import unittest
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.ActionNode import ActionNode
-from contextshell.session_stack.SessionManager import SessionManager
+from contextshell.session_stack.Session import Session
 from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.StorageLayer import StorageLayer
 from tests.session_stack.TestBases import TestBases
 
 
-class BasicSessionTests(TestBases.SessionLayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
-        root = Node()
-        manager = SessionManager(root)
+class FakeSessionAction(ActionNode):
+    path = NodePath('fake.path')
+    def __init__(self):
+        super().__init__(self.path, lambda *args: None)
 
-        return manager.create_session()
+
+class FakeSessionLayer(SessionLayer):
+    @property
+    def session_actions(self):
+        return [FakeSessionAction()]
 
 
 class SessionTests(unittest.TestCase):
     def setUp(self):
         root = Node()
-        manager = SessionManager(root)
-        self.session = manager.create_session()
+
+        self.session = Session(StorageLayer(root))
         self.session.create(NodePath('.foo'))
 
     def test_create_partially_present_path(self):
@@ -56,8 +61,19 @@ class SessionTests(unittest.TestCase):
 
     def test_install_action_in_path(self):
         action = ActionNode('foo.bar', lambda x: x)
-        self.session.install_action(action, 'foo')
+        self.session.install_action(action, NodePath('.foo'))
         self.assertTrue(self.session.exists('.foo.@actions.foo.bar'))
+
+    def test_push_layer_installs_action(self):
+        from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
+        layer = FakeSessionLayer()
+        self.session.push(layer)
+        action_path = NodePath.join(SessionStorageLayer.session_path, Session.actions_branch_name, FakeSessionAction.path)
+        self.assertTrue(self.session.exists(action_path))
+
+    def test_pop_layer_uninstall_action(self):
+        raise NotImplementedError()
+
 
 if __name__ == '__main__':
     unittest.main()

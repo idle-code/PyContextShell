@@ -2,6 +2,7 @@ from contextshell.NodePath import NodePath
 from contextshell.ActionNode import ActionNode
 from contextshell.session_stack.SessionLayer import SessionLayer
 from contextshell.session_stack.SessionStack import SessionStack
+from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from typing import List
 
 
@@ -25,6 +26,11 @@ class Session(SessionStack):
             tested_path = NodePath.join(tested_path, name)
             if not self.exists(tested_path):
                 self.create(tested_path)
+
+    def push(self, layer: SessionLayer):
+        for action in layer.session_actions:
+            self.install_action(action, SessionStorageLayer.session_path)
+        super().push(layer)
     #
     # def _create_temporary_node(self) -> NodePath:
     #     tmp_path = 'tmp'

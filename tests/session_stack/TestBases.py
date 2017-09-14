@@ -14,6 +14,7 @@ class TestBases:
             root = Node()
             self.storage_layer = StorageLayer(root)
             self.session = Session(self.storage_layer)
+
             self.tested_layer = self.prepare_layer(self.session)
             self.session.push(self.tested_layer)
 
@@ -23,6 +24,8 @@ class TestBases:
     class LayerActionsTestsBase(LayerTestsBase):
         def setUp(self):
             super().setUp()
+            # TODO: install session actions
+            # TODO: use SessionManager or explicit installation
             self.interpreter = CommandInterpreter(self.session)
 
     class SessionLayerTestsBase(LayerTestsBase):
@@ -32,6 +35,7 @@ class TestBases:
             self.missing_path = NodePath('.bar')
 
             self.storage_layer.create(self.existing_path, 'foo')
+            self.assertTrue(self.storage_layer.exists(self.existing_path))
 
         def test_create(self):
             self.tested_layer.create(self.missing_path)
@@ -102,6 +106,11 @@ class TestBases:
         def test_set_nonexistent(self):
             with self.assertRaises(NameError):
                 self.tested_layer.set(self.missing_path, 332)
+
+        def test_get_session_actions(self):
+            from contextshell.ActionNode import ActionNode
+            for action in self.tested_layer.session_actions:
+                self.assertIsInstance(action, ActionNode)
 
 
 if __name__ == '__main__':

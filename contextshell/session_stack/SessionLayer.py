@@ -6,6 +6,10 @@ class SessionLayer:
     def __init__(self):
         self.next_layer: 'SessionLayer' = None
 
+    @property
+    def session_actions(self):
+        return []
+
     # TODO: make sure paths passed to those methods are absolute
     def get(self, path: NodePath):
         return self.next_layer.get(path)
