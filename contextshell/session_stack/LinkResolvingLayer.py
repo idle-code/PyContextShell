@@ -1,4 +1,5 @@
 from contextshell.session_stack.SessionLayer import *
+from contextshell.ActionNode import ActionNode
 from typing import List
 
 
@@ -7,6 +8,10 @@ class LinkResolvingLayer(SessionLayer):
 
     def __init__(self):
         super().__init__()
+
+    @property
+    def session_actions(self):
+        return [LinkCreateAction(), LinkReadAction(), IsLinkAction()]
 
     def _rewrite_links_in_path(self, path: NodePath) -> NodePath:
         path = NodePath.cast(path)
@@ -34,6 +39,8 @@ class LinkResolvingLayer(SessionLayer):
         return link_path
 
     def _is_link(self, path: NodePath) -> bool:
+        if not self.next_layer.exists(path):
+            return False
         node_value = self.next_layer.get(path)
         return isinstance(node_value, NodePath)
 
@@ -63,3 +70,34 @@ class LinkResolvingLayer(SessionLayer):
     def remove(self, path: NodePath):
         # TODO: check removal of .link.node.link
         self.next_layer.remove(self._rewrite_links_in_path(path))
+
+
+class LinkCreateAction(ActionNode):
+    def __init__(self):
+        super().__init__(NodePath('create.link'))
+
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        link_path = NodePath.join(target, arguments[0])
+        backing_path = NodePath.cast(arguments[1])
+        if session.exists(link_path):
+            raise RuntimeError(f"{link_path} node already exists")
+        session.create(link_path, backing_path)
+
+
+class LinkReadAction(ActionNode):
+    def __init__(self):
+        super().__init__(NodePath('link.read'))
+
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        pass
+
+
+class IsLinkAction(ActionNode):
+    def __init__(self):
+        super().__init__(NodePath('is.link'))
+
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        assert len(arguments) == 0
+        target_value = session.get(target)  # FIXME: get is being redirected to link backing path
+        print(target_value, type(target_value))
+        return isinstance(target_value, NodePath)

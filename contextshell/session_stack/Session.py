@@ -13,6 +13,12 @@ class Session(SessionStack):
     def __init__(self, storage_layer: SessionLayer):
         super().__init__(storage_layer)
 
+    def uninstall_action(self, action_name: NodePath, action_path: NodePath = default_action_storage):
+        if action_name is None:
+            raise ValueError("No action to install provided")
+        action_path = NodePath.join(action_path, self.actions_branch_name, action_name)
+        self.remove(action_path)
+
     def install_action(self, action_node: ActionNode, action_path: NodePath = default_action_storage):
         if action_node is None:
             raise ValueError("No action to install provided")
@@ -31,7 +37,13 @@ class Session(SessionStack):
         for action in layer.session_actions:
             self.install_action(action, SessionStorageLayer.session_path)
         super().push(layer)
-    #
+
+    def pop(self):
+        removed_layer = super().pop()
+        for action in removed_layer.session_actions:
+            self.uninstall_action(action.path, SessionStorageLayer.session_path)
+        return removed_layer
+
     # def _create_temporary_node(self) -> NodePath:
     #     tmp_path = 'tmp'
     #     if not self.root.contains(tmp_path):

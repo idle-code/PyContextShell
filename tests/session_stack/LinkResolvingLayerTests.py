@@ -105,14 +105,18 @@ class LinkResolvingLayerActionsTests(TestBases.LayerActionsTestsBase):
         with self.assertRaises(RuntimeError):
             self.exec('.', 'create.link', self.link_path)
 
+    def test_create_backing_path_relative(self):
+        raise NotImplementedError()
+
+    def test_create_backing_nonexistent(self):
+        raise NotImplementedError()
+
     def test_is_link(self):
         self.exec('.', 'create.link', self.link_path, self.backing_path)
 
         self.assertFalse(self.exec(self.backing_path, 'is.link'))
         self.assertTrue(self.exec(self.link_path, 'is.link'))
 
-
-    @unittest.skip("Implement when action for reading link content will be available")
     def test_read_link(self):
         raise NotImplementedError()
 

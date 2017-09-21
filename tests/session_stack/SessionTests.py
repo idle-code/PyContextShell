@@ -49,30 +49,75 @@ class SessionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.session.install_action(None)
 
+    def test_uninstall_action_none(self):
+        with self.assertRaises(ValueError):
+            self.session.uninstall_action(None)
+
     def test_install_action(self):
         action = ActionNode('act', lambda x: x)
+
         self.session.install_action(action)
+
         self.assertTrue(self.session.exists('.@actions.act'))
+
+    def test_uninstall_action(self):
+        action = ActionNode('act', lambda x: x)
+        self.session.install_action(action)
+
+        self.session.uninstall_action(action.path)
+
+        self.assertFalse(self.session.exists('.@actions.act'))
 
     def test_install_action_nested(self):
         action = ActionNode('foo.bar', lambda x: x)
+
         self.session.install_action(action)
+
         self.assertTrue(self.session.exists('.@actions.foo.bar'))
+
+    def test_uninstall_action_nested(self):
+        action = ActionNode('foo.bar', lambda x: x)
+        self.session.install_action(action)
+
+        self.session.uninstall_action(action.path)
+
+        self.assertFalse(self.session.exists('.@actions.foo.bar'))
 
     def test_install_action_in_path(self):
         action = ActionNode('foo.bar', lambda x: x)
+
         self.session.install_action(action, NodePath('.foo'))
+
         self.assertTrue(self.session.exists('.foo.@actions.foo.bar'))
+
+    def test_uninstall_action_from_path(self):
+        action = ActionNode('foo.bar', lambda x: x)
+        self.session.install_action(action, NodePath('.foo'))
+
+        self.session.uninstall_action(action.path, NodePath('.foo'))
+
+        self.assertFalse(self.session.exists('.foo.@actions.foo.bar'))
 
     def test_push_layer_installs_action(self):
         from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
         layer = FakeSessionLayer()
+
         self.session.push(layer)
+
         action_path = NodePath.join(SessionStorageLayer.session_path, Session.actions_branch_name, FakeSessionAction.path)
         self.assertTrue(self.session.exists(action_path))
 
     def test_pop_layer_uninstall_action(self):
-        raise NotImplementedError()
+        from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
+        layer = FakeSessionLayer()
+        self.session.push(layer)
+        action_path = NodePath.join(SessionStorageLayer.session_path, Session.actions_branch_name,
+                                    FakeSessionAction.path)
+
+        poped_layer = self.session.pop()
+
+        self.assertIs(poped_layer, layer)
+        self.assertFalse(self.session.exists(action_path))
 
 
 if __name__ == '__main__':
