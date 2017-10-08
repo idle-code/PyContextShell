@@ -18,12 +18,12 @@ class TestedVirtualNodeLayer(VirtualNodeLayer):
 
 
 class BasicVirtualNodeLayerTests(TestBases.SessionLayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         return TestedVirtualNodeLayer()
 
 
 class VirtualNodeLayerTests(TestBases.LayerTestsBase):
-    def prepare_layer(self, storage_layer: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, storage_layer: CrudSessionLayer) -> CrudSessionLayer:
         return TestedVirtualNodeLayer()
 
     def test_on_get(self):

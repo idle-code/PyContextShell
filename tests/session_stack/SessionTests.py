@@ -4,7 +4,7 @@ from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.ActionNode import ActionNode
 from contextshell.session_stack.Session import Session
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.StorageLayer import StorageLayer
 from tests.session_stack.TestBases import TestBases
 
@@ -15,7 +15,7 @@ class FakeSessionAction(ActionNode):
         super().__init__(self.path, lambda *args: None)
 
 
-class FakeSessionLayer(SessionLayer):
+class FakeCrudSessionLayer(CrudSessionLayer):
     @property
     def session_actions(self):
         return [FakeSessionAction()]
@@ -100,7 +100,7 @@ class SessionTests(unittest.TestCase):
 
     def test_push_layer_installs_action(self):
         from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
-        layer = FakeSessionLayer()
+        layer = FakeCrudSessionLayer()
 
         self.session.push(layer)
 
@@ -109,7 +109,7 @@ class SessionTests(unittest.TestCase):
 
     def test_pop_layer_uninstall_action(self):
         from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
-        layer = FakeSessionLayer()
+        layer = FakeCrudSessionLayer()
         self.session.push(layer)
         action_path = NodePath.join(SessionStorageLayer.session_path, Session.actions_branch_name,
                                     FakeSessionAction.path)

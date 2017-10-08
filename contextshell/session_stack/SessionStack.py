@@ -1,22 +1,22 @@
 from contextshell.NodePath import NodePath
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from typing import List
 
 
-class SessionStack(SessionLayer):
-    def __init__(self, storage_layer: SessionLayer):
+class SessionStack(CrudSessionLayer):
+    def __init__(self, storage_layer: CrudSessionLayer):
         super(SessionStack, self).__init__()
         if storage_layer is None:
             raise ValueError("Storage layer must be provided for session stack")
         self.layers = [storage_layer]
 
-    def push(self, layer: SessionLayer):
+    def push(self, layer: CrudSessionLayer):
         if layer is None:
             raise ValueError("No layer to push provided")
         layer.next_layer = self.top
         self.layers.append(layer)
 
-    def pop(self) -> SessionLayer:
+    def pop(self) -> CrudSessionLayer:
         if len(self.layers) == 1:
             raise RuntimeError("Storage layer cannot be removed from stack")
         removed_layer = self.layers.pop()
@@ -24,7 +24,7 @@ class SessionStack(SessionLayer):
         return removed_layer
 
     @property
-    def top(self) -> SessionLayer:
+    def top(self) -> CrudSessionLayer:
         return self.layers[-1]
 
     def get(self, path: NodePath):

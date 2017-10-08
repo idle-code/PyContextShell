@@ -1,8 +1,8 @@
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.CrudSessionLayer import *
 from typing import List
 
 
-class VirtualNodeLayer(SessionLayer):
+class VirtualNodeLayer(CrudSessionLayer):
     """Layer allowing easy creation of virtual nodes"""
 
     def __init__(self, virtual_path: NodePath):

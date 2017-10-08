@@ -6,7 +6,7 @@ from tests.session_stack.TestBases import TestBases
 
 
 class BasicPathVirtualAttributeLayerTests(TestBases.SessionLayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         return PathVirtualAttributeLayer()
 
 
@@ -14,7 +14,7 @@ class PathVirtualAttributeLayerTests(TestBases.LayerTestsBase):
     foo_path = NodePath('.foo')
     foo_path_path = NodePath.join(foo_path, '@path')
 
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         session.create(self.foo_path, "foo")
         return PathVirtualAttributeLayer()
 

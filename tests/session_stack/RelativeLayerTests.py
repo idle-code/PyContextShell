@@ -9,12 +9,12 @@ from tests.session_stack.TestBases import TestBases
 class BasicSessionLayerTests(TestBases.SessionLayerTestsBase):
     start_path = NodePath('.foo')
 
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         return RelativeLayer(self.start_path)
 
 
 class RelativeLayerTests(TestBases.LayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         session.create(NodePath(".first"), 1)
         session.create(NodePath(".first.second"), 2)
         session.create(NodePath(".first.second.third"), 3)
@@ -87,7 +87,7 @@ class RelativeLayerTests(TestBases.LayerTestsBase):
 
 
 class RelativeLayerActionsTests(TestBases.LayerActionsTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         session.create(NodePath(".first"), 1)
         session.create(NodePath(".first.second"), 2)
         session.create(NodePath(".first.second.third"), 3)

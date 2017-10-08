@@ -11,8 +11,10 @@ class SessionLayer:
         return []
 
     def execute(self, target: NodePath, action_name: NodePath, *args):
-        pass
+        return self.next_layer.execute(target, action_name, *args)
 
+
+class CrudSessionLayer(SessionLayer):
     def get(self, path: NodePath):
         return self.next_layer.get(path)
 

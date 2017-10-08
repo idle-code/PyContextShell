@@ -1,4 +1,4 @@
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.CrudSessionLayer import *
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.CommandParser import CommandParser
 from contextshell.NodePath import *
@@ -6,7 +6,7 @@ from contextshell.NodePath import *
 
 class Shell:
     """Makes interaction with user painless"""
-    def __init__(self, session: SessionLayer):
+    def __init__(self, session: CrudSessionLayer):
         self.session = session
         self.interpreter = CommandInterpreter(self.session)
         self.parser = CommandParser()

@@ -1,9 +1,9 @@
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.CrudSessionLayer import *
 from contextshell.ActionNode import ActionNode
 from typing import List
 
 
-class LinkResolvingLayer(SessionLayer):
+class LinkResolvingLayer(CrudSessionLayer):
     """Layer responsible for transparent link nodes handling"""
 
     def __init__(self):
@@ -76,7 +76,7 @@ class LinkCreateAction(ActionNode):
     def __init__(self):
         super().__init__(NodePath('create.link'))
 
-    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
         link_path = NodePath.join(target, arguments[0])
         backing_path = NodePath.cast(arguments[1])
         if session.exists(link_path):
@@ -88,7 +88,7 @@ class LinkReadAction(ActionNode):
     def __init__(self):
         super().__init__(NodePath('link.read'))
 
-    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
         pass
 
 
@@ -96,7 +96,7 @@ class IsLinkAction(ActionNode):
     def __init__(self):
         super().__init__(NodePath('is.link'))
 
-    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
         assert len(arguments) == 0
         target_value = session.get(target)  # FIXME: get is being redirected to link backing path
         return isinstance(target_value, NodePath)

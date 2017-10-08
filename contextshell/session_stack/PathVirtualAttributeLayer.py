@@ -1,5 +1,5 @@
 from VirtualAttributeLayerBase import VirtualAttributeLayerBase
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.CrudSessionLayer import *
 
 
 class PathVirtualAttributeLayer(VirtualAttributeLayerBase):

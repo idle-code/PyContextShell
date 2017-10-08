@@ -1,4 +1,4 @@
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.VirtualNodeLayer import VirtualNodeLayer
 from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
@@ -61,7 +61,7 @@ class PwdAction(ActionNode):
     def __init__(self):
         super().__init__(NodePath('pwd'))
 
-    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
         return session.get(RelativeLayer.session_current_path)
 
 
@@ -69,7 +69,7 @@ class CdAction(ActionNode):
     def __init__(self):
         super().__init__(NodePath('cd'))
 
-    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
         path = target
         if len(arguments) == 1:
             path = NodePath.cast(arguments[0])

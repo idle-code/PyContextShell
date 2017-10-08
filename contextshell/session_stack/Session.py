@@ -1,6 +1,6 @@
 from contextshell.NodePath import NodePath
 from contextshell.ActionNode import ActionNode
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.SessionStack import SessionStack
 from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from typing import List
@@ -10,7 +10,7 @@ class Session(SessionStack):
     actions_branch_name = '@actions'
     default_action_storage = NodePath('.')
 
-    def __init__(self, storage_layer: SessionLayer):
+    def __init__(self, storage_layer: CrudSessionLayer):
         super().__init__(storage_layer)
 
     def uninstall_action(self, action_name: NodePath, action_path: NodePath = default_action_storage):
@@ -33,7 +33,7 @@ class Session(SessionStack):
             if not self.exists(tested_path):
                 self.create(tested_path)
 
-    def push(self, layer: SessionLayer):
+    def push(self, layer: CrudSessionLayer):
         for action in layer.session_actions:
             self.install_action(action, SessionStorageLayer.session_path)
         super().push(layer)

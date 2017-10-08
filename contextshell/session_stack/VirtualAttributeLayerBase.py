@@ -1,10 +1,10 @@
 from typing import List
 
 from contextshell.NodePath import NodePath
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 
 
-class VirtualAttributeLayerBase(SessionLayer):
+class VirtualAttributeLayerBase(CrudSessionLayer):
     def __init__(self, name: str):
         super().__init__()
         self.attribute_name = '@' + name

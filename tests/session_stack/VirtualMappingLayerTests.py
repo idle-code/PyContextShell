@@ -9,13 +9,13 @@ class BasicVirtualMappingLayerTests(TestBases.SessionLayerTestsBase):
     virtual_path = NodePath('.virtual')
     backing_path = NodePath('.backing_node')
 
-    def prepare_layer(self, session: SessionLayer) -> VirtualMappingLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> VirtualMappingLayer:
         session.create(self.backing_path)
         return VirtualMappingLayer(self.virtual_path, self.backing_path)
 
 
 class VirtualMappingLayerTests(TestBases.LayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         self.virtual_path = NodePath('.virtual')
         self.backing_path = NodePath('.backing_node')
         self.virtual_foo_path = NodePath.join(self.virtual_path, 'foo')
@@ -87,7 +87,7 @@ class VirtualMappingLayerTests(TestBases.LayerTestsBase):
 class VirtualMappingLayerSessionSeparationTests(TestBases.LayerTestsBase):
     common_path = NodePath('.common')
 
-    def prepare_layer(self, session: SessionLayer):
+    def prepare_layer(self, session: CrudSessionLayer):
         self.first_backing_path = NodePath('.backing_node.first')
         self.second_backing_path = NodePath('.backing_node.second')
         session.create(self.first_backing_path.base_path)
@@ -96,9 +96,9 @@ class VirtualMappingLayerSessionSeparationTests(TestBases.LayerTestsBase):
 
         self.first_session = self._create_session_stack(session, self.first_backing_path)
         self.second_session = self._create_session_stack(session, self.second_backing_path)
-        return SessionLayer()  # self.tested_layer will not be used
+        return CrudSessionLayer()  # self.tested_layer will not be used
 
-    def _create_session_stack(self, session: SessionLayer, backing_path: NodePath) -> SessionLayer:
+    def _create_session_stack(self, session: CrudSessionLayer, backing_path: NodePath) -> CrudSessionLayer:
         session_stack = SessionStack(session)
         session_stack.push(VirtualMappingLayer(self.common_path, backing_path))
         return session_stack

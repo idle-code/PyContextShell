@@ -1,8 +1,8 @@
-from contextshell.session_stack.SessionLayer import *
+from contextshell.session_stack.CrudSessionLayer import *
 from typing import List
 
 
-class VirtualMappingLayer(SessionLayer):
+class VirtualMappingLayer(CrudSessionLayer):
     """Layer responsible for creating hard aliases of nodes in tree"""
 
     def __init__(self, virtual_path: NodePath, backing_path: NodePath):

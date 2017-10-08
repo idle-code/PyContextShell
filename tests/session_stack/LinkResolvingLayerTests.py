@@ -7,7 +7,7 @@ from tests.session_stack.TestBases import TestBases
 
 
 class BasicLinkResolvingLayerTests(TestBases.SessionLayerTestsBase):
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         return LinkResolvingLayer()
 
 
@@ -17,7 +17,7 @@ class LinkResolvingLayerTests(TestBases.LayerTestsBase):
     backing_path = NodePath('.backing_node')
     backing_foo_path = NodePath('.backing_node.foo')
 
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, "foo")
         # TODO: create link by create.link action
@@ -80,7 +80,7 @@ class LinkResolvingLayerActionsTests(TestBases.LayerActionsTestsBase):
     backing_path = NodePath('.backing_node')
     backing_foo_path = NodePath('.backing_node.foo')
 
-    def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+    def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
         session.create(self.backing_path, "backing")
         session.create(self.backing_foo_path, "foo")
         return LinkResolvingLayer()

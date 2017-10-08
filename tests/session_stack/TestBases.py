@@ -3,7 +3,7 @@ import unittest
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.Session import Session
 from contextshell.session_stack.StorageLayer import StorageLayer
 
@@ -18,7 +18,7 @@ class TestBases:
             self.tested_layer = self.prepare_layer(self.session)
             self.session.push(self.tested_layer)
 
-        def prepare_layer(self, session: SessionLayer) -> SessionLayer:
+        def prepare_layer(self, session: CrudSessionLayer) -> CrudSessionLayer:
             raise NotImplementedError()
 
     class LayerActionsTestsBase(LayerTestsBase):

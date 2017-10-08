@@ -1,7 +1,7 @@
 import unittest
 
 from contextshell.NodePath import NodePath
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.SessionManager import SessionManager
 from contextshell.Command import Command
 from contextshell.TreeRoot import TreeRoot
@@ -109,7 +109,7 @@ class CommandLookupTests(unittest.TestCase):
             super().__init__(NodePath(name))
             self.return_value = return_value
 
-        def __call__(self, session: SessionLayer, target: NodePath, *arguments):
+        def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
             return self.return_value
 
     def setUp(self):

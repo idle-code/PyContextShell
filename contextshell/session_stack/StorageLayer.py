@@ -1,10 +1,10 @@
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from typing import List
 
 
-class StorageLayer(SessionLayer):
+class StorageLayer(CrudSessionLayer):
     def __init__(self, root: Node):
         self.root = root
 

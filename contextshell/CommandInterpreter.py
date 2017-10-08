@@ -1,4 +1,4 @@
-from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from contextshell.Command import Command
 from contextshell.NodePath import NodePath
@@ -8,7 +8,7 @@ class CommandInterpreter:
     actions_branch_name = '@actions'  # TODO: define in a single place (see TreeRoot)
     session_lookup_path = SessionStorageLayer.session_path
 
-    def __init__(self, session: SessionLayer):
+    def __init__(self, session: CrudSessionLayer):
         self.session = session
 
     def execute(self, command: Command):
