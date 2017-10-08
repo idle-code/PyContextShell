@@ -10,7 +10,9 @@ class SessionLayer:
     def session_actions(self):
         return []
 
-    # TODO: make sure paths passed to those methods are absolute
+    def execute(self, target: NodePath, action_name: NodePath, *args):
+        pass
+
     def get(self, path: NodePath):
         return self.next_layer.get(path)
 

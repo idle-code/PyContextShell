@@ -99,5 +99,4 @@ class IsLinkAction(ActionNode):
     def __call__(self, session: SessionLayer, target: NodePath, *arguments):
         assert len(arguments) == 0
         target_value = session.get(target)  # FIXME: get is being redirected to link backing path
-        print(target_value, type(target_value))
         return isinstance(target_value, NodePath)

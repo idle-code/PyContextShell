@@ -73,6 +73,7 @@ class LinkResolvingLayerTests(TestBases.LayerTestsBase):
         self.assertEqual('bar', self.storage_layer.get(backing_bar_path))
 
 
+@unittest.skip("Fix when is.link action can be implemented")
 class LinkResolvingLayerActionsTests(TestBases.LayerActionsTestsBase):
     link_path = NodePath('.link')
     link_foo_path = NodePath('.link.foo')
@@ -118,10 +119,8 @@ class LinkResolvingLayerActionsTests(TestBases.LayerActionsTestsBase):
         self.assertTrue(self.exec(self.link_path, 'is.link'))
 
     def test_read_link(self):
-        raise NotImplementedError()
-
-    def test_read_nonexistent_link(self):
-        raise NotImplementedError()
+        link_path = self.exec(self.link_path, 'link.read')
+        self.assertEqual(link_path, self.link_path)
 
 
 if __name__ == '__main__':
