@@ -1,3 +1,23 @@
+Issues:
+  - What is 'normal' action invocation? Where action arguments should go?
+    - Prefer to use target as an argument
+      - 'foo.bar: remove' instead of 'foo: remove bar'
+    - Prefer to logical order/actual topology instead of target
+      - 'foo: exists bar' instead of 'foo.bar: exists'
+    - Valid basic action calls
+      - 'foo.bar: get'
+      - 'foo.bar: set 123'
+      - 'foo.bar: create spam'
+      - 'foo.bar: create spam 123'
+      - 'foo.bar: list'
+      - 'foo.bar: exists spam'
+      - 'foo.bar.spam: exists' (this will always return True or throw an exception if 'spam' doesn't exists)
+      - 'foo.bar: remove spam'
+      - 'foo.bar.spam: remove' (if 'foo.bar.spam' exists for sure - throw exception if not)
+  - Where and if action call normalization should happen?
+    Normalization in this context means different behaviour depending on number of action parameters, i.e.
+    'foo.bar: remove spam' should be semantically equal to 'foo.bar.spam: remove' (or other way)
+
 Tree backend:
   - Serialization to file
     - Values

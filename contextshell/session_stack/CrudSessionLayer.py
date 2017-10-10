@@ -15,6 +15,27 @@ class SessionLayer:
 
 
 class CrudSessionLayer(SessionLayer):
+    def execute(self, target: NodePath, action_name: NodePath, *args):
+        if action_name == NodePath('get'):
+            return self.get(target)
+        elif action_name == NodePath('set'):
+            self.set(target, args[0])
+        elif action_name == NodePath('list'):
+            return self.list(target)
+        elif action_name == NodePath('exists'):
+            tested_path = NodePath.join(target, args[0])
+            return self.exists(tested_path)
+        elif action_name == NodePath('create'):
+            if len(args) == 2:
+                return self.create(NodePath.join(target, args[0]), args[1])
+            elif len(args) == 1:
+                return self.create(NodePath.join(target, args[0]))
+            else:
+                raise RuntimeError("Too few arguments provided")
+        elif action_name == NodePath('remove'):
+            path_to_remove = NodePath.join(target, args[0])
+            return self.remove(path_to_remove)
+
     def get(self, path: NodePath):
         return self.next_layer.get(path)
 
