@@ -37,19 +37,20 @@ class CrudSessionLayer(SessionLayer):
             return self.remove(path_to_remove)
 
     def get(self, path: NodePath):
-        return self.next_layer.get(path)
+        return self.next_layer.execute(path, 'get')
 
     def set(self, path: NodePath, new_value):
-        return self.next_layer.set(path, new_value)
+        return self.next_layer.execute(path, 'set', new_value)
 
     def list(self, path: NodePath) -> List[NodePath]:
-        return self.next_layer.list(path)
+        return self.next_layer.execute(path, 'list')
 
     def exists(self, path: NodePath) -> bool:
-        return self.next_layer.exists(path)
+        # FIXME: this will throw when path.base_path doesn't exists
+        return self.next_layer.execute(path.base_path, 'exists', path.base_name)
 
     def create(self, path: NodePath, value=None):
-        return self.next_layer.create(path, value)
+        return self.next_layer.execute(path.base_path, 'create', NodePath(path.base_name), value)
 
     def remove(self, path: NodePath):
-        return self.next_layer.remove(path)
+        return self.next_layer.execute(path.base_path, 'remove', path.base_name)

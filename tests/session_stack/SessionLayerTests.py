@@ -94,6 +94,8 @@ class CrudSessionLayerExecuteForwardingTests(unittest.TestCase):
 
         self.assertEqual(return_value, expected_return_value)
 
+    # TODO: test_execute_forwards_to_next_layer
+
     def test_execute_forwards_to_get(self):
         self.check_argument_forwarding('get')
 
@@ -171,8 +173,7 @@ class CrudSessionLayerExecuteForwardingTests(unittest.TestCase):
     def test_execute_normalizes_remove(self):
         self.check_target_in_argument_normalization('remove')
 
-
-class MethodToExecuteFakeLayer(CrudSessionLayer):
+class FakeLayer(SessionLayer):
     def __init__(self):
         self.target = 'no target'
         self.action_name = 'not called'
@@ -184,80 +185,97 @@ class MethodToExecuteFakeLayer(CrudSessionLayer):
         self.args = args
 
 
+class MethodToExecuteFakeLayer(CrudSessionLayer):
+    def __init__(self):
+        self.next_layer = FakeLayer()
+
+    @property
+    def target(self):
+        return self.next_layer.target
+
+    @property
+    def action_name(self):
+        return self.next_layer.action_name
+
+    @property
+    def args(self):
+        return self.next_layer.args
+
+
 class CrudSessionLayerMethodForwardingTests(unittest.TestCase):
     def test_get_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         target = NodePath('foo.bar')
 
-        session_layer.get(target)
+        layer.get(target)
 
-        self.assertEqual(session_layer.target, target)
-        self.assertEqual(session_layer.action_name, 'get')
-        self.assertListEqual(list(session_layer.args), [])
+        self.assertEqual(layer.target, target)
+        self.assertEqual(layer.action_name, 'get')
+        self.assertListEqual(list(layer.args), [])
 
     def test_set_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         target = NodePath('foo.bar')
 
-        session_layer.set(target, 2)
+        layer.set(target, 2)
 
-        self.assertEqual(session_layer.target, target)
-        self.assertEqual(session_layer.action_name, 'set')
-        self.assertListEqual(list(session_layer.args), [2])
+        self.assertEqual(layer.target, target)
+        self.assertEqual(layer.action_name, 'set')
+        self.assertListEqual(list(layer.args), [2])
 
     def test_list_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         target = NodePath('foo.bar')
 
-        session_layer.list(target)
+        layer.list(target)
 
-        self.assertEqual(session_layer.target, target)
-        self.assertEqual(session_layer.action_name, 'list')
-        self.assertListEqual(list(session_layer.args), [])
+        self.assertEqual(layer.target, target)
+        self.assertEqual(layer.action_name, 'list')
+        self.assertListEqual(list(layer.args), [])
 
     def test_exists_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         parent_path = NodePath('foo')
         arg_path = NodePath('bar')
 
-        session_layer.exists(NodePath.join(parent_path, arg_path))
+        layer.exists(NodePath.join(parent_path, arg_path))
 
-        self.assertEqual(session_layer.target, parent_path)
-        self.assertEqual(session_layer.action_name, 'exists')
-        self.assertListEqual(list(session_layer.args), [arg_path])
+        self.assertEqual(layer.target, parent_path)
+        self.assertEqual(layer.action_name, 'exists')
+        self.assertListEqual(list(layer.args), [arg_path])
 
     def test_create_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         parent_path = NodePath('foo')
         arg_path = NodePath('bar')
 
-        session_layer.create(NodePath.join(parent_path, arg_path))
+        layer.create(NodePath.join(parent_path, arg_path))
 
-        self.assertEqual(session_layer.target, parent_path)
-        self.assertEqual(session_layer.action_name, 'create')
-        self.assertListEqual(list(session_layer.args), [arg_path])
+        self.assertEqual(layer.target, parent_path)
+        self.assertEqual(layer.action_name, 'create')
+        self.assertListEqual(list(layer.args), [arg_path, None])
 
     def test_create_with_value_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         parent_path = NodePath('foo')
         arg_path = NodePath('bar')
 
-        session_layer.create(NodePath.join(parent_path, arg_path), 3)
+        layer.create(NodePath.join(parent_path, arg_path), 3)
 
-        self.assertEqual(session_layer.target, parent_path)
-        self.assertEqual(session_layer.action_name, 'create')
-        self.assertListEqual(list(session_layer.args), [arg_path, 3])
+        self.assertEqual(layer.target, parent_path)
+        self.assertEqual(layer.action_name, 'create')
+        self.assertListEqual(list(layer.args), [arg_path, 3])
 
     def test_remove_forwards_to_execute(self):
-        session_layer = MethodToExecuteFakeLayer()
+        layer = MethodToExecuteFakeLayer()
         parent_path = NodePath('foo')
         arg_path = NodePath('bar')
 
-        session_layer.remove(NodePath.join(parent_path, arg_path))
+        layer.remove(NodePath.join(parent_path, arg_path))
 
-        self.assertEqual(session_layer.target, parent_path)
-        self.assertEqual(session_layer.action_name, 'remove')
-        self.assertListEqual(list(session_layer.args), [arg_path])
+        self.assertEqual(layer.target, parent_path)
+        self.assertEqual(layer.action_name, 'remove')
+        self.assertListEqual(list(layer.args), [arg_path])
 
 
 if __name__ == '__main__':
