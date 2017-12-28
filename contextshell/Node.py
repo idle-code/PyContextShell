@@ -32,7 +32,7 @@ class Node:
     def append(self, node, name: str=None):
         """Append provided node as subnode"""
         if node is None:
-            raise ValueError("Cannot append None node")
+            raise ValueError("Cannot append None as node")
         if name is not None:
             if len(name) == 0:
                 raise NameError("Invalid appended node name - empty")
@@ -75,5 +75,5 @@ class Node:
         """Check if there is a subnode with provided name"""
         return self.get_node(name=name, index=index) is not None
 
-    # def __contains__(self, name: str):
-    #     return self.contains(name=name)
+    def __contains__(self, name: str):
+        return self.contains(name=name)

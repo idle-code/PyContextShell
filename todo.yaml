@@ -2,7 +2,7 @@ Issues:
   - What is 'normal' action invocation? Where action arguments should go?
     - Prefer to use target as an argument
       - 'foo.bar: remove' instead of 'foo: remove bar'
-    - Prefer to logical order/actual topology instead of target
+    - >>> Prefer to logical order/actual topology instead of target
       - 'foo: exists bar' instead of 'foo.bar: exists'
     - Valid basic action calls
       - 'foo.bar: get'
@@ -17,6 +17,25 @@ Issues:
   - Where and if action call normalization should happen?
     Normalization in this context means different behaviour depending on number of action parameters, i.e.
     'foo.bar: remove spam' should be semantically equal to 'foo.bar.spam: remove' (or other way)
+    - Normalization should be handled by the invoked action
+  - Should build-in, layer-dependant actions have representation in the tree?
+    - Yes - this will allow their overriding
+  - Network session reequirements
+    - Attachement of an remote tree
+      'create.connection .remote 10.0.0.2'
+      '.remote: connect'
+    - Detachement of an remote tree
+      '.remote: disconnect'
+      'remove .remote'
+    - Argument forwarding to remote tree
+      '.remote.hour: set 18' should invoke '.hour: set 18' on the remote host
+    - Return value forwarding
+      '.remote.minutes: get' should return value to the local system
+    - Local action should be able operate on remote tree
+      'local_action .remote.foo' - local_action should be able to access basic operations of remote '.foo' node
+      - by basic operations I understand CRUD-like ones
+    - Remote actions should be able to use local tree values
+      '.remote.foo: remote_action .bar' - remote action is able to access basic operations of local '.bar' node
 
 Tree backend:
   - Serialization to file
@@ -29,6 +48,7 @@ Tree backend:
   - In-tree links support?
   - Easy creation of custom nodes from python classes
     + @action decorator
+  - Actions should take target node/path and argument tree (instead a list which is currently used)
   - Virtual attributes
     - @name
     - @path

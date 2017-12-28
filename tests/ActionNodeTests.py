@@ -1,22 +1,25 @@
 import unittest
 from contextshell.session_stack.StorageLayer import StorageLayer
-from contextshell.ActionNode import *
+from contextshell.session_stack.SessionLayer import SessionLayer
+from contextshell.NodePath import NodePath
+from contextshell.Node import Node
+from contextshell.ActionNode import ActionNode, action
 
 
-def sum_function(session: CrudSessionLayer, target: NodePath, number: int):
+def sum_function(session: SessionLayer, target: NodePath, number: int):
     return session.get(target) + number
 
 
 class DiffActionNode(ActionNode):
-    def __call__(self, session: CrudSessionLayer, target: NodePath, number: int):
+    def __call__(self, session: SessionLayer, target: NodePath, number: int):
         return session.get(target) - number
 
     @action
-    def diff(self, session: CrudSessionLayer, target: NodePath, number: int):
+    def diff(self, session: SessionLayer, target: NodePath, number: int):
         return session.get(target) - number
 
     @action(path='my.diff')
-    def my_diff(self, session: CrudSessionLayer, target: NodePath, number: int):
+    def my_diff(self, session: SessionLayer, target: NodePath, number: int):
         return session.get(target) - number
 
 

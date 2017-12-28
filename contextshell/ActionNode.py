@@ -1,6 +1,6 @@
 from contextshell.NodePath import NodePath
 from contextshell.Node import Node
-from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
+from contextshell.session_stack.CrudSessionLayer import SessionLayer
 import inspect
 
 class ActionNode(Node):
@@ -39,7 +39,7 @@ class ActionNode(Node):
                 action_parent = NodePath.create_path(self, field.path.base_path)
                 action_parent.append(new_action, field.path.base_name)
 
-    def __call__(self, session: CrudSessionLayer, target: NodePath, *arguments):
+    def __call__(self, session: SessionLayer, target: NodePath, *arguments):
         callback = self.get()
         if callback is None:
             raise NotImplementedError("__call__ method not overridden or no callback provided")
