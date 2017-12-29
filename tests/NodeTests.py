@@ -177,62 +177,76 @@ class SubnodesByIndexTests(unittest.TestCase):
 
     def test_retrieve_by_index(self):
         root = Node()
+        child_node = Node()
+        root.append(child_node)
 
-        self.root.append(self.first)
-        self.root.append(self.second)
-        self.assertIs(self.first, self.root.get_node(index=0))
-        self.assertIs(self.second, self.root.get_node(index=1))
+        retrieved_node = root.get_node(index=0)
+
+        self.assertIs(retrieved_node, child_node)
 
     def test_retrieve_by_getitem(self):
         root = Node()
-        self.root.append(self.first)
-        self.root.append(self.second)
-        self.assertIs(self.first, self.root[0])
-        self.assertIs(self.second, self.root[1])
+        child_node = Node()
+        root.append(child_node)
+
+        retrieved_node = root[0]
+
+        self.assertIs(retrieved_node, child_node)
 
     def test_retrieve_nonexistent_index(self):
         root = Node()
-        self.assertIs(None, self.root.get_node(index=99))
+
+        retrieved_node = root.get_node(index=0)
+
+        self.assertIs(None, retrieved_node)
 
     def test_retrieve_nonexistent_by_getitem(self):
         root = Node()
+
         with self.assertRaises(KeyError):
-            self.root[99]
+            root[0]
 
     def test_remove_no_args(self):
         root = Node()
+
         with self.assertRaises(NameError):
-            self.root.remove()
+            root.remove()
 
     def test_remove_by_index(self):
         root = Node()
-        self.root.append(self.first)
-        self.root.append(self.second)
-        self.assertIs(self.first, self.root[0])
-        self.assertListEqual([0, 1], self.root.list())
+        child_node = Node()
+        root.append(child_node)
 
-        first = self.root.remove(index=0)
+        removed_node = root.remove(index=0)
 
-        self.assertIs(self.first, first)
-        self.assertListEqual([0], self.root.list())
-        self.assertIs(self.second, self.root[0])
+        self.assertIs(removed_node, child_node)
 
     def test_remove_nonexistent_index(self):
         root = Node()
+
         with self.assertRaises(NameError):
-            self.root.remove(index=99)
+            root.remove(index=0)
 
     def test_exists_no_args(self):
         root = Node()
-        with self.assertRaises(NameError):
-            self.root.contains()
 
-    def test_exists_index(self):
+        with self.assertRaises(NameError):
+            root.contains()
+
+    def test_exists_existing_index(self):
         root = Node()
-        self.root.append(self.first)
-        self.assertTrue(self.root.contains(index=0))
-        self.assertFalse(self.root.contains(index=1))
-        self.assertFalse(self.root.contains(index=-1))
+        root.append(Node())
+
+        index_exists = root.contains(index=0)
+
+        self.assertTrue(index_exists)
+
+    def test_nonexisting_existing_index(self):
+        root = Node()
+
+        index_exists = root.contains(index=0)
+
+        self.assertFalse(index_exists)
 
     # def test_exists_by_index(self):
     #     self.root.append('foo', self.foo)
