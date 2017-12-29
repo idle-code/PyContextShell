@@ -42,7 +42,7 @@ class Node:
         self._subnodes.append((name, node))
 
     def get_node(self, name: str=None, index: int=None) -> 'Node':
-        """Return subnode with provided name"""
+        """Return subnode with provided name or index"""
         if name is not None:
             for p in self._subnodes:
                 if p[0] == name:
@@ -55,6 +55,7 @@ class Node:
         return None
 
     def __getitem__(self, name_or_index) -> 'Node':
+        """Return subnode with provided name or index"""
         if isinstance(name_or_index, int):
             node = self.get_node(index=name_or_index)
         else:
@@ -63,16 +64,17 @@ class Node:
             raise KeyError(name_or_index)
         return node
 
-    def remove(self, name: str=None, index=None) -> 'Node':
+    def remove(self, name: str=None, index: int=None) -> 'Node':
         """Remove subnode with provided name"""
         node_to_remove = self.get_node(name=name, index=index)
         if node_to_remove is None:
             raise NameError("Node '{}' doesn't exists".format(name))
         self._subnodes = [p for p in self._subnodes if p[1] is not node_to_remove]
+        node_to_remove._parent = None
         return node_to_remove
 
     def contains(self, name: str=None, index: int=None) -> bool:
-        """Check if there is a subnode with provided name"""
+        """Checks if there is a subnode with provided name"""
         return self.get_node(name=name, index=index) is not None
 
     def __contains__(self, name: str):
