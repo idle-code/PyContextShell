@@ -14,25 +14,10 @@ class NodePath(list):
     @staticmethod
     def cast(path):
         """Converts passed argument to NodePath (if needed)"""
-        # TODO: remove?
+        # TODO: remove this method - be aware what types are passed instead
         if path is None:
             return NodePath()
         return NodePath(path)
-
-    @staticmethod
-    def create_path(root, path):
-        # TODO: move somewhere else - this is Node-implementation dependant
-        path = NodePath.cast(path)
-        if path.is_absolute:
-            raise NotImplementedError("Absolute path creation is not implemented")
-        if len(path) == 0:
-            return root
-        node = root.get_node(name=path[0])
-        if node is None:
-            from contextshell.Node import Node  # TODO: move to the header when Node2 replaces Node
-            node = Node()
-            root.append(node, path[0])
-        return NodePath.create_path(node, path[1:])
 
     def __init__(self, representation=[], absolute=False):
         super().__init__()
@@ -46,6 +31,7 @@ class NodePath(list):
             self.extend(representation)
         elif isinstance(representation, list):
             # TODO: check element's types?
+            # TODO: is it ever used?
             self.extend(representation)
         else:
             raise ValueError("Could not convert {} to NodePath".format(representation))

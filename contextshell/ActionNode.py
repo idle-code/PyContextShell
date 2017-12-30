@@ -1,7 +1,7 @@
 from contextshell.NodePath import NodePath
 from contextshell.Node import Node
 from contextshell.session_stack.CrudSessionLayer import SessionLayer
-import inspect
+
 
 class ActionNode(Node):
     def __init__(self, path, callback=None):
@@ -36,8 +36,21 @@ class ActionNode(Node):
                 new_action = ActionNode(field.path, bound_method)
                 setattr(self, field_name, new_action)
                 # Create subnode for sub-action:
-                action_parent = NodePath.create_path(self, field.path.base_path)
+                action_parent = ActionNode.create_path(self, field.path.base_path)
                 action_parent.append(new_action, field.path.base_name)
+
+    @staticmethod
+    def create_path(root, path):
+        path = NodePath.cast(path)
+        if path.is_absolute:
+            raise NotImplementedError("Absolute path creation is not implemented")
+        if len(path) == 0:
+            return root
+        node = root.get_node(name=path[0])
+        if node is None:
+            node = Node()
+            root.append(node, path[0])
+        return ActionNode.create_path(node, path[1:])
 
     def __call__(self, session: SessionLayer, target: NodePath, *arguments):
         callback = self.get()

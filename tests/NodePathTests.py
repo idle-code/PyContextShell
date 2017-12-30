@@ -1,234 +1,286 @@
 import unittest
 
 from contextshell.NodePath import *
-from contextshell.Node import *
 
 
-class NodePathTests(unittest.TestCase):
-    def test_empty(self):
-        empty = NodePath()
-        self.assertEqual(0, len(empty))
-        self.assertFalse(empty.is_absolute)
+def create_path(representation: str) -> NodePath:
+    """Creates instance of NodePath from provided representation"""
+    return NodePath(representation)
 
-    def test_constructor(self):
-        abc = NodePath(['a', 'b', 'c'])
-        self.assertEqual(3, len(abc))
-        self.assertFalse(abc.is_absolute)
-        self.assertEqual('a.b.c', str(abc))
 
-    def test_parse_relative(self):
-        relative_abc = NodePath('a.b.c')
+class JoinTests(unittest.TestCase):
+    def test_join_two_absolute_paths(self):
+        foo = NodePath('.foo')
+        bar = NodePath('.bar')
 
-        self.assertEqual(3, len(relative_abc))
-        self.assertFalse(relative_abc.is_absolute)
-        self.assertEqual('a.b.c', str(relative_abc))
+        joined_path = NodePath.join(foo, bar)
 
-    def test_parse_absolute(self):
-        absolute_abc = NodePath('.a.b.c')
+        self.assertEqual(joined_path, create_path('.foo.bar'))
 
-        self.assertEqual(3, len(absolute_abc))
-        self.assertTrue(absolute_abc.is_absolute)
-        self.assertEqual('.a.b.c', str(absolute_abc))
-
-    def test_basename(self):
-        abc = NodePath('a.b.c')
-
-        self.assertEqual('c', abc.base_name)
-
-    def test_root_basename(self):
-        root = NodePath('.')
-        self.assertIsNone(root.base_name)
-
-        root = NodePath()
-        self.assertIsNone(root.base_name)
-
-    def test_basepath_relative(self):
-        abc = NodePath('a.b.c')
-        base_path = abc.base_path
-
-        self.assertEqual(2, len(base_path))
-        self.assertEqual(abc.is_absolute, base_path.is_absolute)
-        self.assertEqual('a.b', str(base_path))
-
-    def test_basepath_absolute(self):
-        abc = NodePath('.a.b.c')
-        base_path = abc.base_path
-
-        self.assertEqual(2, len(base_path))
-        self.assertEqual(abc.is_absolute, base_path.is_absolute)
-        self.assertEqual('.a.b', str(base_path))
-
-    def test_index(self):
-        ab2c = NodePath(['a', 'b', 2, 'c'])
-
-        self.assertEqual(4, len(ab2c))
-        self.assertEqual('a.b.2.c', str(ab2c))
-
-    def test_index_parse(self):
-        ab2c = NodePath('.a.b.2.c')
-
-        self.assertEqual(4, len(ab2c))
-        self.assertEqual('.a.b.2.c', str(ab2c))
-        self.assertIsInstance(ab2c[2], int)
-
-    def test_cast(self):
-        none = NodePath.cast(None)
-        self.assertEqual(0, len(none))
-        self.assertFalse(none.is_absolute)
-
-        name = NodePath.cast('foo')
-        self.assertEqual(1, len(name))
-        self.assertFalse(name.is_absolute)
-        self.assertIsInstance(name[0], str)
-
-        path = NodePath.cast('.foo.bar.baz')
-        self.assertEqual(3, len(path))
-        self.assertTrue(path.is_absolute)
-
-        path = NodePath.cast(['foo', 'bar', 'baz'])
-        self.assertEqual(3, len(path))
-        self.assertFalse(path.is_absolute)
-
-    def test_node_cast_mutability(self):
-        foobar = NodePath(['foo', 'bar'])
-        casted = NodePath.cast(foobar)
-        foobar.append('baz')
-
-        self.assertEqual(NodePath.cast(['foo', 'bar', 'baz']), foobar)
-        self.assertEqual(NodePath.cast(['foo', 'bar']), casted)
-
-    def test_cast_index(self):
-        number = NodePath.cast(13)
-        self.assertEqual(1, len(number))
-        self.assertFalse(number.is_absolute)
-        self.assertIsInstance(number[0], int)
-        self.assertEqual(13, number[0])
-
-        strnumber = NodePath.cast('42')
-        self.assertEqual(1, len(strnumber))
-        self.assertFalse(strnumber.is_absolute)
-        self.assertEqual(42, strnumber[0])
-
-    def test_join(self):
-        foobar = NodePath('.foo.bar')
-        spam = NodePath('.spam')
-
-        foobarspam = NodePath.join(foobar, spam)
-
-        self.assertEqual('.foo.bar.spam', str(foobarspam))
-        self.assertEqual(3, len(foobarspam))
-
-    def test_join_mutability(self):
-        foobar = NodePath('.foo.bar')
-        spam = NodePath('.spam')
-
-        foobarspam = NodePath.join(foobar, spam)
-
-        self.assertEqual('.foo.bar.spam', str(foobarspam))
-        self.assertEqual('.foo.bar', str(foobar))
-        self.assertEqual('.spam', str(spam))
-
-    def test_join_raw(self):
+    def test_join_list(self):
+        # CHECK: is this used anywhere?
         rabarbar = NodePath.join('ra', 'bar', 'bar')
 
-        self.assertEqual('ra.bar.bar', str(rabarbar))
-        self.assertEqual(3, len(rabarbar))
+        self.assertEqual(rabarbar, NodePath(['ra', 'bar', 'bar']))
 
-    def test_compare(self):
-        foo = NodePath.cast('.foo')
-        foobar = NodePath.cast('.foo.bar')
 
-        self.assertNotEqual(foo, foobar)
+class CastTests(unittest.TestCase):
+    def test_cast_none(self):
+        none_path = NodePath.cast(None)
 
-        another_foo = NodePath.cast('.foo')
+        self.assertEqual(none_path, create_path(''))
 
-        self.assertEqual(foo, another_foo)
+    def test_cast_representation(self):
+        name_path = NodePath.cast('foo.bar')
 
-    def test_compare_absolute_relative(self):
-        absolute_foo = NodePath.cast('.foo.bar')
-        self.assertTrue(absolute_foo.is_absolute)
-        relative_foo = NodePath.cast('foo.bar')
-        self.assertFalse(relative_foo.is_absolute)
+        self.assertEqual(name_path, create_path('foo.bar'))
 
-        self.assertNotEqual(absolute_foo, relative_foo)
 
-        another_absolute_foo = NodePath.cast('.foo.bar')
+class StrinParsingConstructorTests(unittest.TestCase):
+    def test_constructor_from_string_matches_length(self):
+        relative_path = NodePath('a.b.c')
 
-        self.assertEqual(absolute_foo, another_absolute_foo)
+        self.assertEqual(3, len(relative_path))
 
+    def test_constructor_from_string_trailing_separator(self):
+        relative_path = NodePath('a.b.c.')
+
+        self.assertEqual(3, len(relative_path))
+
+    def test_constructor_from_relative_string(self):
+        relative_path = NodePath('a.b.c')
+
+        relative_path_is_absolute = relative_path.is_absolute
+
+        self.assertFalse(relative_path_is_absolute)
+
+    def test_constructor_from_index_string(self):
+        index_path = NodePath('1.2.3')
+
+        self.assertEqual(3, len(index_path))
+
+    def test_constructor_from_absolute_string(self):
+        absolute_path = NodePath('.a.b.c')
+
+        absolute_path_is_absolute = absolute_path.is_absolute
+
+        self.assertTrue(absolute_path_is_absolute)
+
+    def test_constructor_from_index_string_preserve_element_type(self):
+        index_path = NodePath('1.2.3')
+
+        element = index_path[0]
+
+        self.assertEqual(type(element), type(1))
+
+
+class ConstructorTests(unittest.TestCase):
+    def test_default_constructor_creates_empty_path(self):
+        empty = NodePath()
+
+        self.assertEqual(0, len(empty))
+
+    def test_default_constructor_creates_relative_path(self):
+        empty = NodePath()
+
+        empty_is_absolute = empty.is_absolute
+
+        self.assertFalse(empty_is_absolute)
+
+    def test_constructor_from_single_index(self):
+        index_path = NodePath(3)
+
+        self.assertEqual(1, len(index_path))
+
+    def test_constructor_from_list_creates_relative_path(self):
+        path = NodePath(['a', 'b', 'c'])
+
+        path_is_absolute = path.is_absolute
+
+        self.assertFalse(path_is_absolute)
+
+    def test_constructor_from_list(self):
+        path = NodePath(['a', 'b', 'c'])
+
+        self.assertEqual(3, len(path))
+
+    def test_constructor_from_index_list(self):
+        index_path = NodePath([1, 2, 3])
+
+        self.assertEqual(3, len(index_path))
+
+    def test_constructor_from_index_list_is_relative(self):
+        index_path = NodePath([1])
+
+        index_path_is_absolute = index_path.is_absolute
+
+        self.assertFalse(index_path_is_absolute)
+
+    def test_constructor_from_index_list_preserve_element_type(self):
+        # CHECK: is this test really needed?
+        index_path = NodePath([1])
+
+        element = index_path[0]
+
+        self.assertEqual(type(element), type(1))
+
+    def test_constructor_from_existing_instance(self):
+        path = create_path('foo.bar')
+
+        path_copy = NodePath(path)
+
+        self.assertEqual(path, path_copy)
+
+
+class BasePathTests(unittest.TestCase):
+    def test_basepath_skips_last_element(self):
+        path = create_path('foo.bar.spam')
+
+        base_path = path.base_path
+
+        self.assertEqual(base_path, create_path('foo.bar'))
+
+    def test_basepath_of_relative_is_relative(self):
+        path = create_path('foo.bar.spam')
+
+        base_path = path.base_path
+
+        self.assertFalse(base_path.is_absolute)
+
+    def test_basepath_of_absolute_is_absolute(self):
+        path = create_path('.foo.bar.spam')
+
+        base_path = path.base_path
+
+        self.assertTrue(base_path.is_absolute)
+
+
+class BaseNameTests(unittest.TestCase):
+    def test_basename(self):
+        path = create_path('foo.bar')
+
+        path_base_name = path.base_name
+
+        self.assertEqual(path_base_name, 'bar')
+
+    def test_basename_from_empty(self):
+        path = create_path('')
+
+        path_base_name = path.base_name
+
+        self.assertIsNone(path_base_name)
+
+
+class IsParentOfTests(unittest.TestCase):
     def test_is_parent_of(self):
         foo = NodePath.cast('.foo')
         foobar = NodePath.cast('.foo.bar')
         self.assertTrue(foo.is_parent_of(foobar))
         self.assertFalse(foobar.is_parent_of(foo))
 
-    def test_is_parent_of_relative(self):
-        foo = NodePath.cast('foo')
-        foobar = NodePath.cast('foo.bar')
-        self.assertTrue(foo.is_parent_of(foobar))
-        self.assertFalse(foobar.is_parent_of(foo))
+    def test_longer_is_parent_of_shorter(self):
+        longer = create_path('foo.bar')
+        shorter = create_path('foo')
 
-    def test_is_parent_of_absolute_relative(self):
-        foo = NodePath.cast('.foo')
-        foobar = NodePath.cast('foo.bar')
+        longer_is_parent_of_shorter = longer.is_parent_of(shorter)
+
+        self.assertFalse(longer_is_parent_of_shorter)
+
+    def test_is_parent_of_same_length(self):
+        foobar1 = create_path('foo.bar')
+        foobar2 = create_path('foo.bar')
+
+        foobar_is_parent_of_foobar = foobar1.is_parent_of(foobar2)
+
+        self.assertTrue(foobar_is_parent_of_foobar)
+
+    def test_relative_is_parent_of_relative(self):
+        foo = create_path('foo')
+        foobar = create_path('foo.bar')
+
+        foo_is_parent_of_foobar = foo.is_parent_of(foobar)
+
+        self.assertTrue(foo_is_parent_of_foobar)
+
+    def test_absolute_is_parent_of_absolute(self):
+        foo = create_path('.foo')
+        foobar = create_path('.foo.bar')
+
+        foo_is_parent_of_foobar = foo.is_parent_of(foobar)
+
+        self.assertTrue(foo_is_parent_of_foobar)
+
+    def test_relative_is_parent_of_absolute(self):
+        foo = create_path('foo')
+        foobar = create_path('.foo.bar')
+
         with self.assertRaises(ValueError):
             foo.is_parent_of(foobar)
-        with self.assertRaises(ValueError):
-            foobar.is_parent_of(foo)
 
+    def test_absolute_is_parent_of_relative(self):
+        foo = create_path('.foo')
+        foobar = create_path('foo.bar')
+
+        with self.assertRaises(ValueError):
+            foo.is_parent_of(foobar)
+
+
+class RelativeToTests(unittest.TestCase):
     def test_relative_to(self):
-        foo = NodePath.cast('.foo')
-        foobar = NodePath.cast('.foo.bar')
-        bar = foobar.relative_to(foo)
-        self.assertFalse(bar.is_absolute)
-        self.assertEqual(NodePath('bar'), bar)
+        foo = create_path('.foo')
+        foobar = create_path('.foo.bar')
 
-    def test_relative_to_nonrelative(self):
-        foo = NodePath.cast('.spam.foo')
-        foobar = NodePath.cast('foo.bar')
+        foobar_relative_to_foo = foobar.relative_to(foo)
+
+        self.assertEqual(foobar_relative_to_foo, create_path('bar'))
+
+    def test_relative_to_no_common_base(self):
+        foobar = create_path('.foo.bar')
+        spamrabbit = create_path('.spam.rabbit')
+
         with self.assertRaises(ValueError):
-            foobar.relative_to(foo)
+            foobar.relative_to(spamrabbit)
 
-    def test_relative_to_absolute_relative(self):
-        foo = NodePath.cast('.foo')
-        foobar = NodePath.cast('foo.bar')
+    def test_absolute_relative_to_relative(self):
+        absolute = create_path('.foo.bar')
+        relative = create_path('foo')
+
         with self.assertRaises(ValueError):
-            foobar.relative_to(foo)
+            absolute.relative_to(relative)
+
+    def test_relative_relative_to_absolute(self):
+        relative = create_path('foo.bar')
+        absolute = create_path('.foo')
+
+        with self.assertRaises(ValueError):
+            relative.relative_to(absolute)
 
 
-class HelperMethodsTests(unittest.TestCase):
-    def setUp(self):
-        self.root = Node('root')
-        self.foo = Node('foo')
-        self.root.append(self.foo, 'foo')
-        self.bar = Node('bar')
-        self.foo.append(self.bar, 'bar')
+class EqualOperatorTests(unittest.TestCase):
+    def test_compare_same(self):
+        foo1 = create_path('foo')
+        foo2 = create_path('foo')
 
-    def test_create_path_relative(self):
-        spam_path = NodePath('spam.baz')
-        baz_node = NodePath.create_path(self.foo, spam_path)
-        self.assertIsNotNone(baz_node)
-        spam_node = self.root['foo'].get_node('spam')
-        self.assertIsNotNone(spam_node)
-        self.assertIsNone(spam_node.get())
-        self.assertIsNotNone(spam_node.get_node('baz'))
+        are_equal = foo1 == foo2
 
-    def test_create_path_partially_existing(self):
-        spam_path = NodePath('foo.spam')
-        spam_node = NodePath.create_path(self.root, spam_path)
-        self.assertIsNotNone(spam_node)
-        self.assertIsNotNone(self.root['foo'].get_node('spam'))
+        self.assertTrue(are_equal)
 
-    def test_create_path_existing(self):
-        bar_path = NodePath('foo.bar')
-        bar_node = NodePath.create_path(self.root, bar_path)
-        self.assertIs(self.bar, bar_node)
+    def test_compare_different(self):
+        foo = create_path('foo')
+        bar = create_path('bar')
 
-    def test_create_path_absolute(self):
-        # TODO: check if this is correct behaviour
-        spam_path = NodePath('.foo.spam')
-        with self.assertRaises(NotImplementedError):
-            NodePath.create_path(self.bar, spam_path)
+        are_equal = foo == bar
+
+        self.assertFalse(are_equal)
+
+    def test_compare_absolute_relative(self):
+        absolute_foo = create_path('.foo')
+        relative_foo = create_path('foo')
+
+        are_equal = absolute_foo == relative_foo
+
+        self.assertFalse(are_equal)
+
 
 if __name__ == '__main__':
     unittest.main()
