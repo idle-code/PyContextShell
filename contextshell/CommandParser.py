@@ -6,7 +6,7 @@ def tokenize(text: str) -> List[str]:
     tokens = []
     tok = ''
 
-    def end_token():
+    def finish_token():
         nonlocal tok, tokens
         if len(tok) > 0:
             tokens.append(tok)
@@ -14,13 +14,13 @@ def tokenize(text: str) -> List[str]:
 
     for char in text:
         if char in "{}:#":
-            end_token()
+            finish_token()
             tokens.append(char)
         elif char.isspace():
-            end_token()
+            finish_token()
         else:
             tok += char
-    end_token()
+    finish_token()
     return tokens
 
 
