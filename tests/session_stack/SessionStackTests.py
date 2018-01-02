@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock, Mock, call
 
 from contextshell.session_stack.SessionStack import *
-from contextshell.TreeRoot import TreeRoot
 from contextshell.session_stack.SessionManager import SessionManager
 from contextshell.ActionNode import ActionNode
 

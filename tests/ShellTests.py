@@ -1,13 +1,13 @@
 import unittest
 
-from contextshell.TreeRoot import TreeRoot
+from contextshell.Node import Node
 from contextshell.Shell import *
 from contextshell.session_stack.SessionManager import SessionManager
 
 
 class ShellTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
+        self.root = Node()
         manager = SessionManager(self.root)
 
         self.shell = Shell(manager.create_session())
@@ -31,7 +31,7 @@ class ShellTests(unittest.TestCase):
 
 class ShellCompletionTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
+        self.root = Node()
         manager = SessionManager(self.root)
 
         self.shell = Shell(manager.create_session())

@@ -7,13 +7,12 @@ from contextshell.session_stack.Session import Session
 from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from contextshell.session_stack.SessionManager import SessionManager
 from contextshell.Command import Command
-from contextshell.TreeRoot import TreeRoot
 from contextshell.CommandInterpreter import CommandInterpreter
 
 
 class SessionManagerTests(unittest.TestCase):
     def setUp(self):
-        self.root = TreeRoot()
+        self.root = Node()
         self.manager = SessionManager(self.root)
 
     def test_create_session(self):

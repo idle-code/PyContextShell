@@ -1,17 +1,17 @@
 import unittest
 
+from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.SessionManager import SessionManager
 from contextshell.Command import Command
-from contextshell.TreeRoot import TreeRoot
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.ActionNode import ActionNode
 
 
 class CommandInterpreterTests(unittest.TestCase):
     def setUp(self):
-        root = TreeRoot()
+        root = Node()
         manager = SessionManager(root)
         self.session = manager.create_session()
 
@@ -113,7 +113,7 @@ class CommandLookupTests(unittest.TestCase):
             return self.return_value
 
     def setUp(self):
-        root = TreeRoot()
+        root = Node()
         manager = SessionManager(root)
         self.session = manager.create_session()
         self.interpreter = CommandInterpreter(self.session)

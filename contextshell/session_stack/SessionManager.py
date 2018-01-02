@@ -6,7 +6,6 @@ from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
 from contextshell.session_stack.SessionStack import SessionStack
 from contextshell.session_stack.RelativeLayer import *
 from contextshell.CommandInterpreter import CommandInterpreter
-from contextshell.TreeRoot import TreeRoot
 from contextshell.actions.BasicActions import *
 
 
