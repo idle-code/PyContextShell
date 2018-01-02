@@ -3,7 +3,6 @@ from contextshell.ActionNode import ActionNode
 from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
 from contextshell.session_stack.SessionStack import SessionStack
 from contextshell.session_stack.SessionStorageLayer import SessionStorageLayer
-from typing import List
 
 
 class Session(SessionStack):

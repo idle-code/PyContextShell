@@ -41,17 +41,17 @@ class ListTests(unittest.TestCase):
         node_name = 'foo'
         root.append(Node(), name=node_name)
 
-        subnode_list = root.list()
+        root_subnodes = root.list()
 
-        self.assertListEqual([node_name], subnode_list)
+        self.assertListEqual([node_name], root_subnodes)
 
     def test_list_contains_index(self):
         root = Node()
         root.append(Node())
 
-        subnode_list = root.list()
+        root_subnodes = root.list()
 
-        self.assertListEqual([0], subnode_list)
+        self.assertListEqual([0], root_subnodes)
 
 
 class AppendTests(unittest.TestCase):
@@ -124,9 +124,9 @@ class GetNodeTests(unittest.TestCase):
     def test_get_node_nonexistent_by_name(self):
         root = Node()
 
-        retrieved_foo_node = root.get_node(name='nonexistent')
+        retrieved_nonexistent_node = root.get_node(name='nonexistent')
 
-        self.assertIsNone(retrieved_foo_node)
+        self.assertIsNone(retrieved_nonexistent_node)
 
     def test_get_node_existing_by_index(self):
         root = Node()
@@ -173,9 +173,9 @@ class GetItemTests(unittest.TestCase):
         child_node = Node()
         root.append(child_node)
 
-        retrieved_node = root[0]
+        retrieved_child_node = root[0]
 
-        self.assertIs(retrieved_node, child_node)
+        self.assertIs(retrieved_child_node, child_node)
 
     def test_getitem_nonexistent_by_index(self):
         root = Node()
@@ -196,18 +196,18 @@ class RemoveTests(unittest.TestCase):
         foo = Node()
         root.append(foo, name='foo')
 
-        removed_node = root.remove(name='foo')
+        removed_foo_node = root.remove(name='foo')
 
-        self.assertIs(foo, removed_node)
+        self.assertIs(foo, removed_foo_node)
 
     def test_remove_clears_parent(self):
         root = Node()
         child_node = Node()
         root.append(child_node, name='child')
 
-        removed_node = root.remove(name='child')
+        removed_child_node = root.remove(name='child')
 
-        self.assertIsNone(removed_node.parent)
+        self.assertIsNone(removed_child_node.parent)
 
     def test_remove_existing_name(self):
         root = Node()

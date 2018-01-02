@@ -29,9 +29,6 @@ class CommandParser:
         self._root = None
 
     def parse(self, command_line: str) -> Command:
-        if command_line is None:
-            return None
-
         tokens = tokenize(command_line)
         if len(tokens) == 0:
             return None  # ignore empty lines

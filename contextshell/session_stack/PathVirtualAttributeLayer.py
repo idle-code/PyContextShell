@@ -1,4 +1,4 @@
-from VirtualAttributeLayerBase import VirtualAttributeLayerBase
+from contextshell.session_stack.VirtualAttributeLayerBase import VirtualAttributeLayerBase
 from contextshell.session_stack.CrudSessionLayer import *
 
 
