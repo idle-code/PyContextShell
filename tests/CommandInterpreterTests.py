@@ -1,64 +1,62 @@
 import unittest
+from unittest.mock import MagicMock
 
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.session_stack.CrudSessionLayer import CrudSessionLayer
-from contextshell.session_stack.SessionManager import SessionManager
 from contextshell.Command import Command
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.ActionNode import ActionNode
 
 
+class FakeTree:
+    existing_paths: [NodePath]
+
+    def __init__(self):
+        self.existing_paths = []
+
+    def exists(self, path: NodePath) -> bool:
+        return path in self.existing_paths
+
+
+class FakeActionFinder:
+    existing_actions: [NodePath]
+
+    def __init__(self):
+        self.existing_actions = []
+
+    def find(self, target: NodePath, action_path: NodePath):
+        return action_path in self.existing_actions
+
+
 class CommandInterpreterTests(unittest.TestCase):
-    def setUp(self):
-        root = Node()
-        manager = SessionManager(root)
-        self.session = manager.create_session()
+    def CreateCommand(self, line: str) -> Command:
+        from contextshell.CommandParser import CommandParser
+        return CommandParser().parse(line)
 
-        self.interpreter = CommandInterpreter(self.session)
+    def CreateTree(self):
+        return FakeTree()
 
-        self.session.create('.foo', 1)
-        self.session.create('.foo.bar', 2)
-        self.session.create('.spam', "test")
+    def CreateActionFinder(self):
+        return FakeActionFinder()
 
-    def test_execute_get(self):
-        get_cmd = Command('get')
-        get_cmd.target = '.foo'
-        foo_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(1, foo_val)
-
-        get_cmd.target = '.foo.bar'
-        bar_val = self.interpreter.execute(get_cmd)
-        self.assertEqual(2, bar_val)
-
-        get_cmd.target = '.spam'
-        spam_val = self.interpreter.execute(get_cmd)
-        self.assertEqual('test', spam_val)
-
-    def test_execute_set(self):
-        set_cmd = Command('set')
-        set_cmd.target = '.foo'
-        set_cmd.arguments = [3]
-        self.interpreter.session.get('.foo')
-        self.assertEqual(1, self.interpreter.session.get('.foo'))
-        self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.session.get('.foo'))
-
-        self.assertEqual(2, self.interpreter.session.get('.foo.bar'))
-        set_cmd.target = '.foo.bar'
-        self.interpreter.execute(set_cmd)
-        self.assertEqual(3, self.interpreter.session.get('.foo.bar'))
+    def CreateInterpreter(self, action_finder, session) -> CommandInterpreter:
+        return CommandInterpreter(action_finder, session)
 
     def test_unknown_target(self):
-        get_cmd = Command('get')
-        get_cmd.target = '.rabarbar'
+        action_finder = self.CreateActionFinder()
+        unknown_target_cmd = self.CreateCommand('.unknown_target: get')
+        action_finder.existing_actions.append(unknown_target_cmd.name)
+        interpreter = self.CreateInterpreter(action_finder, self.CreateTree())
+
         with self.assertRaises(NameError):
-            self.interpreter.execute(get_cmd)
+            interpreter.execute(unknown_target_cmd)
 
     def test_unknown_action(self):
-        unknown_cmd = Command('unknown')
+        interpreter = self.CreateInterpreter(self.CreateActionFinder(), self.CreateTree())
+        unknown_action_cmd = self.CreateCommand('.: unknown_action')
+
         with self.assertRaises(NameError):
-            self.interpreter.execute(unknown_cmd)
+            interpreter.execute(unknown_action_cmd)
 
     def test_recursive_target_evaluation(self):
         self.session.create('.foo.name', ".foo")

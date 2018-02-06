@@ -26,7 +26,7 @@ def tokenize(text: str) -> List[str]:
 
 class CommandParser:
     def __init__(self):
-        self._root = None
+        self._root_scope = None
 
     def parse(self, command_line: str) -> Command:
         tokens = tokenize(command_line)
@@ -35,8 +35,8 @@ class CommandParser:
         if tokens[0] == '#':
             return None  # ignore comments
 
-        self._root = self._parse_scope(iter(tokens))
-        return self._root
+        self._root_scope = self._parse_scope(iter(tokens))
+        return self._root_scope
 
     def _parse_scope(self, token_iterator) -> Command:
         parts = []

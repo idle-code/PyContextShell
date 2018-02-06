@@ -1,6 +1,5 @@
 from contextshell.NodePath import NodePath
 from contextshell.Node import Node
-from contextshell.session_stack.CrudSessionLayer import SessionLayer
 
 
 class ActionNode(Node):

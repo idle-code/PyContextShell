@@ -2,7 +2,6 @@ import unittest
 
 from contextshell.Node import Node
 from contextshell.Shell import *
-from contextshell.session_stack.SessionManager import SessionManager
 
 
 class ShellTests(unittest.TestCase):
