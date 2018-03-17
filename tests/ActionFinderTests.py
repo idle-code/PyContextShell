@@ -5,18 +5,27 @@ import unittest
 from unittest.mock import MagicMock, call
 
 
+class MakeActionPathTests(unittest.TestCase):
+    def test_action_path_include_attribute_directory(self):
+        finder = ActionFinder(MagicMock())
+        action = NodePath('spam')
+
+        action_path = finder.make_action_path(NodePath('foo.bar'), action)
+
+        self.assertIn(ActionFinder.actions_branch_name, action_path)
+
+
 class FindActionTests(unittest.TestCase):
     def test_action_lookup_order(self):
+        # FIXME: this bottom-top lookup doesn't make sense
         tree = MagicMock()
         tree.exists.return_value = False
         finder = ActionFinder(tree)
-        target = NodePath('.foo.bar.spam')
         action = NodePath('nonexistent')
 
-        finder.find_action(target, action)
+        finder.find_action(NodePath('.foo.bar'), action)
 
         expected_exists_calls = [
-            call(finder.make_action_path(NodePath('.foo.bar.spam'), action)),
             call(finder.make_action_path(NodePath('.foo.bar'), action)),
             call(finder.make_action_path(NodePath('.foo'), action)),
             call(finder.make_action_path(NodePath('.'), action))
