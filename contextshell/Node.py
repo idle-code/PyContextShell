@@ -1,7 +1,7 @@
 class Node:
     def __init__(self, value=None):
         self._value = value
-        self._subnodes = []
+        self._subnodes = []  # TODO: use OrderedDict?
         self._parent = None
 
     @property

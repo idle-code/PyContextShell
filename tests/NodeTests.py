@@ -106,29 +106,30 @@ class AppendTests(unittest.TestCase):
 
 
 class GetNodeTests(unittest.TestCase):
-    def test_get_node_no_args(self):
+    def test_no_args(self):
         root = Node()
 
         with self.assertRaises(NameError):
             root.get_node()
 
-    def test_get_node_existing_by_name(self):
+    def test_existing_by_name(self):
         root = Node()
         foo = Node()
+        root.append(Node(), name='bar')
         root.append(foo, name='foo')
 
         retrieved_foo_node = root.get_node(name='foo')
 
         self.assertIs(foo, retrieved_foo_node)
 
-    def test_get_node_nonexistent_by_name(self):
+    def test_nonexistent_by_name(self):
         root = Node()
 
         retrieved_nonexistent_node = root.get_node(name='nonexistent')
 
         self.assertIsNone(retrieved_nonexistent_node)
 
-    def test_get_node_existing_by_index(self):
+    def test_existing_by_index(self):
         root = Node()
         child_node = Node()
         root.append(child_node)
@@ -137,14 +138,14 @@ class GetNodeTests(unittest.TestCase):
 
         self.assertIs(retrieved_node, child_node)
 
-    def test_get_node_nonexistent_by_index(self):
+    def test_nonexistent_by_index(self):
         root = Node()
 
         retrieved_node = root.get_node(index=0)
 
         self.assertIsNone(retrieved_node)
 
-    def test_get_node_negative_index(self):
+    def test_negative_index(self):
         root = Node()
 
         retrieved_node = root.get_node(index=-3)

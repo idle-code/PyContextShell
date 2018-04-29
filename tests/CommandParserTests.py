@@ -65,14 +65,14 @@ class StringRepresentationTests(unittest.TestCase):
 
 
 class ParsingTests(unittest.TestCase):
-    def test_parse_empty(self):
+    def test_empty(self):
         parser = create_parser()
 
         cmd = parser.parse("")
 
         self.assertIsNone(cmd)
 
-    def test_parse_whitespaces(self):
+    def test_just_whitespaces(self):
         parser = create_parser()
 
         cmd = parser.parse("   ")
@@ -93,47 +93,44 @@ class ParsingTests(unittest.TestCase):
 
         self.assertIsNone(cmd)
 
-    def test_parse_action_name(self):
+    def test_action_name(self):
         parser = create_parser()
 
         cmd = parser.parse("action")
 
         self.assertEqual("action", cmd.name)
 
-    def test_parse_action_arguments(self):
+    def test_action_arguments(self):
         parser = create_parser()
 
         cmd = parser.parse("action arg1 arg2")
 
         self.assertListEqual(['arg1', 'arg2'], cmd.arguments)
 
-    def test_parse_target(self):
+    def test_target(self):
         parser = create_parser()
 
         cmd = parser.parse("target: action")
 
         self.assertEqual("target", cmd.target)
 
-    def test_parse_nested_action_name(self):
+    def test_nested_action_name(self):
         parser = create_parser()
 
         cmd = parser.parse("{action}")
 
         self.assertEqual("action", cmd.name.name)
 
-    def test_parse_nested_arguments(self):
+    def test_nested_arguments(self):
         parser = create_parser()
 
-        cmd = parser.parse("action {foo}")
+        cmd = parser.parse("action {nested_action}")
 
-        self.assertEqual("foo", cmd.arguments[0].name)
+        self.assertEqual("nested_action", cmd.arguments[0].name)
 
-    def test_parse_nested_target(self):
+    def test_nested_target(self):
         parser = create_parser()
 
-        cmd = parser.parse("{target}: action")
+        cmd = parser.parse("{target_action}: action")
 
-        self.assertEqual("target", cmd.target.name)
-
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual("target_action", cmd.target.name)
