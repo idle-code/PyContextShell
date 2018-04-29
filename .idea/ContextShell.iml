@@ -11,7 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/session_stack" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.6.2 (/usr/bin/python3.6)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (ContextShell)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

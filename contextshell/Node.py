@@ -30,7 +30,7 @@ class Node:
         return indexed_names
 
     def append(self, node, name: str=None):
-        """Append provided node as subnode"""
+        """Append provided node as a subnode"""
         if node is None:
             raise ValueError("Cannot append None as node")
         if name is not None:
