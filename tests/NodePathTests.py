@@ -35,7 +35,7 @@ class CastTests(unittest.TestCase):
         self.assertEqual(name_path, create_path('foo.bar'))
 
 
-class StrinParsingConstructorTests(unittest.TestCase):
+class StringParsingConstructorTests(unittest.TestCase):
     def test_constructor_from_string_matches_length(self):
         relative_path = NodePath('a.b.c')
 
@@ -129,6 +129,10 @@ class ConstructorTests(unittest.TestCase):
         path_copy = NodePath(path)
 
         self.assertEqual(path, path_copy)
+
+    def test_constructor_from_float_throws(self):
+        with self.assertRaises(ValueError):
+            NodePath(3.13)
 
 
 class BasePathTests(unittest.TestCase):
@@ -279,6 +283,22 @@ class EqualOperatorTests(unittest.TestCase):
         are_equal = absolute_foo == relative_foo
 
         self.assertFalse(are_equal)
+
+    def test_differ_same(self):
+        foo1 = create_path('foo')
+        foo2 = create_path('foo')
+
+        are_not_equal = foo1 != foo2
+
+        self.assertFalse(are_not_equal)
+
+    def test_differ_different(self):
+        foo = create_path('foo')
+        bar = create_path('bar')
+
+        are_not_equal = foo != bar
+
+        self.assertTrue(are_not_equal)
 
 
 if __name__ == '__main__':
