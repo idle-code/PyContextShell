@@ -4,8 +4,6 @@ from contextshell.ActionFinder import ActionFinder
 
 
 class CommandInterpreter:
-    actions_branch_name = '@actions'  # TODO: define in a single place (see TreeRoot)
-
     def __init__(self, action_finder: ActionFinder, tree):
         self.action_finder = action_finder
         self.tree = tree

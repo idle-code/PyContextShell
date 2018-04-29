@@ -299,7 +299,3 @@ class EqualOperatorTests(unittest.TestCase):
         are_not_equal = foo != bar
 
         self.assertTrue(are_not_equal)
-
-
-if __name__ == '__main__':
-    unittest.main()

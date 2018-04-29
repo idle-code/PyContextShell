@@ -8,10 +8,11 @@ class Command:
         self.arguments = []
 
     def __str__(self):
-        cmd_invocation = " ".join(map(Command._to_string, [self.name] + self.arguments))
+        representation = " ".join(map(Command._to_string, [self.name] + self.arguments))
         if self.target is None:
-            return cmd_invocation
-        return "{}: {}".format(Command._to_string(self.target), cmd_invocation)
+            return representation
+        representation = "{}: {}".format(Command._to_string(self.target), representation)
+        return representation
 
     @staticmethod
     def _to_string(param):
