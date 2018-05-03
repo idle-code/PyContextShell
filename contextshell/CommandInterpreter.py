@@ -9,9 +9,12 @@ class CommandInterpreter:
         self.tree = tree
 
     def execute(self, command: Command):
+        if command is None:
+            raise ValueError("No command to execute provided")
         target_path = NodePath.cast(self._evaluate(command.target))
         action_path = NodePath.cast(self._evaluate(command.name))
         arguments = map(self._evaluate, command.arguments)
+
         action = self.action_finder.find_action(target_path, action_path)
         if action is None:
             raise NameError("Could not find action named '{}'".format(action_path))

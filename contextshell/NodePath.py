@@ -89,5 +89,8 @@ class NodePath(list):
             return NodePath.separator + text_representation
         return text_representation
 
+    def __hash__(self):
+        return str(self).__hash__()
+
     def __repr__(self):
         return "NodePath('{}', absolute={})".format(self, self.is_absolute)

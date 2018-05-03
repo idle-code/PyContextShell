@@ -5,7 +5,7 @@ class ActionFinder:
     actions_branch_name = '@actions'
 
     def __init__(self, tree):
-        self.tree = tree
+        self.tree = tree  # TODO: pass tree to the find_action instead?
 
     def make_action_path(self, target_path: NodePath, action_path: NodePath):
         return NodePath.join(target_path, ActionFinder.actions_branch_name, action_path)

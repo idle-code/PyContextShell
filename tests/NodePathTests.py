@@ -299,3 +299,29 @@ class EqualOperatorTests(unittest.TestCase):
         are_not_equal = foo != bar
 
         self.assertTrue(are_not_equal)
+
+
+class HashOperatorTests(unittest.TestCase):
+    def test_same_path_hash_matches(self):
+        foo1 = create_path('foo')
+        foo2 = create_path('foo')
+
+        are_equal = hash(foo1) == hash(foo2)
+
+        self.assertTrue(are_equal)
+
+    def test_absolute_relative_hash_differs(self):
+        absolute_foo = create_path('.foo')
+        relative_foo = create_path('foo')
+
+        are_equal = hash(absolute_foo) == hash(relative_foo)
+
+        self.assertFalse(are_equal)
+
+    def test_hash_differs(self):
+        foo = create_path('foo')
+        bar = create_path('bar')
+
+        are_equal = hash(foo) == hash(bar)
+
+        self.assertFalse(are_equal)
