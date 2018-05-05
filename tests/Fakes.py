@@ -1,5 +1,5 @@
 from contextshell.NodePath import NodePath
-from typing import Mapping, Callable
+from typing import Dict, Callable
 
 
 class FakeTree:
@@ -21,13 +21,15 @@ class FakeAction:
 
 
 class FakeActionFinder:
-    def __init__(self, actions : Mapping[str, Callable]):
-        self.requested_action_paths = []
-        self.actions = actions
+    def __init__(self, generate_missing=False):
+        self.actions : Dict[str, Callable] = dict()
+        self.generate_missing = generate_missing
 
     def make_action_path(self, target_path: NodePath, action_path: NodePath):
         raise NotImplementedError()
 
     def find_action(self, target_path: NodePath, action_path: NodePath):
-        self.requested_action_paths.append(action_path)
-        return self.actions.get(str(action_path))
+        action_name = str(action_path)
+        if action_name not in self.actions and self.generate_missing:
+            return lambda *args: None
+        return self.actions.get(action_name)
