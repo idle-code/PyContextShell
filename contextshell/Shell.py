@@ -1,5 +1,6 @@
 from contextshell.CommandParser import CommandParser
 from contextshell.NodePath import *
+from contextshell.CommandInterpreter import CommandInterpreter
 
 
 class Shell:
