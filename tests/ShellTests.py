@@ -39,6 +39,7 @@ class ShellTests(unittest.TestCase):
 
         self.assertEqual(interpreter.execute_result, execute_result)
 
+    @unittest.skip("Not sure if this is right place for this functionality")
     def test_execute_when_command_have_no_target_appends_current_branch(self):
         interpreter = FakeInterpreter()
         # TODO: where to hold current working branch/path?
