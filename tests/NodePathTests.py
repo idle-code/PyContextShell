@@ -82,9 +82,24 @@ class ConstructorTests(unittest.TestCase):
     def test_default_constructor_creates_relative_path(self):
         empty = NodePath()
 
-        empty_is_absolute = empty.is_absolute
+        empty_is_relative = empty.is_relative
 
-        self.assertFalse(empty_is_absolute)
+        self.assertTrue(empty_is_relative)
+
+    # TODO: use parametrized tests for following two cases
+    def test_absolute_affects_is_absolute(self):
+        absolute_path = NodePath(['foo'], absolute=True)
+        relative_path = NodePath(['foo'], absolute=False)
+
+        self.assertTrue(absolute_path.is_absolute)
+        self.assertFalse(relative_path.is_absolute)
+
+    def test_absolute_affects_is_relative(self):
+        absolute_path = NodePath(['foo'], absolute=True)
+        relative_path = NodePath(['foo'], absolute=False)
+
+        self.assertFalse(absolute_path.is_relative)
+        self.assertTrue(relative_path.is_relative)
 
     def test_constructor_from_single_index(self):
         index_path = NodePath(3)

@@ -3,7 +3,14 @@ from typing import Dict, Callable
 
 
 class FakeTree:
-    pass
+    def __init__(self):
+        self.node_map : Dict[NodePath, FakeTree] = dict()
+
+    def get(self, path):
+        return self.node_map[path]
+
+    def exists(self, path):
+        return path in self.node_map
 
 
 class FakeAction:
@@ -28,11 +35,13 @@ class FakeActionFinder:
     def __init__(self, generate_missing=False):
         self.actions : Dict[str, Callable] = dict()
         self.generate_missing = generate_missing
+        self.received_targets = []
 
     def make_action_path(self, target_path: NodePath, action_path: NodePath):
         raise NotImplementedError()
 
     def find_action(self, target_path: NodePath, action_path: NodePath):
+        self.received_targets.append(target_path)
         action_name = str(action_path)
         if action_name not in self.actions and self.generate_missing:
             return FakeAction()

@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import Mock
 
 
 def create_executor(*args):
@@ -18,11 +17,6 @@ class FakeShell:
 
 
 class TestExecutorTests(unittest.TestCase):
-    # def test_empty_passes(self):
-    #     exec = create_executor(FakeShell())
-    #
-    #     exec.test("       ")
-
     def test_with_output_and_no_command_throw(self):
         exec = create_executor(FakeShell())
 

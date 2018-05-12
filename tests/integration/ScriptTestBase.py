@@ -3,7 +3,8 @@ from typing import List, Tuple
 
 
 class ScriptTestBase(unittest.TestCase):
-    pass
+    def create_shell(self):
+        raise NotImplementedError()
 
 
 class TestExecutor:
@@ -11,7 +12,6 @@ class TestExecutor:
         self.shell = shell
 
     def test(self, test_script: str):
-
         for command, expected_output in self._parse_script(test_script):
             output = self.shell.execute(command)
             if expected_output != output:
@@ -57,10 +57,8 @@ Actual output:
 
 def script_test(method):
     def executor(self):
-
-        # 1 Start Shell
-        # 2 Execute command
-        # 3 Check output (if any)
-        # 4 goto 2
-        pass
+        shell = self.create_shell()
+        exec = TestExecutor(shell)
+        test_script = method.__doc__
+        exec.test(test_script)
     return executor

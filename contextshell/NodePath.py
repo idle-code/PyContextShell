@@ -37,6 +37,10 @@ class NodePath(list):
             raise ValueError("Could not convert {} to NodePath".format(representation))
 
     @property
+    def is_relative(self) -> bool:
+        return not self.is_absolute
+
+    @property
     def base_path(self):
         """Returns sub-path consisting of all but last element"""
         return NodePath(self[:-1], absolute=self.is_absolute)

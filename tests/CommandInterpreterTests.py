@@ -26,6 +26,17 @@ class ExecuteTests(unittest.TestCase):
         with self.assertRaises(NameError):
             interpreter.execute(unknown_cmd)
 
+    def test_execute_passes_target_path_to_finder(self):
+        action_finder = FakeActionFinder(generate_missing=True)
+        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+        cmd = self.command("target.path: action")
+
+        interpreter.execute(cmd)
+
+        passed_target = action_finder.received_targets[0]
+        self.assertIsInstance(passed_target, NodePath)
+        self.assertEqual(NodePath('target.path'), passed_target)
+
     def test_executes_action(self):
         action_finder = FakeActionFinder()
         action_finder.actions['action_name'] = action = FakeAction()
