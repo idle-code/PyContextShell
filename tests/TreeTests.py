@@ -69,6 +69,15 @@ class ResolveOptionalTests(unittest.TestCase):
 
         self.assertIsNone(resolved_node)
 
+    def test_resolve_optional_partially_existing(self):
+        tree = create_tree()
+        tree.create(np('.foo'))
+        nonexistent_path = np(".foo.bar")
+
+        resolved_node = tree._resolve_optional_path(nonexistent_path)
+
+        self.assertIsNone(resolved_node)
+
 
 class ResolveTests(unittest.TestCase):
     def test_resolve_relative_path_throws(self):

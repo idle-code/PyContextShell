@@ -40,7 +40,7 @@ class Tree:
         next_branch_name = path[0]
         if not root.contains(next_branch_name):
             return None
-        return self._resolve_path(NodePath.cast(path[1:]), root.get_node(next_branch_name))
+        return self._resolve_optional_path(NodePath.cast(path[1:]), root.get_node(next_branch_name))
 
     def _create_path(self, path: NodePath, root: Node = None) -> Node:
         if root is None:

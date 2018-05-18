@@ -8,18 +8,26 @@ class CrudTests(ScriptTestBase):
         from contextshell.CommandInterpreter import CommandInterpreter
         from contextshell.ActionFinder import ActionFinder
         from contextshell.Tree import Tree
-        #from Fakes import FakeTree
-        #tree = FakeTree()
         tree = Tree()
-        self._install_actions(tree)
         action_finder = ActionFinder(tree)
+        self._install_actions(action_finder)
         interpreter = CommandInterpreter(action_finder, tree)
         return Shell(interpreter)
 
-    def _install_actions(self, tree):
-        pass  # TODO implement or use DefaultTree (or something...)
+    def _install_actions(self, finder):
+        from contextshell.Tree import Tree
+        from contextshell.NodePath import NodePath
 
-    @unittest.skip("TODO: run when actions are installed")
+        def exists(tree: Tree, target: NodePath, action: NodePath, name):
+            return tree.exists(NodePath.join(target, name))
+
+        finder.install_action(".", "exists", exists)
+
+        def create(tree: Tree, target: NodePath, action: NodePath, name, value=None):
+            tree.create(NodePath.join(target, name), value)
+
+        finder.install_action(".", "create", create)
+
     @script_test
     def test_create(self):
         """
@@ -28,7 +36,6 @@ class CrudTests(ScriptTestBase):
         True
         """
 
-    @unittest.skip("TODO: run when actions are installed")
     @script_test
     def test_exists_nonexistent(self):
         """
@@ -36,7 +43,6 @@ class CrudTests(ScriptTestBase):
         False
         """
 
-    @unittest.skip("TODO: run when Tree class is ready")
     @script_test
     def test_get(self):
         """

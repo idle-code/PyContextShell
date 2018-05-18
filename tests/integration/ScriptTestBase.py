@@ -14,6 +14,8 @@ class TestExecutor:
     def test(self, test_script: str):
         for command, expected_output in self._parse_script(test_script):
             output = self.shell.execute(command)
+            if output is not None:
+                output = str(output)
             if expected_output != output:
                 raise AssertionError("""
 Command: {command}
