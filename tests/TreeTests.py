@@ -4,29 +4,98 @@ from contextshell.NodePath import NodePath as np
 
 def create_tree(*args, **kwargs):
     from contextshell.Tree import Tree
-    if 'root_node' in kwargs:
-        root_node = kwargs['root_node']
-    else:
-        from contextshell.Node import Node
-        root_node = Node()
-
-    return Tree(root_node)
+    return Tree(*args)
 
 
-class TreeTests(unittest.TestCase):
-    def test_constructor_when_no_root_node_provided_throws(self):
+class ConstructionTests(unittest.TestCase):
+    def test_root_have_no_value(self):
+        # CHECK: I am unsure if this tests any behaviour
+        tree = create_tree()
+
+        root_value = tree.root.get()
+
+        self.assertIsNone(root_value)
+
+
+class CreatePathTests(unittest.TestCase):
+    def test_relative_path_throws(self):
+        tree = create_tree()
+        relative_path = np("foo")
+
         with self.assertRaises(ValueError):
-            create_tree(root_node=None)
+            tree._create_path(relative_path)
+
+    def test_create_multiple_elements(self):
+        tree = create_tree()
+        long_path = np(".foo.bar")
+
+        tree._create_path(long_path)
+
+        self.assertTrue(tree.exists(np(".foo")))
+        self.assertTrue(tree.exists(long_path))
+
+    def test_create_already_existing(self):
+        tree = create_tree()
+        existing_path = np(".foo")
+        created_node = tree._create_path(existing_path)
+
+        resolved_node = tree._create_path(existing_path)
+
+        self.assertIs(created_node, resolved_node)
+
+
+class ResolveOptionalTests(unittest.TestCase):
+    def test_resolve_optional_relative_path_throws(self):
+        tree = create_tree()
+        relative_path = np("foo")
+
+        with self.assertRaises(ValueError):
+            tree._resolve_optional_path(relative_path)
+
+    def test_resolve_optional_existing(self):
+        tree = create_tree()
+        existing_path = np(".foo.bar")
+        tree.create(existing_path, 'BAR')
+
+        resolved_node = tree._resolve_optional_path(existing_path)
+
+        self.assertIs('BAR', resolved_node.get())
+
+    def test_resolve_optional_nonexistent(self):
+        tree = create_tree()
+        nonexistent_path = np(".foo.bar")
+
+        resolved_node = tree._resolve_optional_path(nonexistent_path)
+
+        self.assertIsNone(resolved_node)
+
+
+class ResolveTests(unittest.TestCase):
+    def test_resolve_relative_path_throws(self):
+        tree = create_tree()
+        relative_path = np("foo")
+
+        with self.assertRaises(ValueError):
+            tree._resolve_path(relative_path)
+
+    def test_resolve_existing(self):
+        tree = create_tree()
+        existing_path = np(".foo.bar")
+        tree.create(existing_path, 'BAR')
+
+        resolved_node = tree._resolve_path(existing_path)
+
+        self.assertIs('BAR', resolved_node.get())
+
+    def test_resolve_nonexistent(self):
+        tree = create_tree()
+        nonexistent_path = np(".foo.bar")
+
+        with self.assertRaises(NameError):
+            tree._resolve_path(nonexistent_path)
 
 
 class CreateTests(unittest.TestCase):
-    def test_create_with_relative_path_throws(self):
-        tree = create_tree()
-        relative_path = np('relative')
-
-        with self.assertRaises(ValueError):
-            tree.create(relative_path)
-
     def test_create_default(self):
         tree = create_tree()
         foo_path = np('.foo')
@@ -54,4 +123,49 @@ class CreateTests(unittest.TestCase):
         with self.assertRaises(NameError):
             tree.create(existing_path)
 
-    # FIXME: am I testing Tree class or Node here?
+    def test_create_multilevel_default(self):
+        tree = create_tree()
+        long_path = np(".foo.bar.spam")
+
+        tree.create(long_path)
+
+        self.assertTrue(tree.exists(long_path))
+
+    def test_create_multilevel_with_initial_value(self):
+        tree = create_tree()
+        long_path = np(".foo.bar.spam")
+
+        tree.create(long_path, 2)
+
+        final_value = tree.get(long_path)
+        self.assertEqual(2, final_value)
+
+
+class ExistsTests(unittest.TestCase):
+    def test_exists_nonexistent(self):
+        tree = create_tree()
+        nonexistent_path = np('.nonexistent')
+
+        exists = tree.exists(nonexistent_path)
+
+        self.assertFalse(exists)
+
+    def test_exists_existing(self):
+        tree = create_tree()
+        existing_path = np('.path')
+        tree.create(existing_path)
+
+        exists = tree.exists(existing_path)
+
+        self.assertTrue(exists)
+
+
+class GetTests(unittest.TestCase):
+    def test_return_value(self):
+        tree = create_tree()
+        existing_path = np('.path')
+        tree.create(existing_path, 3)
+
+        get_value = tree.get(existing_path)
+
+        self.assertEqual(3, get_value)

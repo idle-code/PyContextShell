@@ -11,17 +11,29 @@ class CrudTests(ScriptTestBase):
         #from Fakes import FakeTree
         #tree = FakeTree()
         tree = Tree()
+        self._install_actions(tree)
         action_finder = ActionFinder(tree)
         interpreter = CommandInterpreter(action_finder, tree)
         return Shell(interpreter)
 
-    @unittest.skip("TODO: run when Tree class is ready")
+    def _install_actions(self, tree):
+        pass  # TODO implement or use DefaultTree (or something...)
+
+    @unittest.skip("TODO: run when actions are installed")
     @script_test
     def test_create(self):
         """
         > .: create foo
         > .: exists foo
         True
+        """
+
+    @unittest.skip("TODO: run when actions are installed")
+    @script_test
+    def test_exists_nonexistent(self):
+        """
+        > .: exists unknown
+        False
         """
 
     @unittest.skip("TODO: run when Tree class is ready")

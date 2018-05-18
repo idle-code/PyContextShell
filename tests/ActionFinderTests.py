@@ -50,3 +50,16 @@ class FindActionTests(unittest.TestCase):
         found_action = finder.find_action(NodePath('.'), NodePath('action'))
 
         self.assertIs(found_action, tree.get.return_value)
+
+
+class InstallTests(unittest.TestCase):
+    def test_install(self):
+        tree = MagicMock()
+        finder = ActionFinder(tree)
+        target = NodePath('.')
+        action_name = NodePath('action')
+        action = lambda *args: None
+
+        finder.install_action(target, action_name, action)
+
+        tree.create.assert_called_with(finder.make_action_path(target, action_name), action)
