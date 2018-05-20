@@ -28,6 +28,11 @@ class CrudTests(ScriptTestBase):
 
         finder.install_action(".", "create", create)
 
+        def get(tree: Tree, target: NodePath, action: NodePath):
+            return tree.get(target)
+
+        finder.install_action(".", "get", get)
+
     @script_test
     def test_create(self):
         """
@@ -44,9 +49,16 @@ class CrudTests(ScriptTestBase):
         """
 
     @script_test
-    def test_get(self):
+    def test_get_existing(self):
         """
         > .: create foo 1
         > .foo: get
         1
+        """
+
+    @script_test
+    def test_get_nonexistent(self):
+        """
+        > .foo: get
+        NameError: '.foo' doesn't exists
         """

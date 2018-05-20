@@ -26,7 +26,7 @@ class Tree:
     def _resolve_path(self, path: NodePath, root: Node = None) -> Node:
         node = self._resolve_optional_path(path, root)
         if node is None:
-            raise NameError("Could not find '{}' - path doesn't exists".format(path))
+            raise NameError("'{}' doesn't exists".format(path))
         return node
 
     def _resolve_optional_path(self, path: NodePath, root: Node=None) -> Node:

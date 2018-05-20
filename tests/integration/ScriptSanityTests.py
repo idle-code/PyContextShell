@@ -98,13 +98,3 @@ class TestExecutorTests(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             exec.test("> .: action")
-
-    def test_output_is_stringified_before_comparing(self):
-        shell = FakeShell()
-        shell.responses['.: action'] = True
-        exec = create_executor(shell)
-
-        exec.test("""
-        > .: action
-        True
-        """)
