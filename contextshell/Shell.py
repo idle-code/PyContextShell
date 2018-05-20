@@ -25,24 +25,11 @@ class Shell:
     def format_result(self, result) -> str:
         if result is None:
             return None
+        if isinstance(result, list):
+            if len(result) < 1:
+                return None
+            return "\n".join(map(str, result))
         return str(result)
 
     def format_error(self, error) -> str:
         return "{}: {}".format(type(error).__name__, error)
-
-    @staticmethod
-    def pretty_print(result):
-        if isinstance(result, list):
-            for elem in result:
-                print(elem)
-        else:
-            print(result)
-        # TODO: Rewrite to support new list format (and attributes)
-        # if isinstance(result, list):
-        #     for r in result:
-        #         if isinstance(r, Node):
-        #             print("[{}] {}\t = {}".format(r['@index'], r["@name"], r))
-        #         else:
-        #             print("[{}] {}".format(r['@index'], r))
-        # else:
-        #     print(result)

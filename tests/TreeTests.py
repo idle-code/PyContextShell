@@ -178,3 +178,33 @@ class GetTests(unittest.TestCase):
         get_value = tree.get(existing_path)
 
         self.assertEqual(3, get_value)
+
+
+class SetTests(unittest.TestCase):
+    def test_update_value(self):
+        tree = create_tree()
+        existing_path = np('.path')
+        tree.create(existing_path, 1)
+
+        tree.set(existing_path, 2)
+
+        updated_value = tree.get(existing_path)
+        self.assertEqual(2, updated_value)
+
+
+class ListTests(unittest.TestCase):
+    def test_empty(self):
+        tree = create_tree()
+
+        root_list = tree.list(np('.'))
+
+        self.assertSequenceEqual([], root_list)
+
+    def test_single(self):
+        tree = create_tree()
+        existing_path = np('.path')
+        tree.create(existing_path)
+
+        root_list = tree.list(np('.'))
+
+        self.assertIn(np("path"), root_list)

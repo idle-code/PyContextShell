@@ -23,6 +23,14 @@ class Tree:
         node = self._resolve_path(path)
         return node.get()
 
+    def set(self, path: NodePath, new_value):
+        node = self._resolve_path(path)
+        node.set(new_value)
+
+    def list(self, path: NodePath):
+        node = self._resolve_path(path)
+        return node.list()
+
     def _resolve_path(self, path: NodePath, root: Node = None) -> Node:
         node = self._resolve_optional_path(path, root)
         if node is None:

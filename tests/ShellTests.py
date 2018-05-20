@@ -79,6 +79,14 @@ class FormatResultTests(unittest.TestCase):
 
         self.assertEqual("False", formatted_false)
 
+    def test_format_list(self):
+        interpreter = FakeInterpreter()
+        shell = create_shell(interpreter)
+
+        formatted_list = shell.format_result(['foo', 'bar'])
+
+        self.assertEqual("foo\nbar", formatted_list)
+
 
 class FormatErrorTests(unittest.TestCase):
     def test_message_contains_exception_class(self):

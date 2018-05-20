@@ -33,6 +33,16 @@ class CrudTests(ScriptTestBase):
 
         finder.install_action(".", "get", get)
 
+        def set(tree: Tree, target: NodePath, action: NodePath, new_value):
+            return tree.set(target, new_value)
+
+        finder.install_action(".", "set", set)
+
+        def list(tree: Tree, target: NodePath, action: NodePath):
+            return tree.list(target)
+
+        finder.install_action(".", "list", list)
+
     @script_test
     def test_create(self):
         """
@@ -61,4 +71,35 @@ class CrudTests(ScriptTestBase):
         """
         > .foo: get
         NameError: '.foo' doesn't exists
+        """
+
+    @script_test
+    def test_set_existing(self):
+        """
+        > .: create foo 1
+        > .foo: set 2
+        > .foo: get
+        2
+        """
+
+    @script_test
+    def test_set_nonexistent(self):
+        """
+        > .foo: set 1
+        NameError: '.foo' doesn't exists
+        """
+
+    @script_test
+    def test_set_no_new_value(self):
+        """
+        > .: create foo 1
+        > .foo: set
+        TypeError: set() missing 1 required positional argument: 'new_value'
+        """
+
+    @script_test
+    def test_list_empty(self):
+        """
+        > .: create foo
+        > .foo: list
         """
