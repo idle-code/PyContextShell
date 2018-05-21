@@ -208,3 +208,20 @@ class ListTests(unittest.TestCase):
         root_list = tree.list(np('.'))
 
         self.assertIn(np("path"), root_list)
+
+
+class RemoveTests(unittest.TestCase):
+    def test_remove_existing(self):
+        tree = create_tree()
+        existing_path = np('.foo')
+        tree.create(existing_path, 3)
+
+        tree.remove(existing_path)
+
+        self.assertFalse(tree.exists(existing_path))
+
+    def test_remove_root(self):
+        tree = create_tree()
+
+        with self.assertRaises(ValueError):
+            tree.remove(np('.'))

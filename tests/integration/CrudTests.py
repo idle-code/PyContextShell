@@ -43,6 +43,11 @@ class CrudTests(ScriptTestBase):
 
         finder.install_action(".", "list", list)
 
+        def remove(tree: Tree, target: NodePath, action: NodePath):
+            return tree.remove(target)
+
+        finder.install_action(".", "remove", remove)
+
     @script_test
     def test_create(self):
         """
@@ -102,4 +107,20 @@ class CrudTests(ScriptTestBase):
         """
         > .: create foo
         > .foo: list
+        """
+
+    @script_test
+    def test_remove_existing(self):
+        """
+        > .: create foo
+        > .foo: remove
+        > .: exists foo
+        False
+        """
+
+    @script_test
+    def test_remove_nonexistent(self):
+        """
+        > .foo: remove
+        NameError: '.foo' doesn't exists
         """

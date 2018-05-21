@@ -5,7 +5,7 @@ class Node:
         self._parent = None
 
     @property
-    def parent(self):
+    def parent(self) -> 'Node':
         """Return parent of this node"""
         return self._parent
 

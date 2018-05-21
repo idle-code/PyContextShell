@@ -31,6 +31,12 @@ class Tree:
         node = self._resolve_path(path)
         return node.list()
 
+    def remove(self, path: NodePath):
+        node = self._resolve_path(path)
+        if node.parent is None:
+            raise ValueError("Could not remove root node")
+        node.parent.remove(path.base_name)
+
     def _resolve_path(self, path: NodePath, root: Node = None) -> Node:
         node = self._resolve_optional_path(path, root)
         if node is None:
