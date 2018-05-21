@@ -2,6 +2,17 @@ from contextshell.Command import Command
 from typing import List
 
 
+def convert_token_type(token):
+    try:
+        return int(token)
+    except ValueError:
+        pass
+    try:
+        return float(token)
+    except ValueError:
+        pass
+    return token
+
 def tokenize(text: str) -> List[str]:
     tokens = []
     tok = ''
@@ -9,17 +20,32 @@ def tokenize(text: str) -> List[str]:
     def finish_token():
         nonlocal tok, tokens
         if len(tok) > 0:
+            tok = convert_token_type(tok)
             tokens.append(tok)
             tok = ''
 
+    verbatim_mode = False
+    verbatim_mode_finisher = None
     for char in text:
-        if char in "{}:#":
-            finish_token()
-            tokens.append(char)
-        elif char.isspace():
-            finish_token()
+        if verbatim_mode:
+            if char == verbatim_mode_finisher:
+                finish_token()
+                verbatim_mode = False
+                verbatim_mode_finisher = None
+            else:
+                tok += char
         else:
-            tok += char
+            if char in "'\"":
+                finish_token()
+                verbatim_mode = True
+                verbatim_mode_finisher = char
+            elif char in "{}:#":
+                finish_token()
+                tokens.append(char)
+            elif char.isspace():
+                finish_token()
+            else:
+                tok += char
     finish_token()
     return tokens
 

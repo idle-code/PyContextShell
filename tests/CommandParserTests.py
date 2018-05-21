@@ -28,6 +28,32 @@ class TokenizerTests(unittest.TestCase):
                        '{', 'action', '}',
                        '{', 'foo', ':', 'bar', '}'])
 
+    def test_single_quotes(self):
+        self.tok_test("'foo'",
+                      ['foo'])
+
+    def test_double_quotes(self):
+        self.tok_test("\"foo\"",
+                      ['foo'])
+
+    def test_spaces_in_string(self):
+        self.tok_test("\"  foo bar \"",
+                      ['  foo bar '])
+
+    def test_integer(self):
+        self.tok_test("123",
+                      [123])
+
+    def test_float(self):
+        self.tok_test("3.1415",
+                      [3.1415])
+
+    def test_path(self):
+        # CHECK: Not sure if this works 'right'
+        from contextshell.NodePath import NodePath
+        self.tok_test("foo.bar",
+                      [NodePath("foo.bar")])
+
 
 def create_parser():
     """Create CommandParser instance for tests"""
@@ -134,3 +160,9 @@ class ParsingTests(unittest.TestCase):
         cmd = parser.parse("{target_action}: action")
 
         self.assertEqual("target_action", cmd.target.name)
+
+
+class TypeConversionTests(unittest.TestCase):
+    def test_parse_int(self):
+        pass
+
