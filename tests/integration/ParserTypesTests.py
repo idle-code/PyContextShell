@@ -6,7 +6,7 @@ from tests.integration.ScriptTestBase import script_test
 
 
 class ParserTypesTests(ShellTestsBase):
-    def _install_actions(self, finder):
+    def install_actions(self, finder):
         def type_of(tree: Tree, target: NodePath, action: NodePath, value):
             return type(value).__name__
 

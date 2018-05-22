@@ -9,11 +9,11 @@ class ShellTestsBase(ScriptTestBase):
         from contextshell.Tree import Tree
         tree = Tree()
         action_finder = ActionFinder(tree)
-        self._install_actions(action_finder)
+        self.install_actions(action_finder)
         interpreter = CommandInterpreter(action_finder, tree)
         return Shell(interpreter)
 
-    def _install_actions(self, finder):
+    def install_actions(self, finder):
         from contextshell.Tree import Tree
         from contextshell.NodePath import NodePath
 

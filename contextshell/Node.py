@@ -16,7 +16,7 @@ class Node:
     def set(self, new_value):
         """Store provided value in this node"""
         if type(self._value) != type(new_value):
-            raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self._value)))
+            raise TypeError("Cannot assign value with type '{}' to '{}' node".format(type(new_value).__name__, type(self._value).__name__))
         self._value = new_value
 
     def list(self):

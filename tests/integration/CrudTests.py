@@ -1,4 +1,3 @@
-import unittest
 from integration.ShellTestsBase import ShellTestsBase
 from tests.integration.ScriptTestBase import script_test
 
@@ -58,14 +57,12 @@ class CrudTests(ShellTestsBase):
         TypeError: set() missing 1 required positional argument: 'new_value'
         """
 
-    @unittest.skip("Implement typed parser before enabling")
     @script_test
     def test_set_different_type(self):
         """
         > .: create foo 2
         > .foo: set "rabarbar"
-        > .foo: get
-        TypeError:
+        TypeError: Cannot assign value with type 'str' to 'int' node
         """
 
     @script_test
@@ -89,4 +86,25 @@ class CrudTests(ShellTestsBase):
         """
         > .foo: remove
         NameError: '.foo' doesn't exists
+        """
+
+
+from contextshell.Tree import Tree
+from contextshell.NodePath import NodePath
+
+
+class ListTests(ShellTestsBase):
+    def install_actions(self, finder):
+        def list_actions(tree: Tree, target: NodePath, action: NodePath):
+            from contextshell.ActionFinder import ActionFinder
+            actions_branch = NodePath.join(target, ActionFinder.actions_branch_name)
+            return tree.list(actions_branch)
+
+        finder.install_action(".", "list.actions", list_actions)
+
+    @script_test
+    def test_list_action(self):
+        """
+        > .: list.actions
+        list
         """
