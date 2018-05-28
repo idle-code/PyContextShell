@@ -1,14 +1,11 @@
 from contextshell.Tree import Tree
 from contextshell.NodePath import NodePath
-from integration.ShellTestsBase import ShellTestsBase
-from tests.integration.ScriptTestBase import script_test
+from functional.ShellTestsBase import ShellTestsBase
+from tests.functional.ScriptTestBase import script_test
 
 
 class CrudTestsBase(ShellTestsBase):
     def install_actions(self, finder):
-        from contextshell.Tree import Tree
-        from contextshell.NodePath import NodePath
-
         def exists(tree: Tree, target: NodePath, action: NodePath, name):
             return tree.exists(NodePath.join(target, name))
 
@@ -106,7 +103,7 @@ class SetTests(CrudTestsBase):
         """
         > .: create foo 1
         > .foo: set
-        TypeError: set() missing 1 required positional argument: 'new_value'
+        TypeError: set_action() missing 1 required positional argument: 'new_value'
         """
 
     @script_test
@@ -157,6 +154,8 @@ class ListTests(CrudTestsBase):
         Z_first
         A_second
         """
+    # TODO: list.attributes
+    # TODO: list.all
 
 class RemoveTests(CrudTestsBase):
     @script_test

@@ -1,7 +1,7 @@
 from contextshell.NodePath import NodePath
 from contextshell.Tree import Tree
-from integration.ScriptTestBase import script_test
-from integration.ShellTestsBase import ShellTestsBase
+from functional.ScriptTestBase import script_test
+from functional.ShellTestsBase import ShellTestsBase
 
 
 class ActionResolvingTests(ShellTestsBase):
@@ -15,6 +15,11 @@ class ActionResolvingTests(ShellTestsBase):
             return "CHILD"
 
         finder.install_action(".child", "child_action", child_action)
+
+        def partial_action(tree: Tree, target: NodePath, action: NodePath):
+            pass
+
+        finder.install_action(".", "partial.action", partial_action)
 
     @script_test
     def test_unknown_action(self):
@@ -49,4 +54,11 @@ class ActionResolvingTests(ShellTestsBase):
         """
         > .: child_action
         NameError: Could not find action named 'child_action'
+        """
+
+    @script_test
+    def test_non_action_invoke(self):
+        """
+        > .: partial
+        NameError: Could not find action named 'partial'
         """

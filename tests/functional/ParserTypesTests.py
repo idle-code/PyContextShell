@@ -1,8 +1,8 @@
 import unittest
 from contextshell.Tree import Tree
 from contextshell.NodePath import NodePath
-from integration.ShellTestsBase import ShellTestsBase
-from tests.integration.ScriptTestBase import script_test
+from functional.ShellTestsBase import ShellTestsBase
+from tests.functional.ScriptTestBase import script_test
 
 
 class ParserTypesTests(ShellTestsBase):

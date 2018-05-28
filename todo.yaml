@@ -37,6 +37,16 @@ Issues:
     - Remote actions should be able to use local tree values
       '.remote.foo: remote_action .bar' - remote action is able to access basic operations of local '.bar' node
 
+Filesystem backend:
+  - Custom types for different files
+    - (Virtual) Attributes generation
+  - Can be root backend (so different system actions will be accessible via /system/...)
+  - Access to existing (raw) programs ($PATH directories should be included in some @actions)
+
+Network backend:
+  - Commands issued are executed on the remote host
+
+
 Tree backend:
   - Serialization to file
     - Values

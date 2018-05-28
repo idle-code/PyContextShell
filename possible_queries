@@ -35,3 +35,16 @@ file.rename bar.txt -> spam.cpp
 [2] spam  3 (&.foo)
 
 
+/etc: list
+/etc/passwd: print
+/etc/passwd: edit
+~/image.jpg: open
+
+# Action lookup order:
+path: ACTION
+1) path.@actions: exists ACTION
+2) path.@type.@actions: exists ACTION
+3) .session.@actions
+4) .system.@actions
+
+path.@class.@actions: exists ACTION

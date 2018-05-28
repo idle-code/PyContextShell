@@ -2,7 +2,7 @@ from contextshell.Shell import Shell
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.Tree import Tree
 from contextshell.ActionFinder import ActionFinder
-from integration.ScriptTestBase import ScriptTestBase
+from functional.ScriptTestBase import ScriptTestBase
 from abc import abstractmethod
 
 
