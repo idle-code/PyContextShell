@@ -1,4 +1,4 @@
-from contextshell.Tree import Tree
+from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
 from functional.ShellTestsBase import ShellTestsBase
 from tests.functional.ScriptTestBase import script_test
@@ -6,32 +6,32 @@ from tests.functional.ScriptTestBase import script_test
 
 class CrudTestsBase(ShellTestsBase):
     def install_actions(self, finder):
-        def exists(tree: Tree, target: NodePath, action: NodePath, name):
+        def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
             return tree.exists(NodePath.join(target, name))
 
         finder.install_action(".", "exists", exists)
 
-        def create(tree: Tree, target: NodePath, action: NodePath, name, value=None):
+        def create(tree: NodeTreeRoot, target: NodePath, action: NodePath, name, value=None):
             tree.create(NodePath.join(target, name), value)
 
         finder.install_action(".", "create", create)
 
-        def get(tree: Tree, target: NodePath, action: NodePath):
+        def get(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             return tree.get(target)
 
         finder.install_action(".", "get", get)
 
-        def set_action(tree: Tree, target: NodePath, action: NodePath, new_value):
+        def set_action(tree: NodeTreeRoot, target: NodePath, action: NodePath, new_value):
             return tree.set(target, new_value)
 
         finder.install_action(".", "set", set_action)
 
-        def list_action(tree: Tree, target: NodePath, action: NodePath):
+        def list_action(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             return tree.list(target)
 
         finder.install_action(".", "list", list_action)
 
-        def remove(tree: Tree, target: NodePath, action: NodePath):
+        def remove(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             return tree.remove(target)
 
         finder.install_action(".", "remove", remove)
@@ -119,7 +119,7 @@ class ListTests(CrudTestsBase):
     def install_actions(self, finder):
         super().install_actions(finder)
 
-        def list_actions(tree: Tree, target: NodePath, action: NodePath):
+        def list_actions(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             from contextshell.ActionFinder import ActionFinder
             actions_branch = NodePath.join(target, ActionFinder.actions_branch_name)
             return tree.list(actions_branch)

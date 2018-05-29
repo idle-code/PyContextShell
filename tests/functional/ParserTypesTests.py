@@ -1,5 +1,5 @@
 import unittest
-from contextshell.Tree import Tree
+from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
 from functional.ShellTestsBase import ShellTestsBase
 from tests.functional.ScriptTestBase import script_test
@@ -7,7 +7,7 @@ from tests.functional.ScriptTestBase import script_test
 
 class ParserTypesTests(ShellTestsBase):
     def install_actions(self, finder):
-        def type_of(tree: Tree, target: NodePath, action: NodePath, value):
+        def type_of(tree: NodeTreeRoot, target: NodePath, action: NodePath, value):
             return type(value).__name__
 
         finder.install_action(".", "type.of", type_of)

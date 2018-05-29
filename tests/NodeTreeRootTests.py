@@ -3,8 +3,8 @@ from contextshell.NodePath import NodePath as np
 
 
 def create_tree(*args, **kwargs):
-    from contextshell.Tree import Tree
-    return Tree(*args)
+    from contextshell.NodeTreeRoot import NodeTreeRoot
+    return NodeTreeRoot(*args)
 
 
 class ConstructionTests(unittest.TestCase):

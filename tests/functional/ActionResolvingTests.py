@@ -1,22 +1,22 @@
 from contextshell.NodePath import NodePath
-from contextshell.Tree import Tree
+from contextshell.TreeRoot import TreeRoot
 from functional.ScriptTestBase import script_test
 from functional.ShellTestsBase import ShellTestsBase
 
 
 class ActionResolvingTests(ShellTestsBase):
     def install_actions(self, finder):
-        def parent_action(tree: Tree, target: NodePath, action: NodePath):
+        def parent_action(tree: TreeRoot, target: NodePath, action: NodePath):
             return "PARENT"
 
         finder.install_action(".", "parent_action", parent_action)
 
-        def child_action(tree: Tree, target: NodePath, action: NodePath):
+        def child_action(tree: TreeRoot, target: NodePath, action: NodePath):
             return "CHILD"
 
         finder.install_action(".child", "child_action", child_action)
 
-        def partial_action(tree: Tree, target: NodePath, action: NodePath):
+        def partial_action(tree: TreeRoot, target: NodePath, action: NodePath):
             pass
 
         finder.install_action(".", "partial.action", partial_action)

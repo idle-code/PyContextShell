@@ -1,5 +1,5 @@
 import unittest
-from contextshell.Tree import Tree
+from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
 from functional.ShellTestsBase import ShellTestsBase
 from tests.functional.ScriptTestBase import script_test

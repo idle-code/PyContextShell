@@ -3,7 +3,7 @@ from contextshell.NodePath import NodePath
 from typing import Callable
 
 
-class Tree:
+class NodeTreeRoot:
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
         self.root = self.create_node(None)
