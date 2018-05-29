@@ -1,12 +1,12 @@
+import unittest
 from contextshell.Shell import Shell
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.ActionFinder import ActionFinder
-from functional.ScriptTestBase import ScriptTestBase
 from abc import abstractmethod
 
 
-class ShellTestsBase(ScriptTestBase):
+class ShellTestsBase(unittest.TestCase):
     def create_shell(self):
         tree = NodeTreeRoot()
         action_finder = ActionFinder(tree)

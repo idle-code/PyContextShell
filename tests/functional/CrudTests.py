@@ -1,7 +1,7 @@
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
 from functional.ShellTestsBase import ShellTestsBase
-from tests.functional.ScriptTestBase import script_test
+from tests.functional.TestExecutor import script_test
 
 
 class CrudTestsBase(ShellTestsBase):

@@ -1,6 +1,6 @@
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
-from functional.ScriptTestBase import script_test
+from functional.TestExecutor import script_test
 from functional.ShellTestsBase import ShellTestsBase
 
 

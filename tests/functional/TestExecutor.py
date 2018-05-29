@@ -1,12 +1,4 @@
-import unittest
 from typing import List, Tuple
-from abc import ABC, abstractmethod
-
-
-class ScriptTestBase(unittest.TestCase, ABC):  # TODO: rename/merge with ShellTestsBase
-    @abstractmethod
-    def create_shell(self):
-        raise NotImplementedError()
 
 
 class TestExecutor:

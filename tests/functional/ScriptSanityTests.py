@@ -2,7 +2,7 @@ import unittest
 
 
 def create_executor(*args):
-    from tests.functional.ScriptTestBase import TestExecutor
+    from tests.functional.TestExecutor import TestExecutor
     return TestExecutor(*args)
 
 
