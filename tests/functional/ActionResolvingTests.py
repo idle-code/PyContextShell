@@ -1,10 +1,12 @@
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
 from functional.TestExecutor import script_test
-from functional.ShellTestsBase import ShellTestsBase
+from functional.ShellTestsBase import NodeTreeTestsBase
+import unittest
 
 
-class ActionResolvingTests(ShellTestsBase):
+@unittest.skip("Re-enable when architecture is fixed")
+class ActionResolvingTests(NodeTreeTestsBase):
     def install_actions(self, finder):
         def parent_action(tree: TreeRoot, target: NodePath, action: NodePath):
             return "PARENT"

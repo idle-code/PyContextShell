@@ -1,12 +1,20 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from typing import Callable
+from contextshell.TreeRoot import TreeRoot
+from typing import Callable, Iterable
 
 
-class NodeTreeRoot:
+class NodeTreeRoot(TreeRoot):
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
         self.root = self.create_node(None)
+        from contextshell.ActionFinder import ActionFinder
+        self.action_finder = ActionFinder(self)
+
+    def execute(self, target: NodePath, action: NodePath, *args):
+        action = self.action_finder.find_action(target, action)
+        assert action is not None
+        return action(self, target, action, *args)
 
     def create_node(self, value):
         return Node(value)

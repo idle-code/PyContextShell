@@ -71,6 +71,14 @@ class FormatResultTests(unittest.TestCase):
 
         self.assertIsNone(formatted_none)
 
+    def test_format_empty_list(self):
+        interpreter = FakeInterpreter()
+        shell = create_shell(interpreter)
+
+        formatted_none = shell.format_result([])
+
+        self.assertIsNone(formatted_none)
+
     def test_format_boolean(self):
         interpreter = FakeInterpreter()
         shell = create_shell(interpreter)

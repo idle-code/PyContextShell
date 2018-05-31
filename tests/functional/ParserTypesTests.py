@@ -1,11 +1,11 @@
 import unittest
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
-from functional.ShellTestsBase import ShellTestsBase
+from functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
 
 
-class ParserTypesTests(ShellTestsBase):
+class ParserTypesTests(NodeTreeTestsBase):
     def install_actions(self, finder):
         def type_of(tree: NodeTreeRoot, target: NodePath, action: NodePath, value):
             return type(value).__name__

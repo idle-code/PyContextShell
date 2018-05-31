@@ -1,5 +1,6 @@
 from contextshell.NodePath import NodePath
 from typing import Dict, Callable
+from contextshell.TreeRoot import TreeRoot
 
 
 class FakeTree:

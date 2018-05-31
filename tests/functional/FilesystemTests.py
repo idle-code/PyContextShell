@@ -1,12 +1,12 @@
 import unittest
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
-from functional.ShellTestsBase import ShellTestsBase
+from functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
 
 
 @unittest.skip("TODO after virtual tree interface")
-class CrudTestsBase(ShellTestsBase):
+class CrudTestsBase(NodeTreeTestsBase):
     def install_actions(self, finder):
         # TODO: install filesystem module
         pass

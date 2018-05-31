@@ -1,10 +1,17 @@
 import unittest
-from unittest.mock import Mock, ANY
-from Fakes import FakeAction, FakeActionFinder, FakeTree
-
+from unittest.mock import Mock, ANY, call
+from Fakes import FakeAction
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.NodePath import NodePath
 from contextshell.Command import Command
+
+from contextshell.TreeRoot import TreeRoot
+
+
+class FakeTreeRoot(Mock):
+    def __init__(self):
+        super().__init__()
+        self.execute = Mock()
 
 
 class ExecuteTests(unittest.TestCase):
@@ -13,119 +20,81 @@ class ExecuteTests(unittest.TestCase):
         return CommandParser().parse(text)
 
     def test_execute_none_throws(self):
-        interpreter = CommandInterpreter(action_finder=FakeActionFinder(generate_missing=True), tree=FakeTree())
+        interpreter = CommandInterpreter(tree=FakeTreeRoot())
 
         with self.assertRaises(ValueError):
             interpreter.execute(None)
 
-    def test_execute_raises_when_action_could_not_be_found(self):
-        action_finder = FakeActionFinder()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
-        unknown_cmd = self.command("target: unknown_action")
-
-        with self.assertRaises(NameError):
-            interpreter.execute(unknown_cmd)
-
-    def test_execute_passes_target_path_to_finder(self):
-        action_finder = FakeActionFinder(generate_missing=True)
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
-        cmd = self.command("target.path: action")
-
-        interpreter.execute(cmd)
-
-        passed_target = action_finder.received_targets[0]
-        self.assertIsInstance(passed_target, NodePath)
-        self.assertEqual(NodePath('target.path'), passed_target)
-
     def test_executes_action(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action_name'] = action = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
         cmd = self.command("target: action_name")
 
         interpreter.execute(cmd)
 
-        self.assertTrue(action.called)
+        tree_root.execute.assert_called_with("target", "action_name")
 
     def test_executes_target_action(self):
-        action_finder = FakeActionFinder(generate_missing=True)
-        action_finder.actions['target_action'] = target_action = FakeAction()
-        target_action.return_value = "target.path"
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
+        tree_root.execute.return_value = "target.path"
         cmd = self.command("{target_target: target_action}: action")
 
         interpreter.execute(cmd)
 
-        self.assertTrue(target_action.called)
+        tree_root.execute.assert_any_call("target_target", "target_action")
 
     def test_executes_argument_actions(self):
-        action_finder = FakeActionFinder(generate_missing=True)
-        action_finder.actions['argument_action1'] = arg1_action = FakeAction()
-        action_finder.actions['argument_action2'] = arg2_action = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
         cmd = self.command("target: action {arg_target: argument_action1} {arg_target: argument_action2}")
 
         interpreter.execute(cmd)
 
-        self.assertTrue(arg1_action.called)
-        self.assertTrue(arg2_action.called)
+        tree_root.execute.assert_has_calls([
+            call("arg_target", "argument_action1"),
+            call("arg_target", "argument_action2")
+        ])
 
-    def test_execute_passes_tree_to_action(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action'] = action = FakeAction()
-        tree = FakeTree()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=tree)
-        cmd = self.command("target: action")
-
-        interpreter.execute(cmd)
-
-        self.assertIs(tree, action.received_tree)
-
-    def test_execute_passes_target_to_action(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action'] = action = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
-        cmd = self.command("target: action")
+    def test_execute_passes_target(self):
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
+        cmd = self.command("target.path: action")
 
         interpreter.execute(cmd)
 
-        self.assertEqual("target", action.received_target)
+        tree_root.execute.assert_called_with("target.path", ANY)
 
     def test_execute_no_target_throws(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action'] = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+        interpreter = CommandInterpreter(tree=FakeTreeRoot())
         cmd = self.command("action")
 
         with self.assertRaises(RuntimeError):
             interpreter.execute(cmd)
 
-    def test_execute_passes_action_path_to_action(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action.path'] = action = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+    def test_execute_passes_action_path(self):
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
         cmd = self.command("target: action.path")
 
         interpreter.execute(cmd)
 
-        self.assertEqual("action.path", action.received_action)
+        tree_root.execute.assert_called_with(ANY, "action.path")
 
-    def test_execute_passes_arguments_to_action(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['action'] = action = FakeAction()
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
+    def test_execute_passes_arguments(self):
+        tree_root = FakeTreeRoot()
+        interpreter = CommandInterpreter(tree=tree_root)
         cmd = self.command("target: action foo bar")
 
         interpreter.execute(cmd)
 
-        self.assertSequenceEqual(['foo', 'bar'], action.received_arguments)
+        tree_root.execute.assert_called_with(ANY, ANY, 'foo', 'bar')
 
     def test_execute_passes_returned_value(self):
-        action_finder = FakeActionFinder()
-        action_finder.actions['return3'] = return3 = FakeAction()
-        return3.return_value = 3
-        interpreter = CommandInterpreter(action_finder=action_finder, tree=FakeTree())
-        cmd = self.command("target: return3")
+        tree_root = FakeTreeRoot()
+        tree_root.execute.return_value = 3
+        interpreter = CommandInterpreter(tree=tree_root)
+        cmd = self.command("target: action")
 
         return_value = interpreter.execute(cmd)
 

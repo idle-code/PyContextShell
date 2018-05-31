@@ -1,11 +1,11 @@
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot
+from contextshell.NodeTreeRoot import NodeTreeRoot
 
 
 class ActionFinder:
     actions_branch_name = '@actions'
 
-    def __init__(self, tree: TreeRoot):
+    def __init__(self, tree: NodeTreeRoot):
         self.tree = tree  # TODO: pass tree to the find_action instead?
 
     @staticmethod
