@@ -5,8 +5,8 @@ from tests.functional.TestExecutor import script_test
 import unittest
 
 
-@unittest.skip("Re-enable when architecture is fixed")
 class CrudTestsBase(NodeTreeTestsBase):
+    # TODO: move those actions into NodeTreeRoot implementation
     def install_actions(self, finder):
         def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
             return tree.exists(NodePath.join(target, name))
@@ -158,6 +158,7 @@ class ListTests(CrudTestsBase):
         """
     # TODO: list.attributes
     # TODO: list.all
+
 
 class RemoveTests(CrudTestsBase):
     @script_test

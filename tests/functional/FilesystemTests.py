@@ -6,7 +6,7 @@ from tests.functional.TestExecutor import script_test
 
 
 @unittest.skip("TODO after virtual tree interface")
-class CrudTestsBase(NodeTreeTestsBase):
+class FilesystemTestsBase(NodeTreeTestsBase):
     def install_actions(self, finder):
         # TODO: install filesystem module
         pass

@@ -5,7 +5,6 @@ from functional.ShellTestsBase import NodeTreeTestsBase
 import unittest
 
 
-@unittest.skip("Re-enable when architecture is fixed")
 class ActionResolvingTests(NodeTreeTestsBase):
     def install_actions(self, finder):
         def parent_action(tree: TreeRoot, target: NodePath, action: NodePath):

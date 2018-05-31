@@ -12,9 +12,10 @@ class NodeTreeRoot(TreeRoot):
         self.action_finder = ActionFinder(self)
 
     def execute(self, target: NodePath, action: NodePath, *args):
-        action = self.action_finder.find_action(target, action)
-        assert action is not None
-        return action(self, target, action, *args)
+        action_impl = self.action_finder.find_action(target, action)
+        if action_impl is None:
+            raise NameError("Could not find action named '{}'".format(action))
+        return action_impl(self, target, action, *args)
 
     def create_node(self, value):
         return Node(value)
