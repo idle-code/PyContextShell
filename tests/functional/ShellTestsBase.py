@@ -25,9 +25,8 @@ class VirtualTreeTestsBase(unittest.TestCase, ABC):
 class NodeTreeTestsBase(VirtualTreeTestsBase):
     def register_roots(self, virtual_tree: VirtualTree):
         tree_root = NodeTreeRoot()
-        self.install_actions(tree_root.action_finder)
+        self.install_custom_actions(tree_root.action_finder)
         virtual_tree.mount(NodePath("."), tree_root)
 
-    @abstractmethod
-    def install_actions(self, action_finder: ActionFinder):
-        raise NotImplementedError()
+    def install_custom_actions(self, action_finder: ActionFinder):
+        pass

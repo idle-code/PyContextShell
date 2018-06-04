@@ -195,10 +195,11 @@ class SetTests(unittest.TestCase):
 class ListTests(unittest.TestCase):
     def test_empty(self):
         tree = create_tree()
+        tree.create(np('.empty'))
 
-        root_list = tree.list(np('.'))
+        empty_list = tree.list(np('.empty'))
 
-        self.assertSequenceEqual([], root_list)
+        self.assertSequenceEqual([], empty_list)
 
     def test_single(self):
         tree = create_tree()

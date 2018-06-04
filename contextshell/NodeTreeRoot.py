@@ -4,12 +4,45 @@ from contextshell.TreeRoot import TreeRoot
 from typing import Callable, Iterable
 
 
+# TODO: check how implement TemporaryTreeRoot (based on NodeTreeRoot)
 class NodeTreeRoot(TreeRoot):
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
         self.root = self.create_node(None)
         from contextshell.ActionFinder import ActionFinder
         self.action_finder = ActionFinder(self)
+        self.install_default_actions()
+
+    def install_default_actions(self):
+        def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
+            return tree.exists(NodePath.join(target, name))
+
+        self.action_finder.install_action(".", "exists", exists)
+
+        def create(tree: NodeTreeRoot, target: NodePath, action: NodePath, name, value=None):
+            tree.create(NodePath.join(target, name), value)
+
+        self.action_finder.install_action(".", "create", create)
+
+        def get(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            return tree.get(target)
+
+        self.action_finder.install_action(".", "get", get)
+
+        def set_action(tree: NodeTreeRoot, target: NodePath, action: NodePath, new_value):
+            return tree.set(target, new_value)
+
+        self.action_finder.install_action(".", "set", set_action)
+
+        def list_action(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            return tree.list(target)
+
+        self.action_finder.install_action(".", "list", list_action)
+
+        def remove(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            return tree.remove(target)
+
+        self.action_finder.install_action(".", "remove", remove)
 
     def execute(self, target: NodePath, action: NodePath, *args):
         action_impl = self.action_finder.find_action(target, action)

@@ -6,37 +6,7 @@ import unittest
 
 
 class CrudTestsBase(NodeTreeTestsBase):
-    # TODO: move those actions into NodeTreeRoot implementation
-    def install_actions(self, finder):
-        def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
-            return tree.exists(NodePath.join(target, name))
-
-        finder.install_action(".", "exists", exists)
-
-        def create(tree: NodeTreeRoot, target: NodePath, action: NodePath, name, value=None):
-            tree.create(NodePath.join(target, name), value)
-
-        finder.install_action(".", "create", create)
-
-        def get(tree: NodeTreeRoot, target: NodePath, action: NodePath):
-            return tree.get(target)
-
-        finder.install_action(".", "get", get)
-
-        def set_action(tree: NodeTreeRoot, target: NodePath, action: NodePath, new_value):
-            return tree.set(target, new_value)
-
-        finder.install_action(".", "set", set_action)
-
-        def list_action(tree: NodeTreeRoot, target: NodePath, action: NodePath):
-            return tree.list(target)
-
-        finder.install_action(".", "list", list_action)
-
-        def remove(tree: NodeTreeRoot, target: NodePath, action: NodePath):
-            return tree.remove(target)
-
-        finder.install_action(".", "remove", remove)
+    pass
 
 
 class CreateTests(CrudTestsBase):
@@ -118,8 +88,8 @@ class SetTests(CrudTestsBase):
 
 
 class ListTests(CrudTestsBase):
-    def install_actions(self, finder):
-        super().install_actions(finder)
+    def install_custom_actions(self, finder):
+        super().install_custom_actions(finder)
 
         def list_actions(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             from contextshell.ActionFinder import ActionFinder

@@ -6,7 +6,7 @@ from tests.functional.TestExecutor import script_test
 
 
 class ParserTypesTests(NodeTreeTestsBase):
-    def install_actions(self, finder):
+    def install_custom_actions(self, finder):
         def type_of(tree: NodeTreeRoot, target: NodePath, action: NodePath, value):
             return type(value).__name__
 

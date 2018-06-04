@@ -6,7 +6,7 @@ import unittest
 
 
 class ActionResolvingTests(NodeTreeTestsBase):
-    def install_actions(self, finder):
+    def install_custom_actions(self, finder):
         def parent_action(tree: TreeRoot, target: NodePath, action: NodePath):
             return "PARENT"
 
