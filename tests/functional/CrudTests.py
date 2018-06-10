@@ -88,33 +88,11 @@ class SetTests(CrudTestsBase):
 
 
 class ListTests(CrudTestsBase):
-    def install_custom_actions(self, finder):
-        super().install_custom_actions(finder)
-
-        def list_actions(tree: NodeTreeRoot, target: NodePath, action: NodePath):
-            from contextshell.ActionFinder import ActionFinder
-            actions_branch = NodePath.join(target, ActionFinder.actions_branch_name)
-            return tree.list(actions_branch)
-
-        finder.install_action(".", "list.actions", list_actions)
-
     @script_test
     def test_list_empty(self):
         """
         > .: create foo
         > .foo: list
-        """
-
-    @script_test
-    def test_list_action(self):
-        """
-        > .: list.actions
-        exists
-        create
-        get
-        set
-        list
-        remove
         """
 
     @script_test
@@ -126,8 +104,48 @@ class ListTests(CrudTestsBase):
         Z_first
         A_second
         """
-    # TODO: list.attributes
-    # TODO: list.all
+
+    @script_test
+    def test_list_only_attributes(self):
+        """
+        > .: create .test.@attr
+        > .: create .test.key
+        > .test: list.attributes
+        @attr
+        """
+
+    @script_test
+    def test_list_all(self):
+        """
+        > .: create .test.@attr
+        > .: create .test.key
+        > .test: list.all
+        @attr
+        key
+        """
+
+    @script_test
+    def test_list_only_normal(self):
+        """
+        > .: create .test.@attr
+        > .: create .test.key
+        > .test: list
+        key
+        """
+
+
+class ListActionsTests(CrudTestsBase):
+    @script_test
+    def test_list_action(self):
+        """
+        > .: list.actions
+        create
+        exists
+        get
+        set
+        list
+        remove
+        """
 
 
 class RemoveTests(CrudTestsBase):

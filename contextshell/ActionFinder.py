@@ -2,6 +2,7 @@ from contextshell.NodePath import NodePath
 from contextshell.NodeTreeRoot import NodeTreeRoot
 
 
+# TODO: merge with NodeTreeRoot
 class ActionFinder:
     actions_branch_name = '@actions'
 

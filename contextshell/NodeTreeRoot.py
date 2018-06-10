@@ -1,7 +1,7 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
-from typing import Callable, Iterable
+from typing import Callable, Iterable, List
 
 
 # TODO: check how implement TemporaryTreeRoot (based on NodeTreeRoot)
@@ -14,15 +14,15 @@ class NodeTreeRoot(TreeRoot):
         self.install_default_actions()
 
     def install_default_actions(self):
-        def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
-            return tree.exists(NodePath.join(target, name))
-
-        self.action_finder.install_action(".", "exists", exists)
-
         def create(tree: NodeTreeRoot, target: NodePath, action: NodePath, name, value=None):
             tree.create(NodePath.join(target, name), value)
 
         self.action_finder.install_action(".", "create", create)
+
+        def exists(tree: NodeTreeRoot, target: NodePath, action: NodePath, name):
+            return tree.exists(NodePath.join(target, name))
+
+        self.action_finder.install_action(".", "exists", exists)
 
         def get(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             return tree.get(target)
@@ -35,14 +35,50 @@ class NodeTreeRoot(TreeRoot):
         self.action_finder.install_action(".", "set", set_action)
 
         def list_action(tree: NodeTreeRoot, target: NodePath, action: NodePath):
-            return tree.list(target)
+            all_list = tree.list(target)
+            return list(filter(lambda p: not self.is_attribute(p), all_list))
 
         self.action_finder.install_action(".", "list", list_action)
+
+        def list_all(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            return tree.list(target)
+
+        self.action_finder.install_action(".", "list.all", list_all)
+
+        def list_attributes(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            all_list = tree.list(target)
+            return list(filter(self.is_attribute, all_list))
+
+        self.action_finder.install_action(".", "list.attributes", list_attributes)
+
+        def list_actions(tree: NodeTreeRoot, target: NodePath, action: NodePath):
+            # FIXME: use self.action_finder or other way of listing available actions
+            from contextshell.ActionFinder import ActionFinder
+            actions_branch = NodePath.join(target, ActionFinder.actions_branch_name)
+            return tree.list(actions_branch)
+
+        self.action_finder.install_action(".", "list.actions", list_actions)
 
         def remove(tree: NodeTreeRoot, target: NodePath, action: NodePath):
             return tree.remove(target)
 
         self.action_finder.install_action(".", "remove", remove)
+
+    def is_attribute(self, path: NodePath):
+        return path.startswith('@')
+
+    def list_actions(self, path: NodePath) -> List[NodePath]:
+        action_paths = self.list(NodePath.join(path, '@actions'))
+        action_paths = sorted(action_paths)
+
+        if len(path) == 0:  # Root
+            return action_paths
+        else:
+            return action_paths + self.list_actions(path.base_path)
+
+    def is_action(self, path: NodePath):
+        node_value = self.get(path)
+        return isinstance(node_value, Callable)
 
     def execute(self, target: NodePath, action: NodePath, *args):
         action_impl = self.action_finder.find_action(target, action)

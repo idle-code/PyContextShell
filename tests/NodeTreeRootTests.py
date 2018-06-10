@@ -1,5 +1,7 @@
 import unittest
 from contextshell.NodePath import NodePath as np
+from contextshell.NodePath import NodePath
+from contextshell.TreeRoot import TreeRoot
 
 
 def create_tree(*args, **kwargs):
@@ -226,3 +228,55 @@ class RemoveTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             tree.remove(np('.'))
+
+
+def fake_action(tree: TreeRoot, target: NodePath, action: NodePath):
+    pass
+
+
+class IsActionTests(unittest.TestCase):
+    def test_installed_action(self):
+        tree = create_tree()
+        tree.action_finder.install_action(".", np('test'), fake_action)
+        test_action_path = tree.action_finder.make_action_path(".", np("test"))
+
+        test_is_action = tree.is_action(test_action_path)
+
+        self.assertTrue(test_is_action)
+
+    def test_is_not_action(self):
+        tree = create_tree()
+        foo_path = np(".foo")
+        tree.create(foo_path)
+
+        foo_is_action = tree.is_action(foo_path)
+
+        self.assertFalse(foo_is_action)
+
+
+class ListActions(unittest.TestCase):
+    default_actions = [
+        'create',
+        'exists',
+        'get',
+        'list',
+        'remove',
+        'set',
+    ]
+
+    def test_root_actions(self):
+        tree = create_tree()
+
+        root_actions = tree.list_actions(np('.'))
+
+        self.assertSequenceEqual(ListActions.default_actions, root_actions)
+
+    def test_include_parent_actions(self):
+        tree = create_tree()
+        child_path = np('.child')
+        tree.create(child_path)
+        tree.action_finder.install_action(child_path, np('test'), fake_action)
+
+        child_actions = tree.list_actions(child_path)
+
+        self.assertSequenceEqual(['test'] + ListActions.default_actions, child_actions)
