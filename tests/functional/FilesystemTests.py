@@ -14,7 +14,7 @@ class FilesystemTestsBase(NodeTreeTestsBase):
     @script_test
     def test_mount(self):
         """
-        > .: filesystem.mount.as .fs
-        > .fs: exists
+        $ .: filesystem.mount.as .fs
+        $ .fs: exists
         True
         """

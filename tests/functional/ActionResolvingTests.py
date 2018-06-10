@@ -25,41 +25,41 @@ class ActionResolvingTests(NodeTreeTestsBase):
     @script_test
     def test_unknown_action(self):
         """
-        > .: unknown_action
+        $ .: unknown_action
         NameError: Could not find action named 'unknown_action'
         """
 
     @script_test
     def test_parent_action_from_child(self):
         """
-        > .child: parent_action
+        $ .child: parent_action
         PARENT
         """
 
     @script_test
     def test_child_action_from_child(self):
         """
-        > .child: child_action
+        $ .child: child_action
         CHILD
         """
 
     @script_test
     def test_parent_action_from_parent(self):
         """
-        > .: parent_action
+        $ .: parent_action
         PARENT
         """
 
     @script_test
     def test_child_action_from_parent(self):
         """
-        > .: child_action
+        $ .: child_action
         NameError: Could not find action named 'child_action'
         """
 
     @script_test
     def test_non_action_invoke(self):
         """
-        > .: partial
+        $ .: partial
         NameError: Could not find action named 'partial'
         """

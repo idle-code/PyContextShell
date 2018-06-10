@@ -26,7 +26,7 @@ Actual output:
         i = 0
         while i < len(script_lines):
             line = script_lines[i]
-            if not line.startswith('>'):
+            if not line.startswith('$'):
                 raise ValueError("Expected command but got output in tests script")
             command = line[1:].strip()
             i += 1
@@ -34,7 +34,7 @@ Actual output:
             output_lines = []
             while i < len(script_lines):
                 line = script_lines[i]
-                if line.startswith('>'):
+                if line.startswith('$'):
                     break
                 output_lines.append(line)
                 i += 1

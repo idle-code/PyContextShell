@@ -27,7 +27,7 @@ class TestExecutorTests(unittest.TestCase):
         shell = FakeShell()
         exec = create_executor(shell)
 
-        exec.test("> .: action")
+        exec.test("$ .: action")
 
         self.assertIn(".: action", shell.executed_commands)
 
@@ -38,8 +38,8 @@ class TestExecutorTests(unittest.TestCase):
         exec = create_executor(shell)
 
         exec.test("""
-                > foo
-                > bar
+                $ foo
+                $ bar
                 """)
 
         self.assertSequenceEqual([
@@ -53,7 +53,7 @@ class TestExecutorTests(unittest.TestCase):
         exec = create_executor(shell)
 
         exec.test("""
-        > .: action
+        $ .: action
         bar
         """)
 
@@ -63,7 +63,7 @@ class TestExecutorTests(unittest.TestCase):
         exec = create_executor(shell)
 
         exec.test("""
-        > .: action
+        $ .: action
         bar
         spam
         """)
@@ -75,7 +75,7 @@ class TestExecutorTests(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             exec.test("""
-            > .: action
+            $ .: action
             foo
             """)
 
@@ -86,7 +86,7 @@ class TestExecutorTests(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             exec.test("""
-            > .: action
+            $ .: action
             bar
             gruz
             """)
@@ -97,4 +97,4 @@ class TestExecutorTests(unittest.TestCase):
         exec = create_executor(shell)
 
         with self.assertRaises(AssertionError):
-            exec.test("> .: action")
+            exec.test("$ .: action")

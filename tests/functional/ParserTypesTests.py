@@ -15,28 +15,28 @@ class ParserTypesTests(NodeTreeTestsBase):
     @script_test
     def test_int(self):
         """
-        > .: type.of 123
+        $ .: type.of 123
         int
         """
 
     @script_test
     def test_double_quoted_string(self):
         """
-        > .: type.of "rabarbar"
+        $ .: type.of "rabarbar"
         str
         """
 
     @script_test
     def test_single_quoted_string(self):
         """
-        > .: type.of 'rabarbar'
+        $ .: type.of 'rabarbar'
         str
         """
 
     @script_test
     def test_float(self):
         """
-        > .: type.of 3.1415
+        $ .: type.of 3.1415
         float
         """
 
@@ -44,6 +44,6 @@ class ParserTypesTests(NodeTreeTestsBase):
     @script_test
     def test_path(self):
         """
-        > .: type.of ra.bar.bar
+        $ .: type.of ra.bar.bar
         NodePath
         """
