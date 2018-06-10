@@ -1,7 +1,7 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
-from typing import Callable, Iterable, List
+from typing import Callable, List
 
 
 # TODO: check how implement TemporaryTreeRoot (based on NodeTreeRoot)

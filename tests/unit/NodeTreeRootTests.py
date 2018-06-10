@@ -264,14 +264,14 @@ class ListActions(unittest.TestCase):
         'set',
     ]
 
-    def test_root_actions(self):
+    def test_default_actions(self):
         tree = create_tree()
 
         root_actions = tree.list_actions(np('.'))
 
         self.assertSequenceEqual(ListActions.default_actions, root_actions)
 
-    def test_include_parent_actions(self):
+    def test_node_specific_actions(self):
         tree = create_tree()
         child_path = np('.child')
         tree.create(child_path)

@@ -31,11 +31,27 @@ Issues:
       '.remote.hour: set 18' should invoke '.hour: set 18' on the remote host
     - Return value forwarding
       '.remote.minutes: get' should return value to the local system
-    - Local action should be able operate on remote tree
-      'local_action .remote.foo' - local_action should be able to access basic operations of remote '.foo' node
-      - by basic operations I understand CRUD-like ones
-    - Remote actions should be able to use local tree values
-      '.remote.foo: remote_action .bar' - remote action is able to access basic operations of local '.bar' node
+    - Action arguments can be represented as tree
+      E.g "foo bar=123 bar.spam=arg" will result in following argument tree
+      """
+      [0] foo
+      bar 123
+      bar.spam arg
+      """
+    - How to pass argument tree into action?
+      - >>> Serialization into ordered dictionary
+        - Easy to implement
+        - Backward-compatible with common functions
+      - Path to the temporary tree
+        - Requires backend to support temporary trees
+        - E.g. File backend would require temporary files just for arguments
+      - New tree type
+        - Requires architectual change?
+    - What data is passed to the action on invocation?
+      - Target path
+      - Action name
+      - Arguments
+      Note: Tree/Root is not passed as it doesn't change between invocations
 
 Filesystem backend:
   - Custom types for different files
@@ -45,7 +61,6 @@ Filesystem backend:
 
 Network backend:
   - Commands issued are executed on the remote host
-
 
 Tree backend:
   - Serialization to file
