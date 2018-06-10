@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/actions" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests/session_stack" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests/functional" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/unit" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.7 (ContextShell-TO8qsCbe)" jdkType="Python SDK" />

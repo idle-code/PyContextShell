@@ -1,11 +1,7 @@
 import unittest
 from unittest.mock import Mock, ANY, call
-from Fakes import FakeAction
 from contextshell.CommandInterpreter import CommandInterpreter
-from contextshell.NodePath import NodePath
 from contextshell.Command import Command
-
-from contextshell.TreeRoot import TreeRoot
 
 
 class FakeTreeRoot(Mock):
