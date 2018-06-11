@@ -1,6 +1,6 @@
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
-from functional.ShellTestsBase import NodeTreeTestsBase
+from tests.functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
 import unittest
 

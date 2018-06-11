@@ -1,7 +1,7 @@
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
-from functional.TestExecutor import script_test
-from functional.ShellTestsBase import NodeTreeTestsBase
+from tests.functional.TestExecutor import script_test
+from tests.functional.ShellTestsBase import NodeTreeTestsBase
 import unittest
 
 
