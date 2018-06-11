@@ -1,10 +1,11 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
-from typing import Callable, List
+from contextshell.Action import Action
+from typing import Callable, List, Optional
 
 
-# TODO: check how implement TemporaryTreeRoot (based on NodeTreeRoot)
+# CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)
 class NodeTreeRoot(TreeRoot):
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
@@ -64,6 +65,39 @@ class NodeTreeRoot(TreeRoot):
 
         self.action_finder.install_action(".", "remove", remove)
 
+    def install_global_action(self, action: Action):
+        self.install_action(NodePath('.'), action)
+
+    def install_action(self, target: NodePath, action: Action):
+        self.create(NodePath.join(target, '@actions', action.name), action)
+
+    def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
+        possible_locations = (
+            target,
+            NodePath.join(target, '@type'),
+            NodePath('.')
+        )
+        for candidate_path in possible_locations:
+            action_implementation = self._find_action_in(candidate_path, action)
+            if action_implementation is not None:
+                return action_implementation
+        return None
+
+    def _find_action_in(self, target: NodePath, action: NodePath) -> Optional[Action]:
+        action_node = self._resolve_optional_path(NodePath.join(target, '@actions', action))
+        if action_node is None:
+            return None
+        action_implementation = action_node.get()
+        if not self._is_action_implementation(action_implementation):
+            return None
+        return action_implementation
+
+    def _is_action_implementation(self, node_value) -> bool:
+        return isinstance(node_value, Callable)
+
+    # def install_type(self, type: NodeType):
+    #     raise NotImplementedError()
+
     def is_attribute(self, path: NodePath):
         return path.startswith('@')
 
@@ -78,7 +112,7 @@ class NodeTreeRoot(TreeRoot):
 
     def is_action(self, path: NodePath):
         node_value = self.get(path)
-        return isinstance(node_value, Callable)
+        return self._is_action_implementation(node_value)
 
     def execute(self, target: NodePath, action: NodePath, *args):
         action_impl = self.action_finder.find_action(target, action)

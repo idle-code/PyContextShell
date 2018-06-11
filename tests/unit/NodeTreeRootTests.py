@@ -1,4 +1,6 @@
 import unittest
+from typing import Dict, Union, Any
+
 from contextshell.NodePath import NodePath as np
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
@@ -280,3 +282,66 @@ class ListActions(unittest.TestCase):
         child_actions = tree.list_actions(child_path)
 
         self.assertSequenceEqual(['test'] + ListActions.default_actions, child_actions)
+
+
+from contextshell.Action import Action
+
+
+class FakeAction(Action):
+    def __init__(self, name: NodePath=np('action')):
+        super().__init__(name)
+
+    def __call__(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
+        pass
+
+
+class FindActionTests(unittest.TestCase):
+    def test_find_nonexistent_target(self):
+        tree = create_tree()
+        global_action = FakeAction(np('action'))
+        tree.install_global_action(global_action)
+
+        found_action = tree.find_action(np('.nonexistent'), np('action'))
+
+        self.assertIs(global_action, found_action)
+
+    def test_find_nonexistent_action(self):
+        tree = create_tree()
+
+        found_action = tree.find_action(np('.'), np('action'))
+
+        self.assertIsNone(found_action)
+
+    def test_find_invalid_action(self):
+        tree = create_tree()
+        tree.create(np('.@actions.action'), 123)
+
+        found_action = tree.find_action(np('.'), np('action'))
+
+        self.assertIsNone(found_action)
+
+    def test_resolve_order_target_before_type(self):
+        tree = create_tree()
+        action_name = np('action')
+        type_action = FakeAction(action_name)
+        target_action = FakeAction(action_name)
+        tree.create(np('.target'))
+        tree.install_action(np('.target.@type'), type_action)
+        tree.install_action(np('.target'), target_action)
+
+        found_action = tree.find_action(np('.target'), action_name)
+
+        self.assertIs(target_action, found_action)
+
+    def test_resolve_order_type_before_global(self):
+        tree = create_tree()
+        tree.create(np('.target.@type'))
+        action_name = np('action')
+        global_action = FakeAction(action_name)
+        type_action = FakeAction(action_name)
+        tree.install_global_action(global_action)
+        tree.install_action(np('.target.@type'), type_action)
+
+        found_action = tree.find_action(np('.target'), action_name)
+
+        self.assertIs(type_action, found_action)
