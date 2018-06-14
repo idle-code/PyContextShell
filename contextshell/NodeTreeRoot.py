@@ -1,6 +1,6 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot
+from contextshell.TreeRoot import TreeRoot, ActionArgsPack
 from contextshell.Action import Action
 from contextshell.CallableAction import action_from_function
 from typing import Callable, List, Optional, Dict, Union, Any
@@ -105,14 +105,14 @@ class NodeTreeRoot(TreeRoot):
         node_value = self.get(path)
         return self._is_action_implementation(node_value)
 
-    def execute(self, target: NodePath, action: NodePath, *args):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack):
         #print("Execute: {}: {} {}".format(target, action, args))
         action_impl = self.find_action(target, action)
         if action_impl is None:
             raise NameError("Could not find action named '{}'".format(action))
-        from collections import OrderedDict  # FIXME: Temporary, until execute interface changes
-        arguments = OrderedDict(enumerate(args))
-        return action_impl.invoke(target, action, arguments)
+        #from collections import OrderedDict  # FIXME: Temporary, until execute interface changes
+        #arguments = OrderedDict(enumerate(args))
+        return action_impl.invoke(target, action, args)
 
     def create_node(self, value):
         return Node(value)

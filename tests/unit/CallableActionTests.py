@@ -34,8 +34,8 @@ class CallTests(unittest.TestCase):
         implementation = Mock()
         action = create_action(implementation)
         arguments = OrderedDict([
-            ('foo', 'spam'),
-            ('bar', 2),
+            (np('foo'), 'spam'),
+            (np('bar'), 2),
             ])
 
         action.invoke(np('.target'), np('action'), arguments)

@@ -1,6 +1,7 @@
 from contextshell.Command import Command
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot
+from contextshell.TreeRoot import TreeRoot, parse_argument_tree
+from typing import Dict, Union, Any
 
 
 class CommandInterpreter:
@@ -15,9 +16,9 @@ class CommandInterpreter:
             raise RuntimeError("No action target specified")
         target_path = NodePath.cast(target_path)
         action_path = NodePath.cast(self._evaluate(command.name))
-        arguments = map(self._evaluate, command.arguments)
-        # TODO: parse arguments into OrderedDict[Union[int, NodePath], Any] as in Action.invoke interface
-        return self.tree.execute(target_path, action_path, *arguments)
+        arguments = list(map(self._evaluate, command.arguments))
+        arguments = parse_argument_tree(arguments)
+        return self.tree.execute(target_path, action_path, arguments)
 
     def _evaluate(self, part):
         if isinstance(part, Command):

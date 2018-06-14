@@ -1,7 +1,7 @@
 from contextshell.NodePath import NodePath
 from contextshell.Action import Action
 from typing import Dict, Callable, Union, Any
-from contextshell.TreeRoot import TreeRoot
+from contextshell.TreeRoot import TreeRoot, ActionArgsPack
 
 
 class FakeTree:
@@ -25,7 +25,7 @@ class FakeAction(Action):
         self.received_arguments = None
         self.return_value = None
 
-    def invoke(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
+    def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
         self.called = True
         self.received_target = target
         self.received_action = action

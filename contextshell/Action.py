@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from contextshell.NodePath import NodePath
+from contextshell.TreeRoot import ActionArgsPack
 from typing import Dict, Union, Any
 
 
@@ -10,5 +11,5 @@ class Action(ABC):
         self.name: NodePath = name
 
     @abstractmethod
-    def invoke(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
+    def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
         raise NotImplementedError()

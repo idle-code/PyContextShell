@@ -72,7 +72,6 @@ class StringParsingConstructorTests(unittest.TestCase):
 
         self.assertEqual(type(element), type(1))
 
-
 class ConstructorTests(unittest.TestCase):
     def test_default_constructor_creates_empty_path(self):
         empty = NodePath()
@@ -340,3 +339,49 @@ class HashOperatorTests(unittest.TestCase):
         are_equal = hash(foo) == hash(bar)
 
         self.assertFalse(are_equal)
+
+
+class FromPythonNameTests(unittest.TestCase):
+    def test_basic_name(self):
+        name = 'foo'
+
+        foo_path = NodePath.from_python_name(name)
+
+        self.assertEqual(create_path('foo'), foo_path)
+
+    def test_underscores_as_separators(self):
+        name = 'foo_bar'
+
+        foo_bar_path = NodePath.from_python_name(name)
+
+        self.assertEqual(create_path('foo.bar'), foo_bar_path)
+
+    def test_prefix_underscores_are_ignored(self):
+        name = '__foo'
+
+        foo_path = NodePath.from_python_name(name)
+
+        self.assertEqual(create_path('foo'), foo_path)
+
+
+class ToPythonNameTests(unittest.TestCase):
+    def test_basic_name(self):
+        foo_path = create_path('foo')
+
+        name = foo_path.to_python_name()
+
+        self.assertEqual('foo', name)
+
+    def test_separators_as_underscores(self):
+        foo_bar_path = create_path('foo.bar')
+
+        name = foo_bar_path.to_python_name()
+
+        self.assertEqual('foo_bar', name)
+
+    def test_absolute_path(self):
+        foo_bar_path = create_path('.foo.bar')
+
+        name = foo_bar_path.to_python_name()
+
+        self.assertEqual('foo_bar', name)

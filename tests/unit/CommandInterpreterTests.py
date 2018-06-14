@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import Mock, ANY, call
+from collections import OrderedDict
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.Command import Command
 
@@ -8,6 +9,7 @@ class FakeTreeRoot(Mock):
     def __init__(self):
         super().__init__()
         self.execute = Mock()
+        self.execute.return_value = 'return_value'
 
 
 class ExecuteTests(unittest.TestCase):
@@ -28,7 +30,7 @@ class ExecuteTests(unittest.TestCase):
 
         interpreter.execute(cmd)
 
-        tree_root.execute.assert_called_with("target", "action_name")
+        tree_root.execute.assert_called_with("target", "action_name", OrderedDict())
 
     def test_executes_target_action(self):
         tree_root = FakeTreeRoot()
@@ -38,18 +40,19 @@ class ExecuteTests(unittest.TestCase):
 
         interpreter.execute(cmd)
 
-        tree_root.execute.assert_any_call("target_target", "target_action")
+        tree_root.execute.assert_any_call("target_target", "target_action", OrderedDict())
 
     def test_executes_argument_actions(self):
         tree_root = FakeTreeRoot()
+
         interpreter = CommandInterpreter(tree=tree_root)
         cmd = self.command("target: action {arg_target: argument_action1} {arg_target: argument_action2}")
 
         interpreter.execute(cmd)
 
         tree_root.execute.assert_has_calls([
-            call("arg_target", "argument_action1"),
-            call("arg_target", "argument_action2")
+            call("arg_target", "argument_action1", ANY),
+            call("arg_target", "argument_action2", ANY)
         ])
 
     def test_execute_passes_target(self):
@@ -59,7 +62,7 @@ class ExecuteTests(unittest.TestCase):
 
         interpreter.execute(cmd)
 
-        tree_root.execute.assert_called_with("target.path", ANY)
+        tree_root.execute.assert_called_with("target.path", ANY, ANY)
 
     def test_execute_no_target_throws(self):
         interpreter = CommandInterpreter(tree=FakeTreeRoot())
@@ -75,16 +78,16 @@ class ExecuteTests(unittest.TestCase):
 
         interpreter.execute(cmd)
 
-        tree_root.execute.assert_called_with(ANY, "action.path")
+        tree_root.execute.assert_called_with(ANY, "action.path", ANY)
 
     def test_execute_passes_arguments(self):
         tree_root = FakeTreeRoot()
         interpreter = CommandInterpreter(tree=tree_root)
-        cmd = self.command("target: action foo bar")
+        cmd = self.command("target: action foo")
 
         interpreter.execute(cmd)
 
-        tree_root.execute.assert_called_with(ANY, ANY, 'foo', 'bar')
+        tree_root.execute.assert_called_with(ANY, ANY, OrderedDict([(0, 'foo')]))
 
     def test_execute_passes_returned_value(self):
         tree_root = FakeTreeRoot()

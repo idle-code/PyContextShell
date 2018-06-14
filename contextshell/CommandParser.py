@@ -13,6 +13,7 @@ def convert_token_type(token):
         pass
     return token
 
+
 def tokenize(text: str) -> List[str]:
     tokens = []
     tok = ''
