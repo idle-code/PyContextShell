@@ -52,6 +52,14 @@ Issues:
       - Action name
       - Arguments
       Note: Tree/Root is not passed as it doesn't change between invocations
+    - How to implement dynamic actions?
+      'create' action could have dynamic sub-actions which represent installed types.
+      For example 'create.int', 'create.link', 'create.action.alias', etc;
+      - Sub-actions with no direct representation in node tree
+        could be forwarded to the parent action - 'create.*' -> 'create'
+      - When resolving action, custom commands should be used;
+        Resolving 'create.foo.bar' would require resolving 'create', then
+        'create: list' need to contain 'foo', then 'create.foo: list' would contain 'bar'
 
 Filesystem backend:
   - Custom types for different files

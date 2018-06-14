@@ -6,12 +6,14 @@ from contextshell.NodePath import NodePath
 
 
 class CallableAction(Action):
-    def __init__(self, implementation: Callable):
+    def __init__(self, implementation: Callable, name: NodePath):
+        super().__init__(name)
         self.implementation = implementation
 
-    def __call__(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
+    def invoke(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
+        #print("Invoked with:", *args)
         args, kwargs = CallableAction.unpack_argument_tree(arguments)
-        return self.implementation(target, action, *args, **kwargs)
+        return self.implementation(target, *args, **kwargs)
 
     @staticmethod
     def unpack_argument_tree(arguments: Dict[Union[NodePath, int], Any]) -> Tuple[List[Any], Dict[NodePath, Any]]:
@@ -23,3 +25,11 @@ class CallableAction(Action):
             else:
                 kwargs[key] = value
         return args, kwargs
+
+
+def action_from_function(method_to_wrap: Callable) -> Action:
+    action_name: str = method_to_wrap.__name__
+    if action_name.endswith('_action'):
+        action_name = action_name[:-len('_action')]
+    action_name = action_name.replace('_', '.')
+    return CallableAction(method_to_wrap, NodePath(action_name))

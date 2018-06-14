@@ -1,5 +1,6 @@
 from contextshell.NodePath import NodePath
-from typing import Dict, Callable
+from contextshell.Action import Action
+from typing import Dict, Callable, Union, Any
 from contextshell.TreeRoot import TreeRoot
 
 
@@ -14,8 +15,9 @@ class FakeTree:
         return path in self.node_map
 
 
-class FakeAction:
-    def __init__(self):
+class FakeAction(Action):
+    def __init__(self, name='action'):
+        super().__init__(NodePath(name))
         self.called = False
         self.received_tree = None
         self.received_target = None
@@ -23,27 +25,9 @@ class FakeAction:
         self.received_arguments = None
         self.return_value = None
 
-    def __call__(self, tree, target, action, *arguments):
+    def invoke(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
         self.called = True
-        self.received_tree = tree
         self.received_target = target
         self.received_action = action
         self.received_arguments = arguments
         return self.return_value
-
-
-class FakeActionFinder:
-    def __init__(self, generate_missing=False):
-        self.actions : Dict[str, Callable] = dict()
-        self.generate_missing = generate_missing
-        self.received_targets = []
-
-    def make_action_path(self, target_path: NodePath, action_path: NodePath):
-        raise NotImplementedError()
-
-    def find_action(self, target_path: NodePath, action_path: NodePath):
-        self.received_targets.append(target_path)
-        action_name = str(action_path)
-        if action_name not in self.actions and self.generate_missing:
-            return FakeAction()
-        return self.actions.get(action_name)

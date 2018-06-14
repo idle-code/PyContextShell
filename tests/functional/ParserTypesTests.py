@@ -6,11 +6,12 @@ from tests.functional.TestExecutor import script_test
 
 
 class ParserTypesTests(NodeTreeTestsBase):
-    def install_custom_actions(self, finder):
-        def type_of(tree: NodeTreeRoot, target: NodePath, action: NodePath, value):
-            return type(value).__name__
+    def install_custom_actions(self, tree: NodeTreeRoot):
+        def type_of(target: NodePath, value_to_check):
+            return type(value_to_check).__name__
 
-        finder.install_action(".", "type.of", type_of)
+        from contextshell.CallableAction import action_from_function
+        tree.install_global_action(action_from_function(type_of))
 
     @script_test
     def test_int(self):

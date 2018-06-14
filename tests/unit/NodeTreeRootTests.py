@@ -1,6 +1,6 @@
 import unittest
 from typing import Dict, Union, Any
-
+from tests.unit.Fakes import FakeAction
 from contextshell.NodePath import NodePath as np
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot
@@ -232,15 +232,11 @@ class RemoveTests(unittest.TestCase):
             tree.remove(np('.'))
 
 
-def fake_action(tree: TreeRoot, target: NodePath, action: NodePath):
-    pass
-
-
 class IsActionTests(unittest.TestCase):
     def test_installed_action(self):
         tree = create_tree()
-        tree.action_finder.install_action(".", np('test'), fake_action)
-        test_action_path = tree.action_finder.make_action_path(".", np("test"))
+        tree.install_global_action(FakeAction('test'))
+        test_action_path = np('.@actions.test')  # CHECK: get path from installation? resolve.action?
 
         test_is_action = tree.is_action(test_action_path)
 
@@ -277,22 +273,11 @@ class ListActions(unittest.TestCase):
         tree = create_tree()
         child_path = np('.child')
         tree.create(child_path)
-        tree.action_finder.install_action(child_path, np('test'), fake_action)
+        tree.install_action(child_path, FakeAction('test'))
 
         child_actions = tree.list_actions(child_path)
 
         self.assertSequenceEqual(['test'] + ListActions.default_actions, child_actions)
-
-
-from contextshell.Action import Action
-
-
-class FakeAction(Action):
-    def __init__(self, name: NodePath=np('action')):
-        super().__init__(name)
-
-    def __call__(self, target: NodePath, action: NodePath, arguments: Dict[Union[NodePath, int], Any]):
-        pass
 
 
 class FindActionTests(unittest.TestCase):
@@ -345,3 +330,27 @@ class FindActionTests(unittest.TestCase):
         found_action = tree.find_action(np('.target'), action_name)
 
         self.assertIs(type_action, found_action)
+
+
+# from contextshell.NodeTreeRoot import NodeTreeRoot
+# class TestedNodeTreeRoot(NodeTreeRoot):
+#     def no_args_action(self):
+#         return 'NO_ARGS'
+#
+#
+# class ArgumentUnpackerTests(unittest.TestCase):
+#     def test_unpack_none(self):
+#         tree = TestedNodeTreeRoot()
+#
+#         wrapped_action = tree.arg_unpacker(TestedNodeTreeRoot.no_args_action)
+#         return_value = wrapped_action(tree)
+#
+#         self.assertEqual('NO_ARGS', return_value)
+#
+#     def test_unpack_none(self):
+#         tree = TestedNodeTreeRoot()
+#
+#         wrapped_action = tree.arg_unpacker(TestedNodeTreeRoot.no_args_action)
+#         return_value = wrapped_action(tree)
+#
+#         self.assertEqual('NO_ARGS', return_value)

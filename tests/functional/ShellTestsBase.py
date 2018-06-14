@@ -5,7 +5,6 @@ from contextshell.NodePath import NodePath
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.VirtualTree import VirtualTree
 from contextshell.NodeTreeRoot import NodeTreeRoot
-from contextshell.ActionFinder import ActionFinder
 
 
 class VirtualTreeTestsBase(unittest.TestCase, ABC):
@@ -25,8 +24,8 @@ class VirtualTreeTestsBase(unittest.TestCase, ABC):
 class NodeTreeTestsBase(VirtualTreeTestsBase):
     def register_roots(self, virtual_tree: VirtualTree):
         tree_root = NodeTreeRoot()
-        self.install_custom_actions(tree_root.action_finder)
+        self.install_custom_actions(tree_root)
         virtual_tree.mount(NodePath("."), tree_root)
 
-    def install_custom_actions(self, action_finder: ActionFinder):
+    def install_custom_actions(self, tree: NodeTreeRoot):
         pass

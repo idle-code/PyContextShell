@@ -4,9 +4,9 @@ from contextshell.NodePath import NodePath as np
 from collections import OrderedDict
 
 
-def create_action(*args, **kwargs):
+def create_action(implementation, name='action'):  # FIXME: ugly; add tests for name parameter
     from contextshell.CallableAction import CallableAction
-    return CallableAction(*args, **kwargs)
+    return CallableAction(implementation, np(name))
 
 
 class CallTests(unittest.TestCase):
@@ -14,17 +14,9 @@ class CallTests(unittest.TestCase):
         implementation = Mock()
         action = create_action(implementation)
 
-        action(np('.target'), np('action'), OrderedDict())
+        action.invoke(np('.target'), np('action'), OrderedDict())
 
         self.assertIn(np('.target'), *implementation.call_args)
-
-    def test_action_path_is_passed(self):
-        implementation = Mock()
-        action = create_action(implementation)
-
-        action(np('.target'), np('action'), OrderedDict())
-
-        self.assertIn(np('action'), *implementation.call_args)
 
     def test_arguments_are_unpacked_to_list(self):
         implementation = Mock()
@@ -34,9 +26,9 @@ class CallTests(unittest.TestCase):
             (1, 'bar'),
             ])
 
-        action(np('.target'), np('action'), arguments)
+        action.invoke(np('.target'), np('action'), arguments)
 
-        implementation.assert_called_with(ANY, ANY, 'foo', 'bar')
+        implementation.assert_called_with(ANY, 'foo', 'bar')
 
     def test_arguments_are_unpacked_to_keywords(self):
         implementation = Mock()
@@ -46,15 +38,15 @@ class CallTests(unittest.TestCase):
             ('bar', 2),
             ])
 
-        action(np('.target'), np('action'), arguments)
+        action.invoke(np('.target'), np('action'), arguments)
 
-        implementation.assert_called_with(ANY, ANY, foo='spam', bar=2)
+        implementation.assert_called_with(ANY, foo='spam', bar=2)
 
     def test_return_value_is_forwarded(self):
         implementation = Mock()
         implementation.return_value = 'VALUE'
         action = create_action(implementation)
 
-        action_result = action(np('.target'), np('action'), OrderedDict())
+        action_result = action.invoke(np('.target'), np('action'), OrderedDict())
 
         self.assertEqual('VALUE', action_result)

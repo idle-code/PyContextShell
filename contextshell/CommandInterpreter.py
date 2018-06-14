@@ -16,7 +16,7 @@ class CommandInterpreter:
         target_path = NodePath.cast(target_path)
         action_path = NodePath.cast(self._evaluate(command.name))
         arguments = map(self._evaluate, command.arguments)
-
+        # TODO: parse arguments into OrderedDict[Union[int, NodePath], Any] as in Action.invoke interface
         return self.tree.execute(target_path, action_path, *arguments)
 
     def _evaluate(self, part):
