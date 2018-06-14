@@ -6,7 +6,7 @@ from contextshell.NodePath import NodePath
 
 
 class CallableAction(Action):
-    def __init__(self, implementation: Callable, name: NodePath):
+    def __init__(self, implementation: Callable, name: NodePath) -> None:
         super().__init__(name)
         self.implementation = implementation
 

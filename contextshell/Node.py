@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class Node:
     def __init__(self, value=None):
         self._value = value
@@ -41,7 +44,7 @@ class Node:
         node._parent = self
         self._subnodes.append((name, node))
 
-    def get_node(self, name: str=None, index: int=None) -> 'Node':
+    def get_node(self, name: str=None, index: int=None) -> Optional['Node']:
         """Return subnode with provided name or index"""
         if name is not None:
             for p in self._subnodes:

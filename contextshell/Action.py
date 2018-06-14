@@ -5,7 +5,7 @@ from typing import Dict, Union, Any
 
 
 class Action(ABC):
-    def __init__(self, name: NodePath):
+    def __init__(self, name: NodePath) -> None:
         assert isinstance(name, NodePath)
         assert name.is_relative
         self.name: NodePath = name

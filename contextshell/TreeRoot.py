@@ -14,19 +14,19 @@ class TreeRoot(ABC):
 
 def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[str, Any]]:
     args = dict()
-    kwargs = OrderedDict()
+    kwargs: Dict[str, Any] = OrderedDict()
     for key, value in action_args.items():
         if isinstance(key, int):
             args[key] = value
         else:
             kwargs[key.to_python_name()] = value
     assert len(args) == 0 or max(args.keys()) < len(args)+len(kwargs)
-    args = [a[1] for a in sorted(args.items())]
-    return args, kwargs
+    positional_args = [a[1] for a in sorted(args.items())]
+    return positional_args, kwargs
 
 
 def pack_argument_tree(args: List[Any], kwargs: Dict[str, Any]) -> ActionArgsPack:
-    pack_list = []
+    pack_list: List[Tuple[Union[NodePath, int], Any]] = []
     for i, arg in enumerate(args):
         pack_list.append((i, arg))
     for key, value in kwargs.items():
@@ -36,7 +36,7 @@ def pack_argument_tree(args: List[Any], kwargs: Dict[str, Any]) -> ActionArgsPac
 
 def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
     from contextshell.CommandParser import convert_token_type
-    pack_list = []
+    pack_list: List[Tuple[Union[NodePath, int], Any]] = []
     for i, arg in enumerate(raw_arguments):
         if isinstance(arg, str) and '=' in arg:
             key, value = arg.split('=')

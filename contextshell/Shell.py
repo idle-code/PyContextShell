@@ -1,6 +1,7 @@
 from contextshell.CommandParser import CommandParser
 from contextshell.NodePath import *
 from contextshell.CommandInterpreter import CommandInterpreter
+from typing import Optional
 
 
 class Shell:
@@ -9,7 +10,7 @@ class Shell:
         self.interpreter = interpreter
         self.parser = CommandParser()
 
-    def execute(self, command_line: str) -> str:
+    def execute(self, command_line: str) -> Optional[str]:
         command = self.parser.parse(command_line)
         if command is None:
             return None
@@ -22,7 +23,7 @@ class Shell:
         except Exception as error:
             return self.format_error(error)
 
-    def format_result(self, result) -> str:
+    def format_result(self, result) -> Optional[str]:
         if result is None:
             return None
         if isinstance(result, list):

@@ -92,11 +92,11 @@ class NodePath(list):
         new_path = map(NodePath._to_path_part, [part for part in text.split(NodePath.separator) if len(part) > 0])
         self.extend(new_path)
 
-    def __eq__(self, other: 'NodePath'):
+    def __eq__(self, other):
         other = NodePath.cast(other)
         return self.is_absolute == other.is_absolute and self[:] == other[:]
 
-    def __ne__(self, other: 'NodePath'):
+    def __ne__(self, other):
         return not (self == other)
 
     def __str__(self):

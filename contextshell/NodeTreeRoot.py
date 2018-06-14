@@ -89,7 +89,7 @@ class NodeTreeRoot(TreeRoot):
     # def install_type(self, type: NodeType):
     #     raise NotImplementedError()
 
-    def is_attribute(self, path: NodePath):
+    def is_attribute(self, path: str): # FIXME: is used?
         return path.startswith('@')
 
     def list_actions(self, path: NodePath) -> List[NodePath]:
@@ -149,11 +149,12 @@ class NodeTreeRoot(TreeRoot):
             raise NameError("'{}' doesn't exists".format(path))
         return node
 
-    def _resolve_optional_path(self, path: NodePath, root: Node=None) -> Node:
+    def _resolve_optional_path(self, path: NodePath, root: Node=None) -> Optional[Node]:
         if root is None:
             if path.is_relative:
                 raise ValueError("Could not resolve relative paths")
             root = self.root
+            assert root is not None
         if len(path) == 0:
             return root
 
@@ -167,6 +168,7 @@ class NodeTreeRoot(TreeRoot):
             if path.is_relative:
                 raise ValueError("Could not resolve relative paths")
             root = self.root
+            assert root is not None
         if len(path) == 0:
             return root
 

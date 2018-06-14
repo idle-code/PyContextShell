@@ -1,5 +1,5 @@
 from contextshell.Command import Command
-from typing import List
+from typing import List, Optional
 
 
 def convert_token_type(token):
@@ -55,7 +55,7 @@ class CommandParser:
     def __init__(self):
         self._root_scope = None
 
-    def parse(self, command_line: str) -> Command:
+    def parse(self, command_line: str) -> Optional[Command]:
         tokens = tokenize(command_line)
         if len(tokens) == 0:
             return None  # ignore empty lines

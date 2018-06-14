@@ -5,7 +5,7 @@ from typing import Dict, Union, Any
 
 
 class CommandInterpreter:
-    def __init__(self, tree: TreeRoot):
+    def __init__(self, tree: TreeRoot) -> None:
         self.tree = tree
 
     def execute(self, command: Command):
@@ -17,8 +17,8 @@ class CommandInterpreter:
         target_path = NodePath.cast(target_path)
         action_path = NodePath.cast(self._evaluate(command.name))
         arguments = list(map(self._evaluate, command.arguments))
-        arguments = parse_argument_tree(arguments)
-        return self.tree.execute(target_path, action_path, arguments)
+        packed_arguments = parse_argument_tree(arguments)
+        return self.tree.execute(target_path, action_path, packed_arguments)
 
     def _evaluate(self, part):
         if isinstance(part, Command):
