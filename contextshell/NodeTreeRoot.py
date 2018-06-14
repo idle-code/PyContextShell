@@ -3,7 +3,7 @@ from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot, ActionArgsPack
 from contextshell.Action import Action
 from contextshell.CallableAction import action_from_function
-from typing import Callable, List, Optional, Dict, Union, Any
+from typing import List, Optional
 
 
 # CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)
@@ -13,35 +13,35 @@ class NodeTreeRoot(TreeRoot):
         self.root = self.create_node(None)
         self.install_default_actions()
 
-    def create_action(self, target: NodePath, path: str, value=None):
+    def create_action(self, target: NodePath, path: str, value=None):  # NOCOVER
         self.create(NodePath.join(target, path), value)
 
-    def exists_action(self, target: NodePath, path: str) -> bool:
+    def exists_action(self, target: NodePath, path: str) -> bool:  # NOCOVER
         return self.exists(NodePath.join(target, path))
 
-    def get_action(self, target: NodePath):
+    def get_action(self, target: NodePath):  # NOCOVER
         return self.get(target)
 
-    def set_action(self, target: NodePath, new_value):
+    def set_action(self, target: NodePath, new_value):  # NOCOVER
         return self.set(target, new_value)
 
-    def list_action(self, target: NodePath):
+    def list_action(self, target: NodePath):  # NOCOVER
         all_list = self.list(target)
         return list(filter(lambda p: not self.is_attribute(p), all_list))
 
-    def list_all_action(self, target: NodePath):
+    def list_all_action(self, target: NodePath):  # NOCOVER
         return self.list(target)
 
-    def list_attributes_action(self, target: NodePath):
+    def list_attributes_action(self, target: NodePath):  # NOCOVER
         all_list = self.list(target)
         return list(filter(self.is_attribute, all_list))
 
-    def list_actions_action(self, target: NodePath):
+    def list_actions_action(self, target: NodePath):  # NOCOVER
         # FIXME: use the same mechanism as in self.find_action
         actions_branch = NodePath.join(target, '@actions')
         return self.list(actions_branch)
 
-    def remove_action(self, target: NodePath):
+    def remove_action(self, target: NodePath):  # NOCOVER
         # CHECK: use 'path' argument?
         return self.remove(target)
 
@@ -89,7 +89,7 @@ class NodeTreeRoot(TreeRoot):
     # def install_type(self, type: NodeType):
     #     raise NotImplementedError()
 
-    def is_attribute(self, path: str): # FIXME: is used?
+    def is_attribute(self, path: str): # CHECK: is used?
         return path.startswith('@')
 
     def list_actions(self, path: NodePath) -> List[NodePath]:

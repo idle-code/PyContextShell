@@ -1,9 +1,6 @@
 import unittest
-from typing import Dict, Union, Any
 from tests.unit.Fakes import FakeAction
 from contextshell.NodePath import NodePath as np
-from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot
 
 
 def create_tree(*args, **kwargs):

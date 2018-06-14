@@ -3,8 +3,7 @@ branch = True
 
 [report]
 exclude_lines =
-	pragma: no cover
-
+	NOCOVER
 	raise NotImplementedError
 	assert
 	if __name__ == .__main__.:

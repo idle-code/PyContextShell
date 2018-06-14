@@ -190,8 +190,8 @@ class BaseNameTests(unittest.TestCase):
 
 class IsParentOfTests(unittest.TestCase):
     def test_is_parent_of(self):
-        foo = NodePath.cast('.foo')
-        foobar = NodePath.cast('.foo.bar')
+        foo = create_path('.foo')
+        foobar = create_path('.foo.bar')
         self.assertTrue(foo.is_parent_of(foobar))
         self.assertFalse(foobar.is_parent_of(foo))
 

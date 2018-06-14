@@ -1,5 +1,4 @@
-from collections import OrderedDict
-from typing import Callable, Dict, Union, Any, Tuple, List
+from typing import Callable
 from contextshell.TreeRoot import unpack_argument_tree, ActionArgsPack
 from contextshell.Action import Action
 from contextshell.NodePath import NodePath
@@ -16,9 +15,9 @@ class CallableAction(Action):
         return self.implementation(target, *args, **kwargs)
 
 
-def action_from_function(method_to_wrap: Callable) -> Action:
-    action_name: str = method_to_wrap.__name__
+def action_from_function(function_to_wrap: Callable) -> Action:
+    action_name: str = function_to_wrap.__name__
     if action_name.endswith('_action'):
         action_name = action_name[:-len('_action')]
-    action_name = action_name.replace('_', '.')
-    return CallableAction(method_to_wrap, NodePath(action_name))
+    action_path = NodePath.from_python_name(action_name)
+    return CallableAction(function_to_wrap, action_path)

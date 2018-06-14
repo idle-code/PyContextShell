@@ -1,7 +1,6 @@
 from contextshell.Command import Command
 from contextshell.NodePath import NodePath
 from contextshell.TreeRoot import TreeRoot, parse_argument_tree
-from typing import Dict, Union, Any
 
 
 class CommandInterpreter:
