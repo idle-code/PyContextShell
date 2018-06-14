@@ -31,11 +31,44 @@ Issues:
       '.remote.hour: set 18' should invoke '.hour: set 18' on the remote host
     - Return value forwarding
       '.remote.minutes: get' should return value to the local system
-    - Local action should be able operate on remote tree
-      'local_action .remote.foo' - local_action should be able to access basic operations of remote '.foo' node
-      - by basic operations I understand CRUD-like ones
-    - Remote actions should be able to use local tree values
-      '.remote.foo: remote_action .bar' - remote action is able to access basic operations of local '.bar' node
+    - Action arguments can be represented as tree
+      E.g "foo bar=123 bar.spam=arg" will result in following argument tree
+      """
+      [0] foo
+      bar 123
+      bar.spam arg
+      """
+    - How to pass argument tree into action?
+      - >>> Serialization into ordered dictionary
+        - Easy to implement
+        - Backward-compatible with common functions
+      - Path to the temporary tree
+        - Requires backend to support temporary trees
+        - E.g. File backend would require temporary files just for arguments
+      - New tree type
+        - Requires architectual change?
+    - What data is passed to the action on invocation?
+      - Target path
+      - Action name
+      - Arguments
+      Note: Tree/Root is not passed as it doesn't change between invocations
+    - How to implement dynamic actions?
+      'create' action could have dynamic sub-actions which represent installed types.
+      For example 'create.int', 'create.link', 'create.action.alias', etc;
+      - Sub-actions with no direct representation in node tree
+        could be forwarded to the parent action - 'create.*' -> 'create'
+      - When resolving action, custom commands should be used;
+        Resolving 'create.foo.bar' would require resolving 'create', then
+        'create: list' need to contain 'foo', then 'create.foo: list' would contain 'bar'
+
+Filesystem backend:
+  - Custom types for different files
+    - (Virtual) Attributes generation
+  - Can be root backend (so different system actions will be accessible via /system/...)
+  - Access to existing (raw) programs ($PATH directories should be included in some @actions)
+
+Network backend:
+  - Commands issued are executed on the remote host
 
 Tree backend:
   - Serialization to file

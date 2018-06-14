@@ -67,4 +67,3 @@ Session.vim
 .idea/tasks.xml
 .idea/*.iws
 .mypy_cache/
-/venv-*

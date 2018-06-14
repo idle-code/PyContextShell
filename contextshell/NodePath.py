@@ -1,10 +1,12 @@
 
+# TODO: add from_python_name and to_python_name met
+
 class NodePath(list):
     # CHECK: if this class could be replaced by build-in os.path
     separator = '.'
 
     @staticmethod
-    def join(first, *rest):
+    def join(first, *rest) -> 'NodePath':
         path = NodePath(first)
         for name in rest:
             part = NodePath.cast(name)
@@ -12,12 +14,22 @@ class NodePath(list):
         return path
 
     @staticmethod
-    def cast(path):
+    def cast(path) -> 'NodePath':
         """Converts passed argument to NodePath (if needed)"""
         # TODO: remove this method - be aware what types are passed instead
         if path is None:
             return NodePath()
         return NodePath(path)
+
+    @staticmethod
+    def from_python_name(name: str) -> 'NodePath':
+        name = name.lstrip('_').replace('_', NodePath.separator)
+        return NodePath.cast(name)
+
+    def to_python_name(self) -> str:
+        name = str(self)
+        name = name.lstrip(NodePath.separator).replace(NodePath.separator, '_')
+        return name
 
     def __init__(self, representation=[], absolute=False):
         super().__init__()
@@ -35,6 +47,10 @@ class NodePath(list):
             self.extend(representation)
         else:
             raise ValueError("Could not convert {} to NodePath".format(representation))
+
+    @property
+    def is_relative(self) -> bool:
+        return not self.is_absolute
 
     @property
     def base_path(self):
@@ -88,6 +104,9 @@ class NodePath(list):
         if self.is_absolute:
             return NodePath.separator + text_representation
         return text_representation
+
+    def __hash__(self):
+        return str(self).__hash__()
 
     def __repr__(self):
         return "NodePath('{}', absolute={})".format(self, self.is_absolute)

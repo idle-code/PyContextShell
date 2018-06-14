@@ -1,11 +1,11 @@
 class Node:
     def __init__(self, value=None):
         self._value = value
-        self._subnodes = []
+        self._subnodes = []  # TODO: use OrderedDict?
         self._parent = None
 
     @property
-    def parent(self):
+    def parent(self) -> 'Node':
         """Return parent of this node"""
         return self._parent
 
@@ -16,7 +16,7 @@ class Node:
     def set(self, new_value):
         """Store provided value in this node"""
         if type(self._value) != type(new_value):
-            raise TypeError("Value have different type ({}) than node ({})".format(type(new_value), type(self._value)))
+            raise TypeError("Cannot assign value with type '{}' to '{}' node".format(type(new_value).__name__, type(self._value).__name__))
         self._value = new_value
 
     def list(self):
@@ -30,7 +30,7 @@ class Node:
         return indexed_names
 
     def append(self, node, name: str=None):
-        """Append provided node as subnode"""
+        """Append provided node as a subnode"""
         if node is None:
             raise ValueError("Cannot append None as node")
         if name is not None:
