@@ -7,7 +7,7 @@ import unittest
 
 
 class ActionResolvingTests(NodeTreeTestsBase):
-    def install_custom_actions(self, tree: NodeTreeRoot):
+    def configure_tree(self, tree: NodeTreeRoot):
         from contextshell.CallableAction import action_from_function
 
         def parent(target: NodePath):

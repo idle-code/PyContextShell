@@ -60,6 +60,11 @@ Issues:
       - When resolving action, custom commands should be used;
         Resolving 'create.foo.bar' would require resolving 'create', then
         'create: list' need to contain 'foo', then 'create.foo: list' would contain 'bar'
+    - What is difference between TreeRoot and NodeType?
+      - both contain actions which are valid for their 'mount-point'
+      - TreeRoot provides data-storage backend, while NodeType should use existing storage backend
+    - How to provide actions/types for TreeRoot which doesn't support @action nodes?
+      - TreeRoot's execute method, may throw when method is not found, ater this, next-in-hierarchy treeroot is being searched
 
 Filesystem backend:
   - Custom types for different files
@@ -138,6 +143,9 @@ Shell:
   - set syntax sugar - .some.key = 321
   - get syntax sugar - .some.key (should be translated to .some.key: get if possible)
   - Command output streaming - list | filter | ...
+  - Named streams 
+    - list |> {stream l}
+    - {stream l}: filter
   - Field streaming - {list}|.@name (based on command output streaming; filter?)
   - Batch calling - {selected}: play
 

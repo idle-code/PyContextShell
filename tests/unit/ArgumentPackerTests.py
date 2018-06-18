@@ -75,7 +75,7 @@ class PackArgumentTreeTests(unittest.TestCase):
         args = ['foo', 'bar']
         kwargs = {}
 
-        packed = pack_argument_tree(args, kwargs)
+        packed = pack_argument_tree(*args, **kwargs)
 
         self.assertEqual(OrderedDict([
             (0, 'foo'),
@@ -89,7 +89,7 @@ class PackArgumentTreeTests(unittest.TestCase):
             'bar': 1
         }
 
-        packed = pack_argument_tree(args, kwargs)
+        packed = pack_argument_tree(*args, **kwargs)
 
         self.assertDictEqual({
             np('bar'): 1,
@@ -102,7 +102,7 @@ class PackArgumentTreeTests(unittest.TestCase):
             'foo_bar': 1,
         }
 
-        packed = pack_argument_tree(args, kwargs)
+        packed = pack_argument_tree(*args, **kwargs)
 
         self.assertDictEqual({
             np('foo.bar'): 1

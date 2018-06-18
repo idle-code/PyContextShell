@@ -25,7 +25,7 @@ def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[s
     return positional_args, kwargs
 
 
-def pack_argument_tree(args: List[Any], kwargs: Dict[str, Any]) -> ActionArgsPack:
+def pack_argument_tree(*args: List[Any], **kwargs: Dict[str, Any]) -> ActionArgsPack:
     pack_list: List[Tuple[Union[NodePath, int], Any]] = []
     for i, arg in enumerate(args):
         pack_list.append((i, arg))

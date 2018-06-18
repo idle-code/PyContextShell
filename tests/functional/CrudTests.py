@@ -1,5 +1,6 @@
 from tests.functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
+import unittest
 
 
 class CrudTestsBase(NodeTreeTestsBase):
@@ -21,6 +22,15 @@ class CreateTests(CrudTestsBase):
         $ .: create foo.bar
         $ .: exists foo.bar
         True
+        """
+
+    @unittest.skip("Check when type system will be working")
+    @script_test
+    def test_create_int_type(self):
+        """
+        $ .: create.int i 3
+        $ .i: get
+        3
         """
 
 
@@ -140,6 +150,7 @@ class ListTests(CrudTestsBase):
         set
         list
         remove
+        find
         """
 
 

@@ -24,8 +24,8 @@ class VirtualTreeTestsBase(unittest.TestCase, ABC):
 class NodeTreeTestsBase(VirtualTreeTestsBase):
     def register_roots(self, virtual_tree: VirtualTree):
         tree_root = NodeTreeRoot()
-        self.install_custom_actions(tree_root)
+        self.configure_tree(tree_root)
         virtual_tree.mount(NodePath("."), tree_root)
 
-    def install_custom_actions(self, tree: NodeTreeRoot):
+    def configure_tree(self, tree: NodeTreeRoot):
         pass

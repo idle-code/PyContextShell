@@ -48,3 +48,14 @@ path: ACTION
 4) .system.@actions
 
 path.@class.@actions: exists ACTION
+path.@class.@actions: contains ACTION
+
+
+# Virtual nodes action resolving:
+path.virtual.sub: list
+path.virtual.sub.@actions: contain list
+path.virtual.sub.@type: contain list
+path.virtual.@actions: contain list
+path.virtual.@type: contain list
+etc...
+
