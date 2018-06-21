@@ -32,8 +32,8 @@ class CreatePathTests(unittest.TestCase):
 
         tree._create_path(long_path)
 
-        self.assertTrue(tree.exists(np(".foo")))
-        self.assertTrue(tree.exists(long_path))
+        self.assertTrue(tree.contains(np(".foo")))
+        self.assertTrue(tree.contains(long_path))
 
     def test_create_already_existing(self):
         tree = create_tree()
@@ -111,7 +111,7 @@ class CreateTests(unittest.TestCase):
         foo_path = np('.foo')
 
         tree.create(foo_path)
-        foo_exists = tree.exists(foo_path)
+        foo_exists = tree.contains(foo_path)
 
         self.assertTrue(foo_exists)
 
@@ -139,7 +139,7 @@ class CreateTests(unittest.TestCase):
 
         tree.create(long_path)
 
-        self.assertTrue(tree.exists(long_path))
+        self.assertTrue(tree.contains(long_path))
 
     def test_create_multilevel_with_initial_value(self):
         tree = create_tree()
@@ -151,21 +151,21 @@ class CreateTests(unittest.TestCase):
         self.assertEqual(2, final_value)
 
 
-class ExistsTests(unittest.TestCase):
-    def test_exists_nonexistent(self):
+class ContainsTests(unittest.TestCase):
+    def test_nonexistent(self):
         tree = create_tree()
         nonexistent_path = np('.nonexistent')
 
-        exists = tree.exists(nonexistent_path)
+        exists = tree.contains(nonexistent_path)
 
         self.assertFalse(exists)
 
-    def test_exists_existing(self):
+    def test_existing(self):
         tree = create_tree()
         existing_path = np('.path')
         tree.create(existing_path)
 
-        exists = tree.exists(existing_path)
+        exists = tree.contains(existing_path)
 
         self.assertTrue(exists)
 
@@ -220,7 +220,7 @@ class RemoveTests(unittest.TestCase):
 
         tree.remove(existing_path)
 
-        self.assertFalse(tree.exists(existing_path))
+        self.assertFalse(tree.contains(existing_path))
 
     def test_remove_root(self):
         tree = create_tree()
@@ -351,7 +351,7 @@ class InstallTypeTests(unittest.TestCase):
 
         tree.install_global_type(node_type)
 
-        type_node_exists = tree.exists(np('.@types.Type'))
+        type_node_exists = tree.contains(np('.@types.Type'))
         self.assertTrue(type_node_exists)
 
     def test_install_creates_entry(self):
@@ -360,7 +360,7 @@ class InstallTypeTests(unittest.TestCase):
 
         tree.install_type(np('.child'), node_type)
 
-        child_type_node_exists = tree.exists(np('.child.@types.Type'))
+        child_type_node_exists = tree.contains(np('.child.@types.Type'))
         self.assertTrue(child_type_node_exists)
 
     def test_find_type_nonexistent(self):

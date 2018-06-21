@@ -12,7 +12,7 @@ class CreateTests(CrudTestsBase):
     def test_create(self):
         """
         $ .: create foo
-        $ .: exists foo
+        $ .: contains foo
         True
         """
 
@@ -20,7 +20,7 @@ class CreateTests(CrudTestsBase):
     def test_create_many_parts(self):
         """
         $ .: create foo.bar
-        $ .: exists foo.bar
+        $ .: contains foo.bar
         True
         """
 
@@ -34,11 +34,11 @@ class CreateTests(CrudTestsBase):
         """
 
 
-class ExistsTests(CrudTestsBase):
+class ContainsTests(CrudTestsBase):
     @script_test
-    def test_exists_nonexistent(self):
+    def test_nonexistent(self):
         """
-        $ .: exists unknown
+        $ .: contains unknown
         False
         """
 
@@ -145,7 +145,7 @@ class ListTests(CrudTestsBase):
         """
         $ .: list.actions
         create
-        exists
+        contains
         get
         set
         list
@@ -160,7 +160,7 @@ class RemoveTests(CrudTestsBase):
         """
         $ .: create foo
         $ .foo: remove
-        $ .: exists foo
+        $ .: contains foo
         False
         """
 

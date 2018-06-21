@@ -16,8 +16,8 @@ class NodeTreeRoot(TreeRoot):
     def create_action(self, target: NodePath, path: str, value=None):  # NOCOVER
         self.create(NodePath.join(target, path), value)
 
-    def exists_action(self, target: NodePath, path: str) -> bool:  # NOCOVER
-        return self.exists(NodePath.join(target, path))
+    def contains_action(self, target: NodePath, path: str) -> bool:  # NOCOVER
+        return self.contains(NodePath.join(target, path))
 
     def get_action(self, target: NodePath):  # NOCOVER
         return self.get(target)
@@ -51,7 +51,7 @@ class NodeTreeRoot(TreeRoot):
 
     def install_default_actions(self):
         self.install_global_action(action_from_function(self.create_action))
-        self.install_global_action(action_from_function(self.exists_action))
+        self.install_global_action(action_from_function(self.contains_action))
         self.install_global_action(action_from_function(self.get_action))
         self.install_global_action(action_from_function(self.set_action))
         self.install_global_action(action_from_function(self.list_action))
@@ -133,7 +133,7 @@ class NodeTreeRoot(TreeRoot):
         new_node = self.create_node(initial_value)
         parent.append(new_node, path.base_name)
 
-    def exists(self, path: NodePath) -> bool:
+    def contains(self, path: NodePath) -> bool:
         return self._resolve_optional_path(path) is not None
 
     def get(self, path: NodePath):

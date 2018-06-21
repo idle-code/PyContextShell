@@ -11,7 +11,7 @@ class FakeTree:
     def get(self, path):
         return self.node_map[path]
 
-    def exists(self, path):
+    def contains(self, path):
         return path in self.node_map
 
 
