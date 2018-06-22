@@ -10,22 +10,22 @@ from contextshell.NodeTreeRoot import NodeTreeRoot
 class VirtualTreeTestsBase(unittest.TestCase, ABC):
     def create_shell(self):
         self.virtual_tree = VirtualTree()
-        self.register_roots(self.virtual_tree)
+        self.configure_virtual_tree(self.virtual_tree)
 
         interpreter = CommandInterpreter(self.virtual_tree)
         shell = Shell(interpreter)
         return shell
 
     @abstractmethod
-    def register_roots(self, virtual_tree: VirtualTree):
+    def configure_virtual_tree(self, virtual_tree: VirtualTree):
         raise NotImplementedError()
 
 
-class NodeTreeTestsBase(VirtualTreeTestsBase):
-    def register_roots(self, virtual_tree: VirtualTree):
+class NodeTreeTestsBase(VirtualTreeTestsBase):  # TODO: move to NodeTree tests
+    def configure_virtual_tree(self, virtual_tree: VirtualTree):
         tree_root = NodeTreeRoot()
-        self.configure_tree(tree_root)
+        self.configure_node_tree(tree_root)
         virtual_tree.mount(NodePath("."), tree_root)
 
-    def configure_tree(self, tree: NodeTreeRoot):
+    def configure_node_tree(self, tree: NodeTreeRoot):
         pass

@@ -13,7 +13,7 @@ class CustomType(NodeType):
 
 
 class CustomTypeTests(NodeTreeTestsBase):
-    def configure_tree(self, tree: NodeTreeRoot):
+    def configure_node_tree(self, tree: NodeTreeRoot):
         tree.install_global_type(CustomType())
 
     @unittest.skip("Type system not ready yet")
