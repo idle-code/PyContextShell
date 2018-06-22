@@ -1,4 +1,4 @@
-from contextshell.TreeRoot import TreeRoot
+from contextshell.TreeRoot import TreeRoot, ActionArgsPack
 from contextshell.NodePath import NodePath
 from collections import OrderedDict
 
@@ -20,13 +20,13 @@ class VirtualTree(TreeRoot):
     def umount(self, path: NodePath):
         del self.mounts[path]
 
-    def execute(self, target: NodePath, action: NodePath, *args):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack=OrderedDict()):
         if target.is_relative:
             raise ValueError("Could not execute with relative target path")
         for path, root in self.mounts.items():
             if path.is_parent_of(target):
                 remapped_target = target.relative_to(path)
                 remapped_target.is_absolute = True
-                return root.execute(remapped_target, action, *args)
+                return root.execute(remapped_target, action, args)
         else:
             raise RuntimeError("Could not find provider for path: '{}'".format(target))

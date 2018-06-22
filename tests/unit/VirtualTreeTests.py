@@ -1,5 +1,6 @@
 import unittest
-from contextshell.TreeRoot import TreeRoot
+
+from contextshell.TreeRoot import TreeRoot, ActionArgsPack, OrderedDict, pack_argument_tree
 from contextshell.NodePath import NodePath
 
 
@@ -19,7 +20,7 @@ class FakeTreeRoot(TreeRoot):
         self.execute_args = None
         self.execute_return = None
 
-    def execute(self, target: NodePath, action: NodePath, *args):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = OrderedDict()):
         self.execute_target = target
         self.execute_action = action
         self.execute_args = args
@@ -97,8 +98,9 @@ class ExecuteTests(unittest.TestCase):
         vt = create_virtual_tree()
         tree_root = FakeTreeRoot()
         vt.mount(np("."), tree_root)
+        packed_args = pack_argument_tree('foo', 123)
 
-        vt.execute(np("."), np("action"), 'foo', 123)
+        vt.execute(np("."), np("action"), packed_args)
 
         self.assertSequenceEqual(['foo', 123], tree_root.execute_args)
 

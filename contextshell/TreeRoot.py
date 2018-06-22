@@ -5,14 +5,17 @@ from collections import OrderedDict
 
 
 ActionArgsPack = Dict[Union[NodePath, int], Any]
+PositionalArguments = List[Any]
+KeywordArguments = Dict[str, Any]
 
 
 class TreeRoot(ABC):
     @abstractmethod
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack=OrderedDict()):
         raise NotImplementedError()
 
-def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[str, Any]]:
+
+def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArguments, KeywordArguments]:
     args = dict()
     kwargs: Dict[str, Any] = OrderedDict()
     for key, value in action_args.items():
@@ -25,7 +28,7 @@ def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[s
     return positional_args, kwargs
 
 
-def pack_argument_tree(*args: List[Any], **kwargs: Dict[str, Any]) -> ActionArgsPack:
+def pack_argument_tree(*args: PositionalArguments, **kwargs: KeywordArguments) -> ActionArgsPack:
     pack_list: List[Tuple[Union[NodePath, int], Any]] = []
     for i, arg in enumerate(args):
         pack_list.append((i, arg))

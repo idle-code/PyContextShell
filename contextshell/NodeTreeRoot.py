@@ -1,6 +1,6 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot, ActionArgsPack
+from contextshell.TreeRoot import TreeRoot, ActionArgsPack, OrderedDict
 from contextshell.Action import Action
 from contextshell.CallableAction import action_from_function
 from typing import List, Optional
@@ -118,7 +118,7 @@ class NodeTreeRoot(TreeRoot):
             return None
         return type_node.get()
 
-    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack):
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack=OrderedDict()):
         #print("Execute: {}: {} {}".format(target, action, args))
         action_impl = self.find_action(target, action_name)
         if action_impl is None:
