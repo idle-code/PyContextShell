@@ -6,7 +6,7 @@ from contextshell.Shell import Shell
 from contextshell.NodePath import NodePath
 from contextshell.CommandInterpreter import CommandInterpreter
 from contextshell.VirtualTree import VirtualTree
-from contextshell.NodeTreeRoot import NodeTreeRoot
+from contextshell.backends.NodeTree import NodeTreeRoot
 
 
 class ShellScriptTestsBase(unittest.TestCase, ABC):

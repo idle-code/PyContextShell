@@ -4,7 +4,7 @@ from contextshell.NodePath import NodePath as np
 
 
 def create_tree(*args, **kwargs):
-    from contextshell.NodeTreeRoot import NodeTreeRoot
+    from contextshell.backends.NodeTree import NodeTreeRoot
     return NodeTreeRoot(*args)
 
 

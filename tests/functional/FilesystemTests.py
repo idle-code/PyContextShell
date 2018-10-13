@@ -3,12 +3,9 @@ import os
 import tempfile
 from contextshell.TreeRoot import TreeRoot
 from contextshell.VirtualTree import VirtualTree
-from contextshell.NodeTreeRoot import NodeTreeRoot
-from contextshell.NodePath import NodePath
 from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
 from contextshell.backends.Filesystem import FilesystemRoot
-from contextshell.NodePath import NodePath as np
 
 
 class FilesystemTestsBase(TreeRootTestsBase):
@@ -16,8 +13,7 @@ class FilesystemTestsBase(TreeRootTestsBase):
 
     def create_tree_root(self) -> TreeRoot:
         self.test_directory = tempfile.TemporaryDirectory(FilesystemTestsBase.__name__)
-        # return FilesystemRoot(self.test_directory.name) # FIXME: make this work
-        return None
+        return FilesystemRoot(self.test_directory.name) # FIXME: make this work
 
     def setUp(self):
         super().setUp()
