@@ -20,10 +20,10 @@ class FakeTreeRoot(TreeRoot):
         self.execute_args = None
         self.execute_return = None
 
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = OrderedDict()):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
         self.execute_target = target
         self.execute_action = action
-        self.execute_args = args
+        self.execute_args = args if args else OrderedDict()
         return self.execute_return
 
 

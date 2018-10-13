@@ -1,30 +1,51 @@
 import unittest
+import os
+import tempfile
+from contextshell.TreeRoot import TreeRoot
 from contextshell.VirtualTree import VirtualTree
 from contextshell.NodeTreeRoot import NodeTreeRoot
 from contextshell.NodePath import NodePath
-from tests.functional.ShellTestsBase import VirtualTreeTestsBase
+from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
+from contextshell.backends.Filesystem import FilesystemRoot
+from contextshell.NodePath import NodePath as np
 
 
-class FilesystemTestsBase(VirtualTreeTestsBase):
-    def configure_virtual_tree(self, virtual_tree: VirtualTree):
-        # TODO: Create FilesystemTreeNode
+class FilesystemTestsBase(TreeRootTestsBase):
+    test_directory_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')
+
+    def create_tree_root(self) -> TreeRoot:
+        self.test_directory = tempfile.TemporaryDirectory(FilesystemTestsBase.__name__)
+        # return FilesystemRoot(self.test_directory.name) # FIXME: make this work
+        return None
+
+    def setUp(self):
+        super().setUp()
+        # TODO: create test directory
+
+    def tearDown(self):
+        # TODO: remove test directory
+        super().tearDown()
+
+
+class FilesystemRootTests(FilesystemTestsBase):
+    def setUp(self):
+        super().setUp()
+        # TODO: populate test directory
+
+    @script_test
+    def test_contains_existing_file(self):
+        """
+        $ .: contains test_file
+        True
+        """
+
+
+@unittest.skip("Those tests utilize attach actions which may not belong to the filesystem module")
+class AttachTests(TreeRootTestsBase):
+    def create_tree_root(self) -> TreeRoot:
         pass
 
-    def configure_node_tree(self, tree: NodeTreeRoot):
-        def attach_filesystem(target: NodePath, mount_point: NodePath):
-            tree.create(NodePath(mount_point))
-
-        def detach(target: NodePath):
-            tree.remove(target)
-
-        from contextshell.CallableAction import action_from_function
-        tree.install_global_action(action_from_function(attach_filesystem))
-        tree.install_global_action(action_from_function(detach))
-
-
-@unittest.skip("Re-enable when filesystem module can be installed")
-class AttachTests(VirtualTreeTestsBase):
     def configure_virtual_tree(self, virtual_tree: VirtualTree):
         # TODO: install filesystem module/actions fot attaching
         # Note: VirtualTreeRoot *CAN* append data to the invoked commands

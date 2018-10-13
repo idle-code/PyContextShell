@@ -98,7 +98,7 @@ class NodeTreeRoot(TreeRoot):
         else:
             return action_paths + self.list_actions(path.base_path)
 
-    def is_attribute(self, path: str): # CHECK: is used?
+    def is_attribute(self, path: str):  # CHECK: is this used/needed?
         return path.startswith('@')
 
     def install_global_type(self, node_type):
@@ -118,8 +118,10 @@ class NodeTreeRoot(TreeRoot):
             return None
         return type_node.get()
 
-    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack=OrderedDict()):
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
         #print("Execute: {}: {} {}".format(target, action, args))
+        if not args:
+            args = OrderedDict()
         action_impl = self.find_action(target, action_name)
         if action_impl is None:
             raise NameError("Could not find action named '{}'".format(action_name))
@@ -128,7 +130,7 @@ class NodeTreeRoot(TreeRoot):
     def create_node(self, value):
         return Node(value)
 
-    def create(self, path: NodePath, initial_value=None):
+    def create(self, path: NodePath, initial_value = None):
         parent = self._create_path(path.base_path)
         new_node = self.create_node(initial_value)
         parent.append(new_node, path.base_name)
