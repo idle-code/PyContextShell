@@ -1,6 +1,6 @@
 import unittest
 
-from contextshell.TreeRoot import TreeRoot, ActionArgsPack, OrderedDict, pack_argument_tree
+from contextshell.ActionExecutor import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
 from contextshell.NodePath import NodePath
 
 
@@ -13,7 +13,7 @@ def np(representation):
     return NodePath(representation)
 
 
-class FakeTreeRoot(TreeRoot):
+class FakeActionExecutor(ActionExecutor):
     def __init__(self):
         self.execute_target = None
         self.execute_action = None
@@ -30,14 +30,14 @@ class FakeTreeRoot(TreeRoot):
 class MountTests(unittest.TestCase):
     def test_relative_target(self):
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
 
         with self.assertRaises(ValueError):
             vt.mount(np("foo"), tree_root)
 
     def test_mount_visible_in_mapping(self):
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
 
         vt.mount(np("."), tree_root)
 
@@ -46,14 +46,14 @@ class MountTests(unittest.TestCase):
     def test_mount_on_same_path(self):
         vt = create_virtual_tree()
         mount_path = np(".")
-        vt.mount(mount_path, FakeTreeRoot())
+        vt.mount(mount_path, FakeActionExecutor())
 
         with self.assertRaises(KeyError):
-            vt.mount(mount_path, FakeTreeRoot())
+            vt.mount(mount_path, FakeActionExecutor())
 
     def test_umount_removes_mapping(self):
         vt = create_virtual_tree()
-        vt.mount(np("."), FakeTreeRoot())
+        vt.mount(np("."), FakeActionExecutor())
 
         vt.umount(np("."))
 
@@ -63,14 +63,14 @@ class MountTests(unittest.TestCase):
 class ExecuteTests(unittest.TestCase):
     def test_relative_target(self):
         vt = create_virtual_tree()
-        vt.mount(np("."), FakeTreeRoot())
+        vt.mount(np("."), FakeActionExecutor())
 
         with self.assertRaises(ValueError):
             vt.execute(np("foo"), np("action"))
 
     def test_no_matching_provider(self):
         vt = create_virtual_tree()
-        vt.mount(np(".foo"), FakeTreeRoot())
+        vt.mount(np(".foo"), FakeActionExecutor())
 
         with self.assertRaises(RuntimeError):
             vt.execute(np(".bar"), np("action"))
@@ -78,7 +78,7 @@ class ExecuteTests(unittest.TestCase):
     def test_target_remapping(self):
         """Target path is remapped to match provider's root"""
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
         vt.mount(np(".foo"), tree_root)
 
         vt.execute(np(".foo.bar"), np("action"))
@@ -87,7 +87,7 @@ class ExecuteTests(unittest.TestCase):
 
     def test_action_forwarding(self):
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
         vt.mount(np("."), tree_root)
 
         vt.execute(np("."), np("action"))
@@ -96,7 +96,7 @@ class ExecuteTests(unittest.TestCase):
 
     def test_args_forwarding(self):
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
         vt.mount(np("."), tree_root)
         packed_args = pack_argument_tree('foo', 123)
 
@@ -106,7 +106,7 @@ class ExecuteTests(unittest.TestCase):
 
     def test_return_value_forwarding(self):
         vt = create_virtual_tree()
-        tree_root = FakeTreeRoot()
+        tree_root = FakeActionExecutor()
         tree_root.execute_return = 'RETURN_VALUE'
         vt.mount(np("."), tree_root)
 
@@ -116,8 +116,8 @@ class ExecuteTests(unittest.TestCase):
 
     def test_most_specific_provider_is_matched(self):
         vt = create_virtual_tree()
-        short_path_root = FakeTreeRoot()
-        long_path_root = FakeTreeRoot()
+        short_path_root = FakeActionExecutor()
+        long_path_root = FakeActionExecutor()
         vt.mount(np(".foo"), short_path_root)
         vt.mount(np(".foo.bar"), long_path_root)
 

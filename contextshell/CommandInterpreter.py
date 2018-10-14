@@ -1,10 +1,10 @@
 from contextshell.Command import Command
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot, parse_argument_tree
+from contextshell.ActionExecutor import ActionExecutor, parse_argument_tree
 
 
 class CommandInterpreter:
-    def __init__(self, tree: TreeRoot) -> None:
+    def __init__(self, tree: ActionExecutor) -> None:
         self.tree = tree
 
     def execute(self, command: Command):

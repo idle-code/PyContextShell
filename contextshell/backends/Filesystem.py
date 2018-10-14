@@ -1,9 +1,9 @@
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot, ActionArgsPack
+from contextshell.ActionExecutor import ActionExecutor, ActionArgsPack
 from contextshell.backends.Module import Module
 
 
-class FilesystemRoot(TreeRoot):
+class FilesystemRoot(ActionExecutor):
     def __init__(self, root_directory_path: str):
         self.root_directory_path = root_directory_path
 

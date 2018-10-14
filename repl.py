@@ -1,10 +1,10 @@
 #!/usr/bin/python3.6
 import readline
 
-from contextshell.TreeRoot import *
+from contextshell.ActionExecutor import ActionExecutor
 from contextshell.Shell import *
 
-def create_context_tree() -> TreeRoot:
+def create_context_tree() -> ActionExecutor:
     pass
 
 if __name__ == '__main__':
