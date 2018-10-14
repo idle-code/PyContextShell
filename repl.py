@@ -1,7 +1,7 @@
 #!/usr/bin/python3.6
 import readline
 
-from contextshell.ActionExecutor import ActionExecutor
+from contextshell.backends.ActionExecutor import ActionExecutor
 from contextshell.Shell import *
 
 def create_context_tree() -> ActionExecutor:

@@ -13,7 +13,7 @@ KeywordArguments = Dict[str, ArgumentValue]
 class ActionExecutor(ABC):
     """Interface for backends allowing execution of arbitrary actions"""
     @abstractmethod
-    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None) -> Any:
         raise NotImplementedError()
 
 

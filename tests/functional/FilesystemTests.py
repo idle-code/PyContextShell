@@ -1,7 +1,7 @@
 import unittest
 import os
 import tempfile
-from contextshell.ActionExecutor import ActionExecutor
+from contextshell.backends.ActionExecutor import ActionExecutor
 from contextshell.VirtualTree import VirtualTree
 from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
