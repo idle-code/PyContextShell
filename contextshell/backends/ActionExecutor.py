@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 
 from contextshell.NodePath import NodePath
-from typing import Dict, Union, Any, Tuple, List
+from typing import Dict, Union, Any, Tuple, List, Optional
 
 ArgumentValue = Any
 ActionArgsPack = Dict[Union[NodePath, int], ArgumentValue]
@@ -21,11 +21,19 @@ class Action(ABC):
         raise NotImplementedError()
 
 
-class ActionExecutor(ABC):
+class ActionExecutor:
     """Interface for backends allowing execution of arbitrary actions"""
-    @abstractmethod
-    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None) -> Any:
+
+    def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
         raise NotImplementedError()
+
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
+        if not args:
+            args = OrderedDict()
+        action_impl = self.find_action(target, action_name)
+        if action_impl is None:
+            raise NameError("Could not find action named '{}'".format(action_name))
+        return action_impl.invoke(target, action_name, args)
 
 
 def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArguments, KeywordArguments]:

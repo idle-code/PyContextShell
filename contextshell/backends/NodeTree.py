@@ -1,13 +1,12 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.backends.ActionEndpoint import ActionEndpoint
-from contextshell.backends.ActionExecutor import Action
+from contextshell.backends.ActionExecutor import Action, ActionExecutor
 from contextshell.CallableAction import action_from_function
 from typing import List, Optional
 
 
 # CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)
-class NodeTreeRoot(ActionEndpoint):
+class NodeTreeRoot(ActionExecutor):
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
         self.root = self.create_node(None)

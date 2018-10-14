@@ -1,7 +1,6 @@
 from contextshell.NodePath import NodePath
-from contextshell.backends.ActionExecutor import Action
+from contextshell.backends.ActionExecutor import Action, ActionArgsPack
 from typing import Dict
-from contextshell.backends.ActionEndpoint import ActionArgsPack
 
 
 class FakeTree:

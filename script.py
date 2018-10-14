@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 
-from contextshell.backends.ActionEndpoint import*
+from contextshell.backends.ActionExecutor import *
 
 from contextshell.Shell import *
 
