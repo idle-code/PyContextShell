@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from contextshell.NodePath import NodePath
-from typing import Dict, Union, Any, Tuple, List
 from collections import OrderedDict
+
+from contextshell.NodePath import NodePath
+from typing import Dict, Union, Any, Tuple, List, Optional
 
 ArgumentValue = Any
 ActionArgsPack = Dict[Union[NodePath, int], ArgumentValue]
@@ -9,11 +10,30 @@ PositionalArguments = List[ArgumentValue]
 KeywordArguments = Dict[str, ArgumentValue]
 
 
-# CHECK: Rename TreeRoot to ActionEndpoint or something more appropriate?
-class TreeRoot(ABC):
+class Action(ABC):
+    def __init__(self, name: NodePath) -> None:
+        assert isinstance(name, NodePath)
+        assert name.is_relative
+        self.name: NodePath = name
+
     @abstractmethod
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
+    def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
         raise NotImplementedError()
+
+
+class ActionExecutor:
+    """Interface for backends allowing execution of arbitrary actions"""
+
+    def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
+        raise NotImplementedError()
+
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
+        if not args:
+            args = OrderedDict()
+        action_impl = self.find_action(target, action_name)
+        if action_impl is None:
+            raise NameError("Could not find action named '{}'".format(action_name))
+        return action_impl.invoke(target, action_name, args)
 
 
 def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArguments, KeywordArguments]:

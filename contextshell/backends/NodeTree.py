@@ -1,13 +1,12 @@
 from contextshell.Node import Node
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot, ActionArgsPack, OrderedDict
-from contextshell.Action import Action
+from contextshell.backends.ActionExecutor import Action, ActionExecutor
 from contextshell.CallableAction import action_from_function
 from typing import List, Optional
 
 
 # CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)
-class NodeTreeRoot(TreeRoot):
+class NodeTreeRoot(ActionExecutor):
     """Frontend to the (passive) node-based data storage"""
     def __init__(self):
         self.root = self.create_node(None)
@@ -117,15 +116,6 @@ class NodeTreeRoot(TreeRoot):
             # TODO: as last resort, try invoking 'find.type <type.name>'
             return None
         return type_node.get()
-
-    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
-        #print("Execute: {}: {} {}".format(target, action, args))
-        if not args:
-            args = OrderedDict()
-        action_impl = self.find_action(target, action_name)
-        if action_impl is None:
-            raise NameError("Could not find action named '{}'".format(action_name))
-        return action_impl.invoke(target, action_name, args)
 
     def create_node(self, value):
         return Node(value)

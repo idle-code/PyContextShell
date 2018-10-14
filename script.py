@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 import sys
 
-from TreeRoot import *
+from contextshell.backends.ActionExecutor import *
 
 from contextshell.Shell import *
 
 if len(sys.argv) < 2:
     raise ValueError('Script requires single argument')
 
-tree = TreeRoot()
+tree = ActionEndpoint()
 shell = Shell(tree)
 
 with open(sys.argv[1]) as script:

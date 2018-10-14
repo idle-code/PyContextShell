@@ -1,16 +1,16 @@
-from contextshell.TreeRoot import TreeRoot, ActionArgsPack
+from contextshell.backends.ActionExecutor import ActionExecutor, ActionArgsPack
 from contextshell.NodePath import NodePath
 from collections import OrderedDict
 
 
-class VirtualTree(TreeRoot):
+class VirtualTree(ActionExecutor):
     """Abstract frontend allowing embedding (mounting) of more specific tree roots"""
 
     def __init__(self):
-        self.mounts: OrderedDict[NodePath, TreeRoot] = OrderedDict()
+        self.mounts: OrderedDict[NodePath, ActionExecutor] = OrderedDict()
 
     # TODO: rename to attach/detach
-    def mount(self, path: NodePath, root: TreeRoot):
+    def mount(self, path: NodePath, root: ActionExecutor):
         if path.is_relative:
             raise ValueError("Could not mount relative path")
         if path in self.mounts:
