@@ -21,4 +21,4 @@ class BuiltinExecutor(ActionExecutor):
         return list(self.builtin_actions.values())
 
     def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
-        return self.builtin_actions.get(action) 
+        return self.builtin_actions.get(action)

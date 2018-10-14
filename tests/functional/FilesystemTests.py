@@ -1,6 +1,8 @@
 import unittest
 import os
 import tempfile
+from pathlib import Path
+from shutil import rmtree
 from contextshell.backends.ActionExecutor import ActionExecutor
 from contextshell.VirtualTree import VirtualTree
 from tests.functional.ShellTestsBase import TreeRootTestsBase
@@ -12,23 +14,41 @@ class FilesystemTestsBase(TreeRootTestsBase):
     test_directory_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')
 
     def create_tree_root(self) -> ActionExecutor:
-        self.test_directory = tempfile.TemporaryDirectory(FilesystemTestsBase.__name__)
-        return FilesystemRoot(self.test_directory.name) # FIXME: make this work
+        return FilesystemRoot(self.test_directory.name)
+
+    def _make_test_path(self, relative_path):
+        return Path(self.test_directory.name).joinpath(relative_path)
+
+    def create_file(self, path: str, contents: str=''):
+        with open(self._make_test_path(path), 'w') as file:
+            file.write(contents)
+
+    def create_directory(self, path):
+        os.mkdir(self._make_test_path(path))
 
     def setUp(self):
         super().setUp()
-        # TODO: create test directory
+        temp_dir_suffix = FilesystemTestsBase.__name__
+        self.test_directory = tempfile.TemporaryDirectory(temp_dir_suffix)
 
     def tearDown(self):
-        # TODO: remove test directory
+        self.test_directory.cleanup()
         super().tearDown()
 
 
-@unittest.skip("Implement when actions could be registered in FilesystemTreeRoot")
 class FilesystemRootTests(FilesystemTestsBase):
     def setUp(self):
         super().setUp()
-        # TODO: populate test directory
+        self.create_file('test_file', "TEST_DATA")
+        self.create_directory('dir')
+        self.create_file('dir/nested')
+
+    @script_test
+    def test_contains_nonexistent_file(self):
+        """
+        $ .: contains nonexistent
+        False
+        """
 
     @script_test
     def test_contains_existing_file(self):
@@ -37,6 +57,19 @@ class FilesystemRootTests(FilesystemTestsBase):
         True
         """
 
+    @script_test
+    def test_contains_existing_nested_file(self):
+        """
+        $ .dir: contains nested
+        True
+        """
+
+    @script_test
+    def test_get_contents(self):
+        """
+        $ .test_file: get
+        TEST_DATA
+        """
 
 @unittest.skip("Those tests utilize attach actions which may not belong to the filesystem module")
 class AttachTests(TreeRootTestsBase):
