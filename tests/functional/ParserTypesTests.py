@@ -1,12 +1,12 @@
 import unittest
-from contextshell.NodeTreeRoot import NodeTreeRoot
+from contextshell.backends.NodeTree import NodeTreeRoot
 from contextshell.NodePath import NodePath
 from tests.functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
 
 
 class ParserTypesTests(NodeTreeTestsBase):
-    def install_custom_actions(self, tree: NodeTreeRoot):
+    def configure_node_tree(self, tree: NodeTreeRoot):
         def type_of(target: NodePath, value_to_check):
             return type(value_to_check).__name__
 

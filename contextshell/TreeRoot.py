@@ -3,18 +3,22 @@ from contextshell.NodePath import NodePath
 from typing import Dict, Union, Any, Tuple, List
 from collections import OrderedDict
 
+ArgumentValue = Any
+ActionArgsPack = Dict[Union[NodePath, int], ArgumentValue]
+PositionalArguments = List[ArgumentValue]
+KeywordArguments = Dict[str, ArgumentValue]
 
-ActionArgsPack = Dict[Union[NodePath, int], Any]
 
-
+# CHECK: Rename TreeRoot to ActionEndpoint or something more appropriate?
 class TreeRoot(ABC):
     @abstractmethod
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack):
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
         raise NotImplementedError()
 
-def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[str, Any]]:
-    args = dict()
-    kwargs: Dict[str, Any] = OrderedDict()
+
+def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArguments, KeywordArguments]:
+    args: Dict[int, ArgumentValue] = dict()
+    kwargs: KeywordArguments = OrderedDict()
     for key, value in action_args.items():
         if isinstance(key, int):
             args[key] = value
@@ -25,8 +29,8 @@ def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[List[Any], Dict[s
     return positional_args, kwargs
 
 
-def pack_argument_tree(args: List[Any], kwargs: Dict[str, Any]) -> ActionArgsPack:
-    pack_list: List[Tuple[Union[NodePath, int], Any]] = []
+def pack_argument_tree(*args: PositionalArguments, **kwargs: KeywordArguments) -> ActionArgsPack:
+    pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
     for i, arg in enumerate(args):
         pack_list.append((i, arg))
     for key, value in kwargs.items():
@@ -36,7 +40,7 @@ def pack_argument_tree(args: List[Any], kwargs: Dict[str, Any]) -> ActionArgsPac
 
 def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
     from contextshell.CommandParser import convert_token_type
-    pack_list: List[Tuple[Union[NodePath, int], Any]] = []
+    pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
     for i, arg in enumerate(raw_arguments):
         if isinstance(arg, str) and '=' in arg:
             key, value = arg.split('=')

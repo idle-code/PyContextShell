@@ -1,13 +1,11 @@
 from contextshell.NodePath import NodePath
-from contextshell.TreeRoot import TreeRoot
-from contextshell.NodeTreeRoot import NodeTreeRoot
+from contextshell.backends.NodeTree import NodeTreeRoot
 from tests.functional.TestExecutor import script_test
 from tests.functional.ShellTestsBase import NodeTreeTestsBase
-import unittest
 
 
 class ActionResolvingTests(NodeTreeTestsBase):
-    def install_custom_actions(self, tree: NodeTreeRoot):
+    def configure_node_tree(self, tree: NodeTreeRoot):
         from contextshell.CallableAction import action_from_function
 
         def parent(target: NodePath):

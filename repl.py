@@ -4,8 +4,11 @@ import readline
 from contextshell.TreeRoot import *
 from contextshell.Shell import *
 
+def create_context_tree() -> TreeRoot:
+    pass
+
 if __name__ == '__main__':
-    tree = TreeRoot()
+    tree = create_context_tree()
     session = tree.create_session()
     session.create('test_node', "TODO")
     session.create('tn', "2017-03-31")
@@ -24,3 +27,4 @@ if __name__ == '__main__':
             break
         except Exception as ex:
             print("Error:", ex)
+
