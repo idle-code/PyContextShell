@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Optional
 
-from contextshell.Action import Action
+from contextshell.backends.ActionExecutor import Action
 from contextshell.backends.ActionExecutor import ActionExecutor, ActionArgsPack
 from contextshell.NodePath import NodePath
 from collections import OrderedDict

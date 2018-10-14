@@ -10,6 +10,17 @@ PositionalArguments = List[ArgumentValue]
 KeywordArguments = Dict[str, ArgumentValue]
 
 
+class Action(ABC):
+    def __init__(self, name: NodePath) -> None:
+        assert isinstance(name, NodePath)
+        assert name.is_relative
+        self.name: NodePath = name
+
+    @abstractmethod
+    def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
+        raise NotImplementedError()
+
+
 class ActionExecutor(ABC):
     """Interface for backends allowing execution of arbitrary actions"""
     @abstractmethod
