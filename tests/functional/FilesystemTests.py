@@ -36,10 +36,10 @@ class FilesystemTestsBase(TreeRootTestsBase):
         super().tearDown()
 
 
-class FilesystemRootTests(FilesystemTestsBase):
+class ContainsTests(FilesystemTestsBase):
     def setUp(self):
         super().setUp()
-        self.create_file('test_file', "TEST_DATA")
+        self.create_file('test_file')
         self.create_directory('dir')
         self.create_file('dir/nested')
 
@@ -58,6 +58,13 @@ class FilesystemRootTests(FilesystemTestsBase):
         """
 
     @script_test
+    def test_contains_existing_directory(self):
+        """
+        $ .: contains dir
+        True
+        """
+
+    @script_test
     def test_contains_existing_nested_file(self):
         """
         $ .dir: contains nested
@@ -65,11 +72,89 @@ class FilesystemRootTests(FilesystemTestsBase):
         """
 
     @script_test
-    def test_get_contents(self):
+    def test_contains_existing_nested_argument(self):
         """
-        $ .test_file: get
+        $ .: contains dir.nested
+        True
+        """
+
+
+class GetTests(FilesystemTestsBase):
+    def setUp(self):
+        super().setUp()
+        self.create_file('file', "TEST_DATA")
+        self.create_directory('dir')
+
+    @script_test
+    def test_get_file_contents(self):
+        """
+        $ .file: get
         TEST_DATA
         """
+
+    @script_test
+    def test_get_directory_contents(self):
+        """
+        $ .dir: get
+        NotSupportedError: Operation not defined for directories
+        """
+
+
+class SetTests(FilesystemTestsBase):
+    def setUp(self):
+        super().setUp()
+        self.create_file('file', "TEST_DATA")
+        self.create_directory('dir')
+
+    # TODO: implement
+
+
+class ListTests(FilesystemTestsBase):
+    def setUp(self):
+        super().setUp()
+        self.create_directory('empty')
+        self.create_file('file')
+        self.create_directory('dir')
+        self.create_file('dir/nested')
+
+    @script_test
+    def test_empty(self):
+        """
+        $ .empty: list
+        """
+
+    @script_test
+    def test_nested(self):
+        """
+        $ .dir: list
+        nested
+        """
+
+    @script_test
+    def test_sorted_order(self):
+        """
+        $ .: list
+        dir
+        empty
+        file
+        """
+
+    @script_test
+    def test_nested(self):
+        """
+        $ .dir: list
+        nested
+        """
+
+    @script_test
+    def test_file(self):
+        """
+        $ .file: list
+        NotSupportedError: Operation not defined for files
+        """
+
+    # TODO: implement
+
 
 @unittest.skip("Those tests utilize attach actions which may not belong to the filesystem module")
 class AttachTests(TreeRootTestsBase):
@@ -101,40 +186,36 @@ class AttachTests(TreeRootTestsBase):
         """
 
 
-@unittest.skip("Re-enable when filesystem root is available")
 class IsTests(FilesystemTestsBase):
+    def setUp(self):
+        super().setUp()
+        self.create_file('file')
+        self.create_directory('dir')
+
     @script_test
-    def test_contains_directory(self):
+    def test_is_file_existing_file(self):
         """
-        $ .: attach.filesystem .fs
-        $ .fs: contains test_directory
+        $ .file: is.file
         True
         """
 
     @script_test
-    def test_contains_file(self):
+    def test_is_file_existing_directory(self):
         """
-        $ .: attach.filesystem .fs
-        $ .fs: contains test_file
-        True
-        """
-
-    @script_test
-    def test_is_directory(self):
-        """
-        $ .: attach.filesystem .fs
-        $ .fs.test_directory: is.directory
-        True
-        $ .fs.test_directory: is.file
+        $ .dir: is.file
         False
         """
 
     @script_test
-    def test_is_file(self):
+    def test_is_directory_existing_file(self):
         """
-        $ .: attach.filesystem .fs
-        $ .fs.test_file: is.directory
+        $ .file: is.directory
         False
-        $ .fs.test_file: is.file
+        """
+
+    @script_test
+    def test_is_file_existing_directory(self):
+        """
+        $ .dir: is.directory
         True
         """
