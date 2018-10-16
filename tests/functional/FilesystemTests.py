@@ -153,7 +153,19 @@ class ListTests(FilesystemTestsBase):
         NotSupportedError: Operation not defined for files
         """
 
-    # TODO: implement
+    @script_test
+    def test_actions(self):
+        # CHECK: should multipart actions be listed?
+        # CHECK: what if first part of multipart action is not executable (e.g 'is' in is.file)?
+        """
+        $ .: list.actions
+        contains
+        get
+        is.file
+        is.directory
+        list
+        list.actions
+        """
 
 
 @unittest.skip("Those tests utilize attach actions which may not belong to the filesystem module")

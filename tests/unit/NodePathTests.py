@@ -72,6 +72,7 @@ class StringParsingConstructorTests(unittest.TestCase):
 
         self.assertEqual(type(element), type(1))
 
+
 class ConstructorTests(unittest.TestCase):
     def test_default_constructor_creates_empty_path(self):
         empty = NodePath()
@@ -114,6 +115,11 @@ class ConstructorTests(unittest.TestCase):
 
     def test_constructor_from_list(self):
         path = NodePath(['a', 'b', 'c'])
+
+        self.assertEqual(3, len(path))
+
+    def test_constructor_from_tuple(self):
+        path = NodePath(('a', 'b', 'c'))
 
         self.assertEqual(3, len(path))
 
