@@ -1,6 +1,6 @@
 from typing import Callable
-from contextshell.backends.ActionExecutor import unpack_argument_tree, ActionArgsPack
-from contextshell.backends.ActionExecutor import Action
+from contextshell.ActionExecutor import unpack_argument_tree, ActionArgsPack
+from contextshell.ActionExecutor import Action
 from contextshell.NodePath import NodePath
 
 
@@ -11,6 +11,7 @@ class CallableAction(Action):
         self.implementation = implementation
 
     def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
+        # CHECK: why action name is not passed? Is it needed in the signature?
         args, kwargs = unpack_argument_tree(arguments)
         return self.implementation(target, *args, **kwargs)
 

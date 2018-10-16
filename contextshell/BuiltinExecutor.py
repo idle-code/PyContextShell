@@ -1,7 +1,7 @@
 from typing import Optional, List, Dict
 
-from contextshell.backends.ActionExecutor import ActionExecutor, Action
-from contextshell.NodePath import NodePath
+from .ActionExecutor import ActionExecutor, Action
+from .NodePath import NodePath
 
 
 class BuiltinExecutor(ActionExecutor):

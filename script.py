@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 import sys
 
-from contextshell.backends.ActionExecutor import *
-
 from contextshell.Shell import *
 
 if len(sys.argv) < 2:

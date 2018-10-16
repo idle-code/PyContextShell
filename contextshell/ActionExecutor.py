@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-
 from contextshell.NodePath import NodePath
 from typing import Dict, Union, Any, Tuple, List, Optional
 

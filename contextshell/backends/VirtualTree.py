@@ -1,6 +1,7 @@
-from contextshell.backends.ActionExecutor import ActionExecutor, ActionArgsPack
-from contextshell.NodePath import NodePath
 from collections import OrderedDict
+
+from ..ActionExecutor import ActionExecutor, ActionArgsPack
+from ..NodePath import NodePath
 
 
 class VirtualTree(ActionExecutor):

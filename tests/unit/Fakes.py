@@ -1,5 +1,5 @@
 from contextshell.NodePath import NodePath
-from contextshell.backends.ActionExecutor import Action, ActionArgsPack
+from contextshell.ActionExecutor import Action, ActionArgsPack
 from typing import Dict
 
 

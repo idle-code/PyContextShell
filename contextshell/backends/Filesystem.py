@@ -1,11 +1,10 @@
 from pathlib import Path
 from typing import List
-from contextshell.NodePath import NodePath
-from contextshell.backends.ActionExecutor import ActionExecutor, ActionArgsPack
-from contextshell.backends.BuiltinExecutor import BuiltinExecutor
-from contextshell.backends.Module import Module
-from contextshell.CallableAction import CallableAction, action_from_function
-from contextshell.exceptions import NotSupportedError
+
+from ..NodePath import NodePath
+from ..BuiltinExecutor import BuiltinExecutor
+from ..CallableAction import action_from_function
+from ..exceptions import NotSupportedError
 
 
 class FilesystemRoot(BuiltinExecutor):
@@ -51,7 +50,3 @@ class FilesystemRoot(BuiltinExecutor):
     def list_actions_action(self, target: NodePath) -> List[NodePath]:
         # TODO: list actions depending on target type (might require issue #14)
         return list(map(lambda a: a.name, self.list_builtin_actions()))
-
-
-class FilesystemModule(Module):
-    pass
