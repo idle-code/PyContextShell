@@ -41,7 +41,7 @@ class NodePath(list):
         elif isinstance(representation, NodePath):
             self.is_absolute = representation.is_absolute
             self.extend(representation)
-        elif isinstance(representation, list):
+        elif isinstance(representation, list) or isinstance(representation, tuple):
             # TODO: check element's types?
             # TODO: is it ever used?
             self.extend(representation)

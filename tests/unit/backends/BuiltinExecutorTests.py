@@ -10,39 +10,39 @@ class RegisterAction(unittest.TestCase):
         executor = BuiltinExecutor()
 
         with self.assertRaises(ValueError):
-            executor.register_action(None)
+            executor.register_builtin_action(None)
 
     def test_normal(self):
         executor = BuiltinExecutor()
         action = FakeAction()
 
-        executor.register_action(action)
+        executor.register_builtin_action(action)
 
         self.assertIsNotNone(executor.builtin_actions.get(action.name))
 
     def test_duplicate(self):
         executor = BuiltinExecutor()
         action = FakeAction()
-        executor.register_action(action)
+        executor.register_builtin_action(action)
 
         with self.assertRaises(ValueError):
-            executor.register_action(action)
+            executor.register_builtin_action(action)
 
 
 class ListActions(unittest.TestCase):
     def test_no_actions(self):
         executor = BuiltinExecutor()
 
-        registered_actions = executor.list_actions()
+        registered_actions = executor.list_builtin_actions()
 
         self.assertListEqual([], registered_actions)
 
     def test_single_action(self):
         executor = BuiltinExecutor()
         action = FakeAction()
-        executor.register_action(action)
+        executor.register_builtin_action(action)
 
-        registered_actions = executor.list_actions()
+        registered_actions = executor.list_builtin_actions()
 
         self.assertListEqual([action], registered_actions)
 
@@ -59,7 +59,7 @@ class FindAction(unittest.TestCase):
     def test_existing_action(self):
         executor = BuiltinExecutor()
         action = FakeAction()
-        executor.register_action(action)
+        executor.register_builtin_action(action)
         target = NodePath('.')
 
         found_action = executor.find_action(target, action.name)
