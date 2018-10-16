@@ -49,6 +49,7 @@ class FilesystemRoot(BuiltinExecutor):
         return list(sorted([NodePath(f.name) for f in dir_path.iterdir()]))
 
     def list_actions_action(self, target: NodePath) -> List[NodePath]:
+        # TODO: list actions depending on target type (might require issue #14)
         return list(map(lambda a: a.name, self.list_builtin_actions()))
 
 

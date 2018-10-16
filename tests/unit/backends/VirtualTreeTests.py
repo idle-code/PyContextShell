@@ -5,7 +5,7 @@ from contextshell.NodePath import NodePath
 
 
 def create_virtual_tree():
-    from contextshell.VirtualTree import VirtualTree
+    from contextshell.backends.VirtualTree import VirtualTree
     return VirtualTree()
 
 

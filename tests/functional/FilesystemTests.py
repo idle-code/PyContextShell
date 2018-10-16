@@ -1,10 +1,7 @@
-import unittest
 import os
 import tempfile
 from pathlib import Path
-from shutil import rmtree
 from contextshell.backends.ActionExecutor import ActionExecutor
-from contextshell.VirtualTree import VirtualTree
 from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
 from contextshell.backends.Filesystem import FilesystemRoot
@@ -165,36 +162,6 @@ class ListTests(FilesystemTestsBase):
         is.directory
         list
         list.actions
-        """
-
-
-@unittest.skip("Those tests utilize attach actions which may not belong to the filesystem module")
-class AttachTests(TreeRootTestsBase):
-    def create_tree_root(self) -> ActionExecutor:
-        pass
-
-    def configure_virtual_tree(self, virtual_tree: VirtualTree):
-        # TODO: install filesystem module/actions fot attaching
-        # Note: VirtualTreeRoot *CAN* append data to the invoked commands
-        # i.e. it can add attach.* commands to output of 'list.actions' (for completion)
-        # TODO: find a (easy) way to support custom actions in VirtualTreeRoot
-        pass
-
-    @script_test
-    def test_attach(self):
-        """
-        $ .: attach.filesystem .fs
-        $ .: contains fs
-        True
-        """
-
-    @script_test
-    def test_detach(self):
-        """
-        $ .: attach.filesystem .fs
-        $ .fs: detach
-        $ .: contains fs
-        False
         """
 
 

@@ -11,7 +11,6 @@ class CallableAction(Action):
         self.implementation = implementation
 
     def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
-        #print("Invoked with:", *args)
         args, kwargs = unpack_argument_tree(arguments)
         return self.implementation(target, *args, **kwargs)
 

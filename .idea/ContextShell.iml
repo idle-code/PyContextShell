@@ -13,6 +13,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/unit" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/contextshell/backends" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests/functional/backends" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/unit/backends" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.mypy_cache" />
     </content>

@@ -2,10 +2,9 @@ import unittest
 from unittest.mock import Mock, ANY
 from contextshell.NodePath import NodePath as np
 from collections import OrderedDict
-
+from contextshell.CallableAction import CallableAction, action_from_function
 
 def create_action(implementation, name='action'):  # FIXME: ugly; add tests for name parameter
-    from contextshell.CallableAction import CallableAction
     return CallableAction(implementation, np(name))
 
 
@@ -50,3 +49,21 @@ class CallTests(unittest.TestCase):
         action_result = action.invoke(np('.target'), np('action'), OrderedDict())
 
         self.assertEqual('VALUE', action_result)
+
+
+class DecoratorTests(unittest.TestCase):
+    def test_action_name(self):
+        def myaction(*args):
+            pass
+
+        action = action_from_function(myaction)
+
+        self.assertEqual(np('myaction'), action.name)
+
+    def test_action_name_suffix_is_trimmed(self):
+        def myaction_action(*args):
+            pass
+
+        action = action_from_function(myaction_action)
+
+        self.assertEqual(np('myaction'), action.name)

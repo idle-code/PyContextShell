@@ -1,4 +1,4 @@
-from contextshell.Node import Node
+from .Node import Node
 from contextshell.NodePath import NodePath
 from contextshell.backends.ActionExecutor import Action, ActionExecutor
 from contextshell.CallableAction import action_from_function
