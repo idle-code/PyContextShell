@@ -1,8 +1,7 @@
 import unittest
 from unittest.mock import Mock, ANY, call
 from collections import OrderedDict
-from contextshell.CommandInterpreter import CommandInterpreter
-from contextshell.Command import Command
+from contextshell.command import Command, CommandInterpreter
 
 
 class FakeTreeRoot(Mock):
@@ -14,7 +13,7 @@ class FakeTreeRoot(Mock):
 
 class ExecuteTests(unittest.TestCase):
     def command(self, text: str) -> Command:
-        from contextshell.CommandParser import CommandParser
+        from contextshell.command import CommandParser
         return CommandParser().parse(text)
 
     def test_execute_none_throws(self):

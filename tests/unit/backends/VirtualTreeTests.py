@@ -1,7 +1,7 @@
 import unittest
 
-from contextshell.ActionExecutor import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
-from contextshell.NodePath import NodePath
+from contextshell.action import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
+from contextshell.path import NodePath
 
 
 def create_virtual_tree():

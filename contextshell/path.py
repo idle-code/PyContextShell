@@ -1,5 +1,4 @@
 
-# TODO: add from_python_name and to_python_name met
 
 class NodePath(list):
     # CHECK: if this class could be replaced by build-in os.path

@@ -1,6 +1,4 @@
-from contextshell.CommandParser import CommandParser
-from contextshell.NodePath import *
-from contextshell.CommandInterpreter import CommandInterpreter
+from contextshell.command import CommandParser
 from typing import Optional
 
 

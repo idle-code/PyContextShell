@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, ANY
-from contextshell.NodePath import NodePath as np
+from contextshell.path import NodePath as np
 from collections import OrderedDict
-from contextshell.CallableAction import CallableAction, action_from_function
+from contextshell.action import CallableAction, action_from_function
 
 def create_action(implementation, name='action'):  # FIXME: ugly; add tests for name parameter
     return CallableAction(implementation, np(name))

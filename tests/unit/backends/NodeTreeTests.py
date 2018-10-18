@@ -1,6 +1,6 @@
 import unittest
 from tests.unit.Fakes import FakeAction
-from contextshell.NodePath import NodePath as np
+from contextshell.path import NodePath as np
 
 
 def create_tree(*args, **kwargs):

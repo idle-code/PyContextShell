@@ -1,10 +1,10 @@
 import os
 import tempfile
 from pathlib import Path
-from contextshell.ActionExecutor import ActionExecutor
+from contextshell.action import ActionExecutor
 from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
-from contextshell.backends.Filesystem import FilesystemRoot
+from contextshell.backends.FilesystemTree import FilesystemRoot
 
 
 class FilesystemTestsBase(TreeRootTestsBase):

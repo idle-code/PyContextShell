@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
-from ..ActionExecutor import ActionExecutor, ActionArgsPack
-from ..NodePath import NodePath
+from ..action import ActionExecutor, ActionArgsPack
+from ..path import NodePath
 
 
 class VirtualTree(ActionExecutor):
