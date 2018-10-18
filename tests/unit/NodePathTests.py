@@ -1,5 +1,5 @@
 import unittest
-from contextshell.NodePath import *
+from contextshell.path import *
 
 
 def create_path(representation: str) -> NodePath:

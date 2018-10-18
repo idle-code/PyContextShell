@@ -2,7 +2,7 @@
 import readline
 
 from contextshell.action import ActionExecutor
-from contextshell.Shell import *
+from contextshell.shell import *
 
 def create_context_tree() -> ActionExecutor:
     pass

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 
-from contextshell.Shell import *
+from contextshell.shell import *
 
 if len(sys.argv) < 2:
     raise ValueError('Script requires single argument')

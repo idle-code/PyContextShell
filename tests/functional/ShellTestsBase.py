@@ -2,8 +2,8 @@ import unittest
 from abc import ABC, abstractmethod
 
 from contextshell.action import ActionExecutor
-from contextshell.Shell import Shell
-from contextshell.NodePath import NodePath
+from contextshell.shell import Shell
+from contextshell.path import NodePath
 from contextshell.command import CommandInterpreter
 from contextshell.backends.VirtualTree import VirtualTree
 from contextshell.backends.NodeTree import NodeTreeRoot

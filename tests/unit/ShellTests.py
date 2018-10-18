@@ -14,7 +14,7 @@ class FakeInterpreter:
 
 
 def create_shell(*args):
-    from contextshell.Shell import Shell
+    from contextshell.shell import Shell
     return Shell(*args)
 
 

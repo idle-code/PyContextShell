@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, ANY
-from contextshell.NodePath import NodePath as np
+from contextshell.path import NodePath as np
 from collections import OrderedDict
 from contextshell.action import CallableAction, action_from_function
 

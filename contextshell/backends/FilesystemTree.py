@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-from ..NodePath import NodePath
+from ..path import NodePath
 from ..action import action_from_function, BuiltinExecutor
 from ..exceptions import NotSupportedError
 

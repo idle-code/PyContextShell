@@ -50,7 +50,7 @@ class TokenizerTests(unittest.TestCase):
 
     def test_path(self):
         # CHECK: Not sure if this works 'right'
-        from contextshell.NodePath import NodePath
+        from contextshell.path import NodePath
         self.tok_test("foo.bar",
                       [NodePath("foo.bar")])
 

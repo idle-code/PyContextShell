@@ -3,7 +3,7 @@ from collections import OrderedDict
 from typing import Union, Any, Tuple
 from typing import Callable
 from typing import Optional, List, Dict
-from .NodePath import NodePath
+from .path import NodePath
 
 
 ArgumentValue = Any
