@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from contextshell.NodePath import NodePath
-from typing import Dict, Union, Any, Tuple, List, Optional
+from typing import Union, Any, Tuple
+from typing import Callable
+from typing import Optional, List, Dict
+from .NodePath import NodePath
+
 
 ArgumentValue = Any
 ActionArgsPack = Dict[Union[NodePath, int], ArgumentValue]
@@ -18,6 +21,26 @@ class Action(ABC):
     @abstractmethod
     def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
         raise NotImplementedError()
+
+
+class CallableAction(Action):
+    """Action with implementation based on python callables"""
+    def __init__(self, implementation: Callable, name: NodePath) -> None:
+        super().__init__(name)
+        self.implementation = implementation
+
+    def invoke(self, target: NodePath, action: NodePath, arguments: ActionArgsPack):
+        # CHECK: why action name is not passed? Is it needed in the signature?
+        args, kwargs = unpack_argument_tree(arguments)
+        return self.implementation(target, *args, **kwargs)
+
+
+def action_from_function(function_to_wrap: Callable) -> Action:
+    action_name: str = function_to_wrap.__name__
+    if action_name.endswith('_action'):
+        action_name = action_name[:-len('_action')]
+    action_path = NodePath.from_python_name(action_name)
+    return CallableAction(function_to_wrap, action_path)
 
 
 class ActionExecutor:
@@ -71,3 +94,23 @@ def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
         else:
             pack_list.append((i, arg))
     return OrderedDict(pack_list)
+
+
+class BuiltinExecutor(ActionExecutor):
+    """Manages built-in, global action registry"""
+    def __init__(self):
+        super().__init__()
+        self.builtin_actions: Dict[NodePath, Action] = {}
+
+    def register_builtin_action(self, action: Action):
+        if action is None:
+            raise ValueError("No action to register provided")
+        if action.name in self.builtin_actions:
+            raise ValueError(f"Builtin action '{action.name}' already registered")
+        self.builtin_actions[action.name] = action
+
+    def list_builtin_actions(self) -> List[Action]:
+        return list(self.builtin_actions.values())
+
+    def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
+        return self.builtin_actions.get(action)

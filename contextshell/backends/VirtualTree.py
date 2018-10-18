@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from ..ActionExecutor import ActionExecutor, ActionArgsPack
+from ..action import ActionExecutor, ActionArgsPack
 from ..NodePath import NodePath
 
 

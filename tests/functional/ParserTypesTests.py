@@ -10,7 +10,7 @@ class ParserTypesTests(NodeTreeTestsBase):
         def type_of(target: NodePath, value_to_check):
             return type(value_to_check).__name__
 
-        from contextshell.CallableAction import action_from_function
+        from contextshell.action import action_from_function
         tree.install_global_action(action_from_function(type_of))
 
     @script_test

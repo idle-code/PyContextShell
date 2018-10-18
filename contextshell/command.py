@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from contextshell.NodePath import NodePath
-from contextshell.ActionExecutor import ActionExecutor, parse_argument_tree
+from contextshell.action import ActionExecutor, parse_argument_tree
 
 
 class Command:

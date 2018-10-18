@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from .Node import Node
 from ..NodePath import NodePath
-from ..ActionExecutor import Action, ActionExecutor
-from ..CallableAction import action_from_function
+from ..action import Action, ActionExecutor
+from ..action import action_from_function
 
 
 # CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)

@@ -2,9 +2,9 @@ import unittest
 from collections import OrderedDict
 from typing import Optional
 
-from contextshell.ActionExecutor import Action, pack_argument_tree
+from contextshell.action import Action, pack_argument_tree
 from contextshell.NodePath import NodePath, NodePath as np
-from contextshell.ActionExecutor import ActionExecutor
+from contextshell.action import ActionExecutor
 from tests.unit.Fakes import FakeAction
 
 

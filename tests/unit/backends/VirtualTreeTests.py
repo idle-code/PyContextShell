@@ -1,6 +1,6 @@
 import unittest
 
-from contextshell.ActionExecutor import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
+from contextshell.action import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
 from contextshell.NodePath import NodePath
 
 

@@ -1,7 +1,7 @@
 import unittest
 from abc import ABC, abstractmethod
 
-from contextshell.ActionExecutor import ActionExecutor
+from contextshell.action import ActionExecutor
 from contextshell.Shell import Shell
 from contextshell.NodePath import NodePath
 from contextshell.command import CommandInterpreter

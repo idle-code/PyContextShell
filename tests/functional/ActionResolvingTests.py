@@ -6,7 +6,7 @@ from tests.functional.ShellTestsBase import NodeTreeTestsBase
 
 class ActionResolvingTests(NodeTreeTestsBase):
     def configure_node_tree(self, tree: NodeTreeRoot):
-        from contextshell.CallableAction import action_from_function
+        from contextshell.action import action_from_function
 
         def parent(target: NodePath):
             return "PARENT"
