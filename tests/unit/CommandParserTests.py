@@ -3,7 +3,7 @@ import unittest
 
 class TokenizerTests(unittest.TestCase):
     def tok_test(self, text: str, expected_tokens: list):
-        from contextshell.CommandParser import tokenize
+        from contextshell.command import tokenize
         self.assertListEqual(expected_tokens, tokenize(text))
 
     def test_empty(self):
@@ -57,7 +57,7 @@ class TokenizerTests(unittest.TestCase):
 
 def create_parser():
     """Create CommandParser instance for tests"""
-    from contextshell.CommandParser import CommandParser
+    from contextshell.command import CommandParser
     return CommandParser()
 
 

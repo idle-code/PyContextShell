@@ -58,7 +58,7 @@ def pack_argument_tree(*args: PositionalArguments, **kwargs: KeywordArguments) -
 
 
 def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
-    from contextshell.CommandParser import convert_token_type
+    from contextshell.command import convert_token_type
     pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
     for i, arg in enumerate(raw_arguments):
         if isinstance(arg, str) and '=' in arg:

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from contextshell.ActionExecutor import ActionExecutor
 from contextshell.Shell import Shell
 from contextshell.NodePath import NodePath
-from contextshell.CommandInterpreter import CommandInterpreter
+from contextshell.command import CommandInterpreter
 from contextshell.backends.VirtualTree import VirtualTree
 from contextshell.backends.NodeTree import NodeTreeRoot
 
