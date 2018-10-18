@@ -27,14 +27,14 @@ class NodeTreeRoot(ActionExecutor):
 
     def list_action(self, target: NodePath):  # NOCOVER
         all_list = self.list(target)
-        return list(filter(lambda p: not self.is_attribute(p), all_list))
+        return list(filter(lambda p: not NodePath(p).is_attribute, all_list))
 
     def list_all_action(self, target: NodePath):  # NOCOVER
         return self.list(target)
 
     def list_attributes_action(self, target: NodePath):  # NOCOVER
         all_list = self.list(target)
-        return list(filter(self.is_attribute, all_list))
+        return list(filter(lambda p: NodePath(p).is_attribute, all_list))
 
     def list_actions_action(self, target: NodePath):  # NOCOVER
         # FIXME: use the same mechanism as in self.find_action
@@ -97,9 +97,6 @@ class NodeTreeRoot(ActionExecutor):
             return action_paths
         else:
             return action_paths + self.list_actions(path.base_path)
-
-    def is_attribute(self, path: str):  # CHECK: is this used/needed?
-        return path.startswith('@')
 
     def install_global_type(self, node_type):
         self.install_type(NodePath('.'), node_type)

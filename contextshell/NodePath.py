@@ -53,6 +53,12 @@ class NodePath(list):
         return not self.is_absolute
 
     @property
+    def is_attribute(self) -> bool:
+        if not isinstance(self.base_name, str):
+            return False
+        return self.base_name.startswith('@')
+
+    @property
     def base_path(self):
         """Returns sub-path consisting of all but last element"""
         return NodePath(self[:-1], absolute=self.is_absolute)

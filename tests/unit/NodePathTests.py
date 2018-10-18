@@ -391,3 +391,20 @@ class ToPythonNameTests(unittest.TestCase):
         name = foo_bar_path.to_python_name()
 
         self.assertEqual('foo_bar', name)
+
+
+class IsAttributeTests(unittest.TestCase):
+    def test_is_attribute(self):
+        path = create_path('@attr')
+
+        self.assertTrue(path.is_attribute)
+
+    def test_str_is_not_attribute(self):
+        path = create_path('field')
+
+        self.assertFalse(path.is_attribute)
+
+    def test_index_is_not_attribute(self):
+        path = create_path(2)
+
+        self.assertFalse(path.is_attribute)
