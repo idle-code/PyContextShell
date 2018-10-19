@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 coverage = "==5.0a1"
+pylint = "*"
+git-pylint-commit-hook = "*"
 
 [dev-packages]
 
