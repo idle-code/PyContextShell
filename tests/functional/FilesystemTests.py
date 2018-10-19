@@ -93,7 +93,6 @@ class GetTests(FilesystemTestsBase):
     def test_get_directory_contents(self):
         """
         $ .dir: get
-        NotSupportedError: Operation not defined for directories
         """
 
 
@@ -147,7 +146,6 @@ class ListTests(FilesystemTestsBase):
     def test_file(self):
         """
         $ .file: list
-        NotSupportedError: Operation not defined for files
         """
 
     @script_test

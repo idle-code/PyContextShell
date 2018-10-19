@@ -29,7 +29,7 @@ class FilesystemRoot(BuiltinExecutor):
     def get_action(self, target: NodePath):
         full_path = self._to_os_path(target)
         if full_path.is_dir():
-            raise NotSupportedError("Operation not defined for directories")
+            return None
         return full_path.read_text()
 
     def is_file_action(self, target: NodePath) -> bool:
@@ -43,7 +43,7 @@ class FilesystemRoot(BuiltinExecutor):
     def list_action(self, target: NodePath) -> List[NodePath]:
         dir_path = self._to_os_path(target)
         if not dir_path.is_dir():
-            raise NotSupportedError("Operation not defined for files")
+            return []
         return list(sorted([NodePath(f.name) for f in dir_path.iterdir()]))
 
     def list_actions_action(self, target: NodePath) -> List[NodePath]:
