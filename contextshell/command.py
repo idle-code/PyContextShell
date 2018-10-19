@@ -27,6 +27,7 @@ class Command:
 
 
 class CommandInterpreter:
+    """Actually executes commands on provided backend tree"""
     def __init__(self, tree: ActionExecutor) -> None:
         self.tree = tree
 
@@ -66,7 +67,7 @@ def tokenize(text: str) -> List[str]:
 
     def finish_token():
         nonlocal tok, tokens
-        if len(tok) > 0:
+        if tok:
             tok = convert_token_type(tok)
             tokens.append(tok)
             tok = ''
@@ -103,7 +104,7 @@ class CommandParser:
 
     def parse(self, command_line: str) -> Optional[Command]:
         tokens = tokenize(command_line)
-        if len(tokens) == 0:
+        if not tokens:
             return None  # ignore empty lines
         if tokens[0] == '#':
             return None  # ignore comments
@@ -116,17 +117,16 @@ class CommandParser:
         for tok in token_iterator:
             if tok == '{':
                 parts.append(self._parse_scope(token_iterator))
-            elif tok == '}':
-                break
-            else:
+            elif tok != '}':
                 parts.append(tok)
+            else:
+                break
 
         if ':' in parts:
             cmd = Command(parts[2])
             cmd.target = parts[0]
             cmd.arguments = parts[3:]
-            return cmd
         else:
             cmd = Command(parts[0])
             cmd.arguments = parts[1:]
-            return cmd
+        return cmd

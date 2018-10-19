@@ -43,7 +43,13 @@ def action_from_function(function_to_wrap: Callable) -> Action:
     return CallableAction(function_to_wrap, action_path)
 
 
-class ActionExecutor:
+class Executor(ABC):
+    @abstractmethod
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
+        raise NotImplementedError()
+
+
+class ActionExecutor(Executor):
     """Interface for backends allowing execution of arbitrary actions"""
 
     def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
@@ -66,7 +72,7 @@ def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArgumen
             args[key] = value
         else:
             kwargs[key.to_python_name()] = value
-    assert len(args) == 0 or max(args.keys()) < len(args)+len(kwargs)
+    assert not args or max(args.keys()) < len(args)+len(kwargs)
     positional_args = [a[1] for a in sorted(args.items())]
     return positional_args, kwargs
 
