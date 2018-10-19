@@ -17,7 +17,7 @@ class FilesystemTree(BuiltinExecutor):
         self.register_builtin_action(action_from_function(self.list_actions_action))
 
     def _to_os_path(self, *paths: NodePath) -> Path:
-        node_paths = map(lambda p: NodePath(p), paths)
+        node_paths = map(NodePath, paths)
         os_paths = map(lambda p: Path('').joinpath(*p), node_paths)
         return self.root_directory_path.joinpath(*os_paths)
 

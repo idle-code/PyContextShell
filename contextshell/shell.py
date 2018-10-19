@@ -1,5 +1,5 @@
-from contextshell.command import CommandParser
 from typing import Optional
+from contextshell.command import CommandParser
 
 
 class Shell:
@@ -9,6 +9,7 @@ class Shell:
         self.parser = CommandParser()
 
     def execute(self, command_line: str) -> Optional[str]:
+        """Executes single command line and produces textual output"""
         command = self.parser.parse(command_line)
         if command is None:
             return None
@@ -22,13 +23,15 @@ class Shell:
             return self.format_error(error)
 
     def format_result(self, result) -> Optional[str]:
+        """Transform valid command execution result into text"""
         if result is None:
             return None
         if isinstance(result, list):
-            if len(result) < 1:
+            if not result:
                 return None
             return "\n".join(map(str, result))
         return str(result)
 
     def format_error(self, error) -> str:
+        """Transform command failure result into text"""
         return "{}: {}".format(type(error).__name__, error)

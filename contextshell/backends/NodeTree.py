@@ -22,9 +22,11 @@ class Node:
 
     def set(self, new_value):
         """Store provided value in this node"""
-        if type(self._value) != type(new_value):
-            raise TypeError("Cannot assign value with type '{}' to '{}' node".format(type(new_value).__name__,
-                                                                                     type(self._value).__name__))
+        if not isinstance(new_value, type(self._value)):
+            new_type = type(new_value).__name__
+            current_type = type(self._value).__name__
+            raise TypeError(
+                f"Cannot assign value with type '{new_type}' to '{current_type}' node")
         self._value = new_value
 
     def list(self):
@@ -32,8 +34,8 @@ class Node:
         names = map(lambda p: p[0], self._subnodes)
         index = 0
         indexed_names = []
-        for n in names:
-            indexed_names.append(n if n is not None else index)
+        for name in names:
+            indexed_names.append(name if name is not None else index)
             index += 1
         return indexed_names
 
@@ -42,7 +44,7 @@ class Node:
         if node is None:
             raise ValueError("Cannot append None as node")
         if name is not None:
-            if len(name) == 0:
+            if not name:
                 raise NameError("Invalid appended node name - empty")
             if self.get_node(name) is not None:
                 raise NameError("Node '{}' already exists".format(name))
@@ -52,9 +54,9 @@ class Node:
     def get_node(self, name: str = None, index: int = None) -> Optional['Node']:
         """Return subnode with provided name or index"""
         if name is not None:
-            for p in self._subnodes:
-                if p[0] == name:
-                    return p[1]
+            for name_node_pair in self._subnodes:
+                if name_node_pair[0] == name:
+                    return name_node_pair[1]
         elif index is not None:
             if 0 <= index < len(self._subnodes):
                 return self._subnodes[index][1]
@@ -153,7 +155,7 @@ class NodeTreeRoot(ActionExecutor):
         self.create(NodePath.join(target, '@actions', action.name), action)
 
     def find_first_in(self, candidate_paths: List[NodePath]) -> Optional[Node]:
-        if candidate_paths is None or len(candidate_paths) == 0:
+        if candidate_paths is None or not candidate_paths:
             raise ValueError("No candidate paths provided")
         for path in candidate_paths:
             node = self._resolve_optional_path(path)
@@ -177,10 +179,9 @@ class NodeTreeRoot(ActionExecutor):
         action_paths = self.list(NodePath.join(path, '@actions'))
         action_paths = sorted(action_paths)
 
-        if len(path) == 0:  # Root
+        if not path:  # Root
             return action_paths
-        else:
-            return action_paths + self.list_actions(path.base_path)
+        return action_paths + self.list_actions(path.base_path)
 
     def install_global_type(self, node_type):
         self.install_type(NodePath('.'), node_type)
@@ -240,7 +241,7 @@ class NodeTreeRoot(ActionExecutor):
                 raise ValueError("Could not resolve relative paths")
             root = self.root
             assert root is not None
-        if len(path) == 0:
+        if not path:
             return root
 
         next_branch_name = path[0]
@@ -254,7 +255,7 @@ class NodeTreeRoot(ActionExecutor):
                 raise ValueError("Could not resolve relative paths")
             root = self.root
             assert root is not None
-        if len(path) == 0:
+        if not path:
             return root
 
         next_branch_name = path[0]

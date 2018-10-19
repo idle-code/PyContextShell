@@ -30,7 +30,7 @@ class NodePath(list):
         name = name.lstrip(NodePath.separator).replace(NodePath.separator, '_')
         return name
 
-    def __init__(self, representation=[], absolute=False):
+    def __init__(self, representation=None, absolute=False):
         super().__init__()
         self.is_absolute = absolute
         if isinstance(representation, int):
@@ -40,10 +40,12 @@ class NodePath(list):
         elif isinstance(representation, NodePath):
             self.is_absolute = representation.is_absolute
             self.extend(representation)
-        elif isinstance(representation, list) or isinstance(representation, tuple):
+        elif isinstance(representation, (list, tuple)):
             # TODO: check element's types?
             # TODO: is it ever used?
             self.extend(representation)
+        elif representation is None:
+            pass
         else:
             raise ValueError("Could not convert {} to NodePath".format(representation))
 
@@ -65,7 +67,7 @@ class NodePath(list):
     @property
     def base_name(self):
         """Returns last path element"""
-        if len(self) == 0:
+        if not self:
             return None
         return self[-1]
 
@@ -73,13 +75,13 @@ class NodePath(list):
         """Checks if provided path prefix matches self"""
         other = NodePath.cast(other)
         if self.is_absolute != other.is_absolute:
-            raise ValueError("Cannot compare absolute and relative paths: {} and {}".format(self, other))
+            raise ValueError(f"Cannot compare absolute and relative paths: {self} and {other}")
         return NodePath(other[:len(self)], absolute=other.is_absolute) == self
 
     def relative_to(self, other) -> 'NodePath':
         """Make current path relative to provided one by removing common prefix"""
         if not other.is_parent_of(self):
-            raise ValueError("{} is not relative to {}".format(self, other))
+            raise ValueError(f"{self} is not relative to {other}")
         return NodePath(self[len(other):], absolute=False)
 
     @staticmethod
@@ -94,7 +96,8 @@ class NodePath(list):
         text = text.strip()
         if text.startswith(NodePath.separator):
             self.is_absolute = True
-        new_path = map(NodePath._to_path_part, [part for part in text.split(NodePath.separator) if len(part) > 0])
+        non_empty_path_parts = [part for part in text.split(NodePath.separator) if part]
+        new_path = map(NodePath._to_path_part, non_empty_path_parts)
         self.extend(new_path)
 
     def __eq__(self, other):
@@ -102,7 +105,7 @@ class NodePath(list):
         return self.is_absolute == other.is_absolute and self[:] == other[:]
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __str__(self):
         text_representation = NodePath.separator.join(map(str, self))

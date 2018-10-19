@@ -1,17 +1,18 @@
 from collections import OrderedDict
+from typing import Dict
 
-from ..action import ActionExecutor, ActionArgsPack
+from ..action import Executor, ActionArgsPack
 from ..path import NodePath
 
 
-class VirtualTree(ActionExecutor):
+class VirtualTree(Executor):
     """Abstract frontend allowing embedding (mounting) of more specific tree roots"""
 
     def __init__(self):
-        self.mounts: OrderedDict[NodePath, ActionExecutor] = OrderedDict()
+        self.mounts: Dict[NodePath, Executor] = OrderedDict()
 
     # TODO: rename to attach/detach
-    def mount(self, path: NodePath, root: ActionExecutor):
+    def mount(self, path: NodePath, root: Executor):
         if path.is_relative:
             raise ValueError("Could not mount relative path")
         if path in self.mounts:
@@ -27,7 +28,7 @@ class VirtualTree(ActionExecutor):
     def umount(self, path: NodePath):
         del self.mounts[path]
 
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
+    def execute(self, target: NodePath, action_name: NodePath, args: ActionArgsPack = None):
         if target.is_relative:
             raise ValueError("Could not invoke action with relative target path")
         if not args:
@@ -36,6 +37,5 @@ class VirtualTree(ActionExecutor):
             if path.is_parent_of(target):
                 remapped_target = target.relative_to(path)
                 remapped_target.is_absolute = True
-                return root.execute(remapped_target, action, args)
-        else:
-            raise RuntimeError("Could not find provider for path: '{}'".format(target))
+                return root.execute(remapped_target, action_name, args)
+        raise RuntimeError("Could not find provider for path: '{}'".format(target))
