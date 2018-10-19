@@ -3,10 +3,9 @@ from typing import List
 
 from ..path import NodePath
 from ..action import action_from_function, BuiltinExecutor
-from ..exceptions import NotSupportedError
 
 
-class FilesystemRoot(BuiltinExecutor):
+class FilesystemTree(BuiltinExecutor):
     def __init__(self, root_directory_path: str):
         super().__init__()
         self.root_directory_path = Path(root_directory_path)

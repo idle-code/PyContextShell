@@ -1,30 +1,13 @@
 import unittest
 
-from contextshell.action import ActionExecutor, ActionArgsPack, OrderedDict, pack_argument_tree
-from contextshell.path import NodePath
+from tests.unit.Fakes import FakeActionExecutor
+from contextshell.action import pack_argument_tree
+from contextshell.path import NodePath as np
 
 
 def create_virtual_tree():
     from contextshell.backends.VirtualTree import VirtualTree
     return VirtualTree()
-
-
-def np(representation):
-    return NodePath(representation)
-
-
-class FakeActionExecutor(ActionExecutor):
-    def __init__(self):
-        self.execute_target = None
-        self.execute_action = None
-        self.execute_args = None
-        self.execute_return = None
-
-    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
-        self.execute_target = target
-        self.execute_action = action
-        self.execute_args = args if args else OrderedDict()
-        return self.execute_return
 
 
 class MountTests(unittest.TestCase):

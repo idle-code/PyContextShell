@@ -4,14 +4,14 @@ from pathlib import Path
 from contextshell.action import ActionExecutor
 from tests.functional.ShellTestsBase import TreeRootTestsBase
 from tests.functional.TestExecutor import script_test
-from contextshell.backends.FilesystemTree import FilesystemRoot
+from contextshell.backends.FilesystemTree import FilesystemTree
 
 
 class FilesystemTestsBase(TreeRootTestsBase):
     test_directory_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test_data')
 
     def create_tree_root(self) -> ActionExecutor:
-        return FilesystemRoot(self.test_directory.name)
+        return FilesystemTree(self.test_directory.name)
 
     def _make_test_path(self, relative_path):
         return Path(self.test_directory.name).joinpath(relative_path)

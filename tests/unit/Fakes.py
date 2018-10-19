@@ -1,5 +1,7 @@
+from collections import OrderedDict
+
 from contextshell.path import NodePath
-from contextshell.action import Action, ActionArgsPack
+from contextshell.action import Action, ActionArgsPack, ActionExecutor
 from typing import Dict
 
 
@@ -30,3 +32,17 @@ class FakeAction(Action):
         self.received_action = action
         self.received_arguments = arguments
         return self.return_value
+
+
+class FakeActionExecutor(ActionExecutor):
+    def __init__(self):
+        self.execute_target = None
+        self.execute_action = None
+        self.execute_args = None
+        self.execute_return = None
+
+    def execute(self, target: NodePath, action: NodePath, args: ActionArgsPack = None):
+        self.execute_target = target
+        self.execute_action = action
+        self.execute_args = args if args else OrderedDict()
+        return self.execute_return

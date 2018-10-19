@@ -23,7 +23,8 @@ class Node:
     def set(self, new_value):
         """Store provided value in this node"""
         if type(self._value) != type(new_value):
-            raise TypeError("Cannot assign value with type '{}' to '{}' node".format(type(new_value).__name__, type(self._value).__name__))
+            raise TypeError("Cannot assign value with type '{}' to '{}' node".format(type(new_value).__name__,
+                                                                                     type(self._value).__name__))
         self._value = new_value
 
     def list(self):
@@ -36,7 +37,7 @@ class Node:
             index += 1
         return indexed_names
 
-    def append(self, node, name: str=None):
+    def append(self, node, name: str = None):
         """Append provided node as a subnode"""
         if node is None:
             raise ValueError("Cannot append None as node")
@@ -48,7 +49,7 @@ class Node:
         node._parent = self
         self._subnodes.append((name, node))
 
-    def get_node(self, name: str=None, index: int=None) -> Optional['Node']:
+    def get_node(self, name: str = None, index: int = None) -> Optional['Node']:
         """Return subnode with provided name or index"""
         if name is not None:
             for p in self._subnodes:
@@ -71,7 +72,7 @@ class Node:
             raise KeyError(name_or_index)
         return node
 
-    def remove(self, name: str=None, index: int=None) -> 'Node':
+    def remove(self, name: str = None, index: int = None) -> 'Node':
         """Remove subnode with provided name"""
         node_to_remove = self.get_node(name=name, index=index)
         if node_to_remove is None:
@@ -80,7 +81,7 @@ class Node:
         node_to_remove._parent = None
         return node_to_remove
 
-    def contains(self, name: str=None, index: int=None) -> bool:
+    def contains(self, name: str = None, index: int = None) -> bool:
         """Checks if there is a subnode with provided name"""
         return self.get_node(name=name, index=index) is not None
 
@@ -91,6 +92,7 @@ class Node:
 # CHECK: how to implement TemporaryTreeRoot (based on NodeTreeRoot)
 class NodeTreeRoot(ActionExecutor):
     """Frontend to the (passive) node-based data storage"""
+
     def __init__(self):
         self.root = self.create_node(None)
         self.install_default_actions()
@@ -200,7 +202,7 @@ class NodeTreeRoot(ActionExecutor):
     def create_node(self, value):
         return Node(value)
 
-    def create(self, path: NodePath, initial_value = None):
+    def create(self, path: NodePath, initial_value=None):
         parent = self._create_path(path.base_path)
         new_node = self.create_node(initial_value)
         parent.append(new_node, path.base_name)
@@ -232,7 +234,7 @@ class NodeTreeRoot(ActionExecutor):
             raise NameError("'{}' doesn't exists".format(path))
         return node
 
-    def _resolve_optional_path(self, path: NodePath, root: Node=None) -> Optional[Node]:
+    def _resolve_optional_path(self, path: NodePath, root: Node = None) -> Optional[Node]:
         if root is None:
             if path.is_relative:
                 raise ValueError("Could not resolve relative paths")
