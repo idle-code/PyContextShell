@@ -140,8 +140,10 @@ disable=print-statement,
         deprecated-sys-function,
         exception-escape,
         comprehension-escape,
-        C0111, # Missing docstrings # TODO: re-enable when interfaces are more stable
-        W0511 # fixme-like strings 
+        bad-continuation,
+        too-few-public-methods,  # TODO: re-enable when interfaces are more stable
+        C0111, # Missing docstrings  # TODO: re-enable when interfaces are more stable
+        W0511 # fixme-like strings
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

@@ -143,9 +143,8 @@ Shell:
   - set syntax sugar - .some.key = 321
   - get syntax sugar - .some.key (should be translated to .some.key: get if possible)
   - Command output streaming - list | filter | ...
-  - Named streams 
+  - Named streams
     - list |> {stream l}
     - {stream l}: filter
   - Field streaming - {list}|.@name (based on command output streaming; filter?)
   - Batch calling - {selected}: play
-

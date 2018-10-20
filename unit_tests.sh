@@ -16,4 +16,3 @@ if [[ $TESTS_PASSED -eq 0 ]];
 then
 	coverage report -m
 fi
-

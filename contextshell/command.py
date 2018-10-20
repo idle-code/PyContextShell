@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from contextshell.path import NodePath
 from contextshell.action import ActionExecutor, parse_argument_tree
+from contextshell.path import NodePath
 
 
 class Command:
@@ -28,6 +28,7 @@ class Command:
 
 class CommandInterpreter:
     """Actually executes commands on provided backend tree"""
+
     def __init__(self, tree: ActionExecutor) -> None:
         self.tree = tree
 
@@ -63,14 +64,14 @@ def convert_token_type(token):
 
 def tokenize(text: str) -> List[str]:
     tokens = []
-    tok = ''
+    tok = ""
 
     def finish_token():
         nonlocal tok, tokens
         if tok:
             tok = convert_token_type(tok)
             tokens.append(tok)
-            tok = ''
+            tok = ""
 
     verbatim_mode = False
     verbatim_mode_finisher = None
@@ -106,7 +107,7 @@ class CommandParser:
         tokens = tokenize(command_line)
         if not tokens:
             return None  # ignore empty lines
-        if tokens[0] == '#':
+        if tokens[0] == "#":
             return None  # ignore comments
 
         self._root_scope = self._parse_scope(iter(tokens))
@@ -115,14 +116,14 @@ class CommandParser:
     def _parse_scope(self, token_iterator) -> Command:
         parts = []
         for tok in token_iterator:
-            if tok == '{':
+            if tok == "{":
                 parts.append(self._parse_scope(token_iterator))
-            elif tok != '}':
+            elif tok != "}":
                 parts.append(tok)
             else:
                 break
 
-        if ':' in parts:
+        if ":" in parts:
             cmd = Command(parts[2])
             cmd.target = parts[0]
             cmd.arguments = parts[3:]

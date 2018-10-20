@@ -2,7 +2,7 @@ import unittest
 
 
 def create_node(*args, **kwargs):
-    from contextshell.backends.NodeTree import Node
+    from contextshell.backends.node import Node
     return Node(*args, **kwargs)
 
 

@@ -1,7 +1,8 @@
-from contextshell.backends.NodeTree import NodeTreeRoot
+import unittest
+
+from contextshell.backends.node import NodeTreeRoot
 from tests.functional.ShellTestsBase import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
-import unittest
 
 
 class NodeType:

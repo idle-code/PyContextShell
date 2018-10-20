@@ -1,11 +1,9 @@
-
-
 class NodePath(list):
     # CHECK: if this class could be replaced by build-in os.path
-    separator = '.'
+    separator = "."
 
     @staticmethod
-    def join(first, *rest) -> 'NodePath':
+    def join(first, *rest) -> "NodePath":
         path = NodePath(first)
         for name in rest:
             part = NodePath.cast(name)
@@ -13,7 +11,7 @@ class NodePath(list):
         return path
 
     @staticmethod
-    def cast(path) -> 'NodePath':
+    def cast(path) -> "NodePath":
         """Converts passed argument to NodePath (if needed)"""
         # TODO: remove this method - be aware what types are passed instead
         if path is None:
@@ -21,13 +19,13 @@ class NodePath(list):
         return NodePath(path)
 
     @staticmethod
-    def from_python_name(name: str) -> 'NodePath':
-        name = name.lstrip('_').replace('_', NodePath.separator)
+    def from_python_name(name: str) -> "NodePath":
+        name = name.lstrip("_").replace("_", NodePath.separator)
         return NodePath.cast(name)
 
     def to_python_name(self) -> str:
         name = str(self)
-        name = name.lstrip(NodePath.separator).replace(NodePath.separator, '_')
+        name = name.lstrip(NodePath.separator).replace(NodePath.separator, "_")
         return name
 
     def __init__(self, representation=None, absolute=False):
@@ -47,7 +45,7 @@ class NodePath(list):
         elif representation is None:
             pass
         else:
-            raise ValueError("Could not convert {} to NodePath".format(representation))
+            raise ValueError(f"Could not convert {representation} to NodePath")
 
     @property
     def is_relative(self) -> bool:
@@ -57,7 +55,7 @@ class NodePath(list):
     def is_attribute(self) -> bool:
         if not isinstance(self.base_name, str):
             return False
-        return self.base_name.startswith('@')
+        return self.base_name.startswith("@")
 
     @property
     def base_path(self):
@@ -71,18 +69,18 @@ class NodePath(list):
             return None
         return self[-1]
 
-    def is_parent_of(self, other: 'NodePath') -> bool:
+    def is_parent_of(self, other: "NodePath") -> bool:
         """Checks if provided path prefix matches self"""
         other = NodePath.cast(other)
         if self.is_absolute != other.is_absolute:
             raise ValueError(f"Cannot compare absolute and relative paths: {self} and {other}")
-        return NodePath(other[:len(self)], absolute=other.is_absolute) == self
+        return NodePath(other[: len(self)], absolute=other.is_absolute) == self
 
-    def relative_to(self, other) -> 'NodePath':
+    def relative_to(self, other) -> "NodePath":
         """Make current path relative to provided one by removing common prefix"""
         if not other.is_parent_of(self):
             raise ValueError(f"{self} is not relative to {other}")
-        return NodePath(self[len(other):], absolute=False)
+        return NodePath(self[len(other) :], absolute=False)
 
     @staticmethod
     def _to_path_part(name: str):
@@ -117,4 +115,4 @@ class NodePath(list):
         return str(self).__hash__()
 
     def __repr__(self):
-        return "NodePath('{}', absolute={})".format(self, self.is_absolute)
+        return f"NodePath('{self}', absolute={self.is_absolute})"

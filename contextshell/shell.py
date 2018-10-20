@@ -1,9 +1,11 @@
 from typing import Optional
+
 from contextshell.command import CommandParser
 
 
 class Shell:
     """Makes interaction with user painless"""
+
     def __init__(self, interpreter):
         self.interpreter = interpreter
         self.parser = CommandParser()

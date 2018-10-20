@@ -4,7 +4,7 @@ import sys
 from contextshell.shell import *
 
 if len(sys.argv) < 2:
-    raise ValueError('Script requires single argument')
+    raise ValueError("Script requires single argument")
 
 tree = ActionEndpoint()
 shell = Shell(tree)
@@ -14,7 +14,7 @@ with open(sys.argv[1]) as script:
         line = line.strip()
         if len(line) == 0:
             continue
-        if line.startswith('#'):
+        if line.startswith("#"):
             print(line)
             continue
 

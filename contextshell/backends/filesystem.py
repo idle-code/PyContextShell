@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import List
 
+from ..action import BuiltinExecutor, action_from_function
 from ..path import NodePath
-from ..action import action_from_function, BuiltinExecutor
 
 
 class FilesystemTree(BuiltinExecutor):
@@ -18,7 +18,7 @@ class FilesystemTree(BuiltinExecutor):
 
     def _to_os_path(self, *paths: NodePath) -> Path:
         node_paths = map(NodePath, paths)
-        os_paths = map(lambda p: Path('').joinpath(*p), node_paths)
+        os_paths = map(lambda p: Path("").joinpath(*p), node_paths)
         return self.root_directory_path.joinpath(*os_paths)
 
     def contains_action(self, target: NodePath, path: NodePath) -> bool:
@@ -45,6 +45,6 @@ class FilesystemTree(BuiltinExecutor):
             return []
         return list(sorted([NodePath(f.name) for f in dir_path.iterdir()]))
 
-    def list_actions_action(self, target: NodePath) -> List[NodePath]:
+    def list_actions_action(self, _: NodePath) -> List[NodePath]:
         # TODO: list actions depending on target type (might require issue #14)
         return list(map(lambda a: a.name, self.list_builtin_actions()))
