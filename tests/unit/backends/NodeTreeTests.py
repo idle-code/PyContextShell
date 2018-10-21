@@ -1,7 +1,12 @@
 import unittest
+from typing import List
 
-from contextshell.path import NodePath as np
-from tests.unit.Fakes import FakeAction
+from contextshell.action import Executor
+
+from ..fakes import FakeAction
+from .bases import Base
+
+from contextshell.path import NodePath, NodePath as np  # isort:skip
 
 
 def create_tree(*args, **kwargs):
@@ -61,7 +66,7 @@ class ResolveOptionalTests(unittest.TestCase):
 
         resolved_node = tree._resolve_optional_path(existing_path)
 
-        self.assertIs('BAR', resolved_node.get())
+        self.assertEqual('BAR', resolved_node.get())
 
     def test_resolve_optional_nonexistent(self):
         tree = create_tree()
@@ -260,7 +265,7 @@ class ListActions(unittest.TestCase):
 
 
 class FindFirstInTests(unittest.TestCase):
-    def test_no_canditates_provided(self):
+    def test_no_candidates_provided(self):
         tree = create_tree()
 
         with self.assertRaises(ValueError):
@@ -392,3 +397,21 @@ class InstallTypeTests(unittest.TestCase):
         found_type = tree.find_type(np('.target'), type_name)
 
         self.assertIs(target_type, found_type)
+
+
+class L0ActionsTests(Base.L0ActionsTests):
+    def setUp(self):
+        super().setUp()
+        self.root = create_tree()
+        self.root.create(np('.node'))
+
+    def create_backend(self) -> Executor:
+        return self.root
+
+    @property
+    def existing_paths(self) -> List[NodePath]:
+        return [np('node')]
+
+    @property
+    def nonexistent_paths(self) -> List[NodePath]:
+        return [np('nonexistent')]
