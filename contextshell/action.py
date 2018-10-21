@@ -10,7 +10,7 @@ PositionalArguments = List[ArgumentValue]
 KeywordArguments = Dict[str, ArgumentValue]
 
 
-class Action(ABC):  # pylint: disable=too-few-public-methods
+class Action(ABC):
     def __init__(self, name: NodePath) -> None:
         assert isinstance(name, NodePath)
         assert name.is_relative
@@ -84,23 +84,6 @@ def pack_argument_tree(*args: PositionalArguments, **kwargs: KeywordArguments) -
         pack_list.append((i, arg))
     for key, value in kwargs.items():
         pack_list.append((NodePath.from_python_name(key), value))
-    return OrderedDict(pack_list)
-
-
-def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
-    from contextshell.command import convert_token_type
-
-    pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
-    for i, arg in enumerate(raw_arguments):
-        if isinstance(arg, str) and "=" in arg:
-            key, value = arg.split("=")
-            key_path = NodePath.from_python_name(key)
-            if key_path.is_absolute:
-                raise ValueError(f"Named argument path must be relative - {key_path}")
-            typed_value = convert_token_type(value)
-            pack_list.append((key_path, typed_value))
-        else:
-            pack_list.append((i, arg))
     return OrderedDict(pack_list)
 
 

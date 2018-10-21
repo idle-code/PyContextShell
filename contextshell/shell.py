@@ -21,9 +21,10 @@ class Shell:
         try:
             result = self.interpreter.execute(command)
             return self.format_result(result)
-        except Exception as error:
+        except Exception as error:  # pylint: disable=broad-except
             return self.format_error(error)
 
+    # pylint: disable=no-self-use
     def format_result(self, result) -> Optional[str]:
         """Transform valid command execution result into text"""
         if result is None:
@@ -34,6 +35,7 @@ class Shell:
             return "\n".join(map(str, result))
         return str(result)
 
+    # pylint: disable=no-self-use
     def format_error(self, error) -> str:
         """Transform command failure result into text"""
         return "{}: {}".format(type(error).__name__, error)

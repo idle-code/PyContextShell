@@ -8,12 +8,7 @@ class Node:
     def __init__(self, value=None):
         self._value = value
         self._subnodes = []  # TODO: use OrderedDict?
-        self._parent = None
-
-    @property
-    def parent(self) -> "Node":
-        """Return parent of this node"""
-        return self._parent
+        self.parent = None
 
     def get(self):
         """Get value stored in this node"""
@@ -46,7 +41,7 @@ class Node:
                 raise NameError("Invalid appended node name - empty")
             if self.get_node(name) is not None:
                 raise NameError(f"Node '{name}' already exists")
-        node._parent = self
+        node.parent = self
         self._subnodes.append((name, node))
 
     def get_node(self, name: str = None, index: int = None) -> Optional["Node"]:
@@ -78,7 +73,7 @@ class Node:
         if node_to_remove is None:
             raise NameError(f"Node '{name}' doesn't exists")
         self._subnodes = [p for p in self._subnodes if p[1] is not node_to_remove]
-        node_to_remove._parent = None
+        node_to_remove.parent = None
         return node_to_remove
 
     def contains(self, name: str = None, index: int = None) -> bool:
@@ -94,7 +89,7 @@ class NodeTreeRoot(ActionExecutor):
     """Frontend to the (passive) node-based data storage"""
 
     def __init__(self):
-        self.root = self.create_node(None)
+        self.root = Node(None)
         self.install_default_actions()
 
     def create_action(self, target: NodePath, path: str, value=None):  # NOCOVER
@@ -198,12 +193,9 @@ class NodeTreeRoot(ActionExecutor):
             return None
         return type_node.get()
 
-    def create_node(self, value):
-        return Node(value)
-
     def create(self, path: NodePath, initial_value=None):
         parent = self._create_path(path.base_path)
-        new_node = self.create_node(initial_value)
+        new_node = Node(initial_value)
         parent.append(new_node, path.base_name)
 
     def contains(self, path: NodePath) -> bool:
@@ -258,6 +250,6 @@ class NodeTreeRoot(ActionExecutor):
 
         next_branch_name = path[0]
         if not root.contains(next_branch_name):
-            new_node = self.create_node(None)
+            new_node = Node(None)
             root.append(new_node, next_branch_name)
         return self._create_path(NodePath.cast(path[1:]), root.get_node(next_branch_name))

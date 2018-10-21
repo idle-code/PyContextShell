@@ -1,7 +1,8 @@
-from typing import List, Optional
+from collections.__init__ import OrderedDict
+from typing import List, Optional, Tuple, Union
 
-from contextshell.action import ActionExecutor, parse_argument_tree
-from contextshell.path import NodePath
+from .action import ActionArgsPack, ActionExecutor, ArgumentValue
+from .path import NodePath
 
 
 class Command:
@@ -131,3 +132,18 @@ class CommandParser:
             cmd = Command(parts[0])
             cmd.arguments = parts[1:]
         return cmd
+
+
+def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
+    pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
+    for i, arg in enumerate(raw_arguments):
+        if isinstance(arg, str) and "=" in arg:
+            key, value = arg.split("=")
+            key_path = NodePath.from_python_name(key)
+            if key_path.is_absolute:
+                raise ValueError(f"Named argument path must be relative - {key_path}")
+            typed_value = convert_token_type(value)
+            pack_list.append((key_path, typed_value))
+        else:
+            pack_list.append((i, arg))
+    return OrderedDict(pack_list)

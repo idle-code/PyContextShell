@@ -1,8 +1,8 @@
 from collections import OrderedDict
-
-from contextshell.path import NodePath
-from contextshell.action import Action, ActionArgsPack, ActionExecutor
 from typing import Dict
+
+from contextshell.action import Action, ActionArgsPack, ActionExecutor
+from contextshell.path import NodePath
 
 
 class FakeTree:
