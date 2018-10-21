@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from typing import Union, Any, Tuple
-from typing import Callable
-from typing import Optional, List, Dict
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
 from .path import NodePath
 
-
-ArgumentValue = Any
+ArgumentValue = Any  # pylint: disable=invalid-name
 ActionArgsPack = Dict[Union[NodePath, int], ArgumentValue]
 PositionalArguments = List[ArgumentValue]
 KeywordArguments = Dict[str, ArgumentValue]
@@ -25,6 +23,7 @@ class Action(ABC):
 
 class CallableAction(Action):
     """Action with implementation based on python callables"""
+
     def __init__(self, implementation: Callable, name: NodePath) -> None:
         super().__init__(name)
         self.implementation = implementation
@@ -37,8 +36,8 @@ class CallableAction(Action):
 
 def action_from_function(function_to_wrap: Callable) -> Action:
     action_name: str = function_to_wrap.__name__
-    if action_name.endswith('_action'):
-        action_name = action_name[:-len('_action')]
+    if action_name.endswith("_action"):
+        action_name = action_name[: -len("_action")]
     action_path = NodePath.from_python_name(action_name)
     return CallableAction(function_to_wrap, action_path)
 
@@ -60,11 +59,13 @@ class ActionExecutor(Executor):
             args = OrderedDict()
         action_impl = self.find_action(target, action_name)
         if action_impl is None:
-            raise NameError("Could not find action named '{}'".format(action_name))
+            raise NameError(f"Could not find action named '{action_name}'")
         return action_impl.invoke(target, action_name, args)
 
 
-def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArguments, KeywordArguments]:
+def unpack_argument_tree(
+    action_args: ActionArgsPack
+) -> Tuple[PositionalArguments, KeywordArguments]:
     args: Dict[int, ArgumentValue] = dict()
     kwargs: KeywordArguments = OrderedDict()
     for key, value in action_args.items():
@@ -72,7 +73,7 @@ def unpack_argument_tree(action_args: ActionArgsPack) -> Tuple[PositionalArgumen
             args[key] = value
         else:
             kwargs[key.to_python_name()] = value
-    assert not args or max(args.keys()) < len(args)+len(kwargs)
+    assert not args or max(args.keys()) < len(args) + len(kwargs)
     positional_args = [a[1] for a in sorted(args.items())]
     return positional_args, kwargs
 
@@ -86,24 +87,9 @@ def pack_argument_tree(*args: PositionalArguments, **kwargs: KeywordArguments) -
     return OrderedDict(pack_list)
 
 
-def parse_argument_tree(raw_arguments: List[str]) -> ActionArgsPack:
-    from contextshell.command import convert_token_type
-    pack_list: List[Tuple[Union[NodePath, int], ArgumentValue]] = []
-    for i, arg in enumerate(raw_arguments):
-        if isinstance(arg, str) and '=' in arg:
-            key, value = arg.split('=')
-            key_path = NodePath.from_python_name(key)
-            if key_path.is_absolute:
-                raise ValueError("Named argument path must be relative - {}".format(key_path))
-            typed_value = convert_token_type(value)
-            pack_list.append((key_path, typed_value))
-        else:
-            pack_list.append((i, arg))
-    return OrderedDict(pack_list)
-
-
 class BuiltinExecutor(ActionExecutor):
     """Manages built-in, global action registry"""
+
     def __init__(self):
         super().__init__()
         self.builtin_actions: Dict[NodePath, Action] = {}

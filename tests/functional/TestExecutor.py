@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 
 class TestExecutor:
@@ -19,8 +19,8 @@ Actual output:
                     actual=repr(output),
                     expected=repr(expected_output)))
 
-    def _parse_script(self, script_text: str) -> List[Tuple[str, str]]:
-        commands = []
+    def _parse_script(self, script_text: str) -> List[Tuple[str, Optional[str]]]:
+        commands: List[Tuple[str, Optional[str]]] = []
         script_text = script_text.strip()
         script_lines = list(map(str.strip, script_text.split('\n')))
         i = 0
@@ -41,10 +41,9 @@ Actual output:
 
             if len(output_lines) > 0:
                 expected_output = "\n".join(output_lines)
+                commands.append((command, expected_output))
             else:
-                expected_output = None
-
-            commands.append((command, expected_output))
+                commands.append((command, None))
 
         return commands
 

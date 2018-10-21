@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from typing import Dict
 
-from ..action import Executor, ActionArgsPack
+from ..action import ActionArgsPack, Executor
 from ..path import NodePath
 
 
@@ -38,4 +38,4 @@ class VirtualTree(Executor):
                 remapped_target = target.relative_to(path)
                 remapped_target.is_absolute = True
                 return root.execute(remapped_target, action_name, args)
-        raise RuntimeError("Could not find provider for path: '{}'".format(target))
+        raise RuntimeError(f"Could not find provider for path: '{target}'")

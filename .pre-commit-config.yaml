@@ -1,0 +1,41 @@
+exclude: '^\.idea/.*$'
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/asottile/pyupgrade
+    rev: master
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py36-plus
+  - repo: https://github.com/doublify/pre-commit-isort
+    rev: master
+    hooks:
+      - id: isort
+        args:
+          - --multi-line=3
+          - --keep-direct-and-as
+  - repo: https://github.com/ambv/black
+    rev: master
+    hooks:
+      - id: black
+        exclude: "tests"
+        args:
+          - -l 100
+          - --py36
+  - repo: https://github.com/guykisel/prospector-mirror
+    rev: master
+    hooks:
+      - id: prospector
+        exclude: "tests"
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: master
+    hooks:
+      - id: mypy
+        files: 'contextshell|tests'

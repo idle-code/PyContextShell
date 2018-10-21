@@ -74,7 +74,7 @@ class StringRepresentationTests(unittest.TestCase):
     def test_string_representation_contains_action_argument(self):
         parser = create_parser()
         action_argument = 'arg'
-        cmd = parser.parse("action {}".format(action_argument))
+        cmd = parser.parse(f"action {action_argument}")
 
         have_argument_string = action_argument in str(cmd)
 
@@ -83,7 +83,7 @@ class StringRepresentationTests(unittest.TestCase):
     def test_string_representation_contains_target_path(self):
         parser = create_parser()
         target_path = 'foo.bar'
-        cmd = parser.parse("{}: action".format(target_path))
+        cmd = parser.parse(f"{target_path}: action")
 
         have_target_path = target_path in str(cmd)
 
@@ -165,4 +165,3 @@ class ParsingTests(unittest.TestCase):
 class TypeConversionTests(unittest.TestCase):
     def test_parse_int(self):
         pass
-

@@ -4,11 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pre-commit = "*"
+
+[dev-packages]
+mypy = "*"
 coverage = "==5.0a1"
 pylint = "*"
 git-pylint-commit-hook = "*"
-
-[dev-packages]
+pre-commit = "*"
 
 [requires]
 python_version = "3.7"

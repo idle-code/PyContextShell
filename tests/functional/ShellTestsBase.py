@@ -1,12 +1,12 @@
 import unittest
 from abc import ABC, abstractmethod
 
-from contextshell.action import ActionExecutor
-from contextshell.shell import Shell
-from contextshell.path import NodePath
+from contextshell.action import ActionExecutor, Executor
+from contextshell.backends.node import NodeTreeRoot
+from contextshell.backends.virtual import VirtualTree
 from contextshell.command import CommandInterpreter
-from contextshell.backends.VirtualTree import VirtualTree
-from contextshell.backends.NodeTree import NodeTreeRoot
+from contextshell.path import NodePath
+from contextshell.shell import Shell
 
 
 class ShellScriptTestsBase(unittest.TestCase, ABC):
@@ -17,7 +17,7 @@ class ShellScriptTestsBase(unittest.TestCase, ABC):
 
 class TreeRootTestsBase(ShellScriptTestsBase):
     @abstractmethod
-    def create_tree_root(self) -> ActionExecutor:
+    def create_tree_root(self):
         raise NotImplementedError()
 
     def create_shell(self):
@@ -28,18 +28,17 @@ class TreeRootTestsBase(ShellScriptTestsBase):
         shell = Shell(interpreter)
         return shell
 
-    def configure_tree_root(self, tree_root: ActionExecutor):
+    def configure_tree_root(self, tree_root):
         pass
 
 
 # TODO: is this class needed when testing single TreeRoot-based class?
 class VirtualTreeTestsBase(TreeRootTestsBase):
-    def create_tree_root(self) -> ActionExecutor:
+    def create_tree_root(self):
         return VirtualTree()
 
-    def configure_tree_root(self, tree_root: ActionExecutor):
+    def configure_tree_root(self, tree_root):
         self.configure_virtual_tree(tree_root)
-
 
     @abstractmethod
     def configure_virtual_tree(self, virtual_tree: VirtualTree):

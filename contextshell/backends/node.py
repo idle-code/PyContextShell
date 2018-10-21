@@ -1,20 +1,14 @@
 from typing import List, Optional
 
+from ..action import Action, ActionExecutor, action_from_function
 from ..path import NodePath
-from ..action import Action, ActionExecutor
-from ..action import action_from_function
 
 
 class Node:
     def __init__(self, value=None):
         self._value = value
         self._subnodes = []  # TODO: use OrderedDict?
-        self._parent = None
-
-    @property
-    def parent(self) -> 'Node':
-        """Return parent of this node"""
-        return self._parent
+        self.parent = None
 
     def get(self):
         """Get value stored in this node"""
@@ -25,8 +19,7 @@ class Node:
         if not isinstance(new_value, type(self._value)):
             new_type = type(new_value).__name__
             current_type = type(self._value).__name__
-            raise TypeError(
-                f"Cannot assign value with type '{new_type}' to '{current_type}' node")
+            raise TypeError(f"Cannot assign value with type '{new_type}' to '{current_type}' node")
         self._value = new_value
 
     def list(self):
@@ -39,7 +32,7 @@ class Node:
             index += 1
         return indexed_names
 
-    def append(self, node, name: str = None):
+    def append(self, node: "Node", name: str = None):
         """Append provided node as a subnode"""
         if node is None:
             raise ValueError("Cannot append None as node")
@@ -47,11 +40,11 @@ class Node:
             if not name:
                 raise NameError("Invalid appended node name - empty")
             if self.get_node(name) is not None:
-                raise NameError("Node '{}' already exists".format(name))
-        node._parent = self
+                raise NameError(f"Node '{name}' already exists")
+        node.parent = self
         self._subnodes.append((name, node))
 
-    def get_node(self, name: str = None, index: int = None) -> Optional['Node']:
+    def get_node(self, name: str = None, index: int = None) -> Optional["Node"]:
         """Return subnode with provided name or index"""
         if name is not None:
             for name_node_pair in self._subnodes:
@@ -64,7 +57,7 @@ class Node:
             raise NameError("No name or index provided")
         return None
 
-    def __getitem__(self, name_or_index) -> 'Node':
+    def __getitem__(self, name_or_index) -> "Node":
         """Return subnode with provided name or index"""
         if isinstance(name_or_index, int):
             node = self.get_node(index=name_or_index)
@@ -74,13 +67,13 @@ class Node:
             raise KeyError(name_or_index)
         return node
 
-    def remove(self, name: str = None, index: int = None) -> 'Node':
+    def remove(self, name: str = None, index: int = None) -> "Node":
         """Remove subnode with provided name"""
         node_to_remove = self.get_node(name=name, index=index)
         if node_to_remove is None:
-            raise NameError("Node '{}' doesn't exists".format(name))
+            raise NameError(f"Node '{name}' doesn't exists")
         self._subnodes = [p for p in self._subnodes if p[1] is not node_to_remove]
-        node_to_remove._parent = None
+        node_to_remove.parent = None
         return node_to_remove
 
     def contains(self, name: str = None, index: int = None) -> bool:
@@ -96,7 +89,7 @@ class NodeTreeRoot(ActionExecutor):
     """Frontend to the (passive) node-based data storage"""
 
     def __init__(self):
-        self.root = self.create_node(None)
+        self.root = Node(None)
         self.install_default_actions()
 
     def create_action(self, target: NodePath, path: str, value=None):  # NOCOVER
@@ -125,7 +118,7 @@ class NodeTreeRoot(ActionExecutor):
     def list_actions_action(self, target: NodePath):  # NOCOVER
         # FIXME: use the same mechanism as in self.find_action
         # CHECK: consider using find.all.actions action
-        actions_branch = NodePath.join(target, '@actions')
+        actions_branch = NodePath.join(target, "@actions")
         return self.list(actions_branch)
 
     def remove_action(self, target: NodePath):  # NOCOVER
@@ -149,10 +142,10 @@ class NodeTreeRoot(ActionExecutor):
         self.install_global_action(action_from_function(self.find_type_action))
 
     def install_global_action(self, action: Action):
-        self.install_action(NodePath('.'), action)
+        self.install_action(NodePath("."), action)
 
     def install_action(self, target: NodePath, action: Action):
-        self.create(NodePath.join(target, '@actions', action.name), action)
+        self.create(NodePath.join(target, "@actions", action.name), action)
 
     def find_first_in(self, candidate_paths: List[NodePath]) -> Optional[Node]:
         if candidate_paths is None or not candidate_paths:
@@ -165,9 +158,9 @@ class NodeTreeRoot(ActionExecutor):
 
     def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
         possible_locations = [
-            NodePath.join(target, '@actions', action),
-            NodePath.join(target, '@type.@actions', action),
-            NodePath.join('.@actions', action)
+            NodePath.join(target, "@actions", action),
+            NodePath.join(target, "@type.@actions", action),
+            NodePath.join(".@actions", action),
         ]
         action_node = self.find_first_in(possible_locations)
         if action_node is None:
@@ -176,7 +169,7 @@ class NodeTreeRoot(ActionExecutor):
         return action_node.get()
 
     def list_actions(self, path: NodePath) -> List[NodePath]:
-        action_paths = self.list(NodePath.join(path, '@actions'))
+        action_paths = self.list(NodePath.join(path, "@actions"))
         action_paths = sorted(action_paths)
 
         if not path:  # Root
@@ -184,15 +177,15 @@ class NodeTreeRoot(ActionExecutor):
         return action_paths + self.list_actions(path.base_path)
 
     def install_global_type(self, node_type):
-        self.install_type(NodePath('.'), node_type)
+        self.install_type(NodePath("."), node_type)
 
     def install_type(self, target: NodePath, node_type):
-        self.create(NodePath.join(target, '@types', node_type.name), node_type)
+        self.create(NodePath.join(target, "@types", node_type.name), node_type)
 
     def find_type(self, target: NodePath, type_name: NodePath):  # TODO: add type-hints
         possible_locations = [
-            NodePath.join(target, '@types', type_name),
-            NodePath.join('.@types', type_name)
+            NodePath.join(target, "@types", type_name),
+            NodePath.join(".@types", type_name),
         ]
         type_node = self.find_first_in(possible_locations)
         if type_node is None:
@@ -200,12 +193,9 @@ class NodeTreeRoot(ActionExecutor):
             return None
         return type_node.get()
 
-    def create_node(self, value):
-        return Node(value)
-
     def create(self, path: NodePath, initial_value=None):
         parent = self._create_path(path.base_path)
-        new_node = self.create_node(initial_value)
+        new_node = Node(initial_value)
         parent.append(new_node, path.base_name)
 
     def contains(self, path: NodePath) -> bool:
@@ -232,7 +222,7 @@ class NodeTreeRoot(ActionExecutor):
     def _resolve_path(self, path: NodePath, root: Node = None) -> Node:
         node = self._resolve_optional_path(path, root)
         if node is None:
-            raise NameError("'{}' doesn't exists".format(path))
+            raise NameError(f"'{path}' doesn't exists")
         return node
 
     def _resolve_optional_path(self, path: NodePath, root: Node = None) -> Optional[Node]:
@@ -260,6 +250,6 @@ class NodeTreeRoot(ActionExecutor):
 
         next_branch_name = path[0]
         if not root.contains(next_branch_name):
-            new_node = self.create_node(None)
+            new_node = Node(None)
             root.append(new_node, next_branch_name)
         return self._create_path(NodePath.cast(path[1:]), root.get_node(next_branch_name))

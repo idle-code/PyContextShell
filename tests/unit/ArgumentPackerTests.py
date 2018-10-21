@@ -1,7 +1,9 @@
 import unittest
-from contextshell.action import pack_argument_tree, unpack_argument_tree, parse_argument_tree
-from contextshell.path import NodePath as np
 from collections import OrderedDict
+
+from contextshell.action import pack_argument_tree, unpack_argument_tree
+from contextshell.command import parse_argument_tree
+from contextshell.path import NodePath as np
 
 
 class UnpackArgumentTreeTests(unittest.TestCase):

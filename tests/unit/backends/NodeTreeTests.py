@@ -1,11 +1,11 @@
 import unittest
 
-from tests.unit.Fakes import FakeAction
 from contextshell.path import NodePath as np
+from tests.unit.Fakes import FakeAction
 
 
 def create_tree(*args, **kwargs):
-    from contextshell.backends.NodeTree import NodeTreeRoot
+    from contextshell.backends.node import NodeTreeRoot
     return NodeTreeRoot(*args)
 
 

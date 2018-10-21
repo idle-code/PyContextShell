@@ -1,12 +1,12 @@
 import unittest
 
-from tests.unit.Fakes import FakeActionExecutor
 from contextshell.action import pack_argument_tree
 from contextshell.path import NodePath as np
+from tests.unit.Fakes import FakeActionExecutor
 
 
 def create_virtual_tree():
-    from contextshell.backends.VirtualTree import VirtualTree
+    from contextshell.backends.virtual import VirtualTree
     return VirtualTree()
 
 
@@ -107,5 +107,3 @@ class ExecuteTests(unittest.TestCase):
         vt.execute(np(".foo.bar.spam"), np("action"))
 
         self.assertEqual(np("action"), long_path_root.execute_action)
-
-
