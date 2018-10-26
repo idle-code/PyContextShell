@@ -397,21 +397,3 @@ class InstallTypeTests(unittest.TestCase):
         found_type = tree.find_type(np('.target'), type_name)
 
         self.assertIs(target_type, found_type)
-
-
-class L0ActionsTests(Base.L0ActionsTests):
-    def setUp(self):
-        super().setUp()
-        self.root = create_tree()
-        self.root.create(np('.node'))
-
-    def create_backend(self) -> Executor:
-        return self.root
-
-    @property
-    def existing_paths(self) -> List[NodePath]:
-        return [np('node')]
-
-    @property
-    def nonexistent_paths(self) -> List[NodePath]:
-        return [np('nonexistent')]
