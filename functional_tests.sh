@@ -8,8 +8,9 @@ coverage run \
 	-m unittest \
 		discover \
 		--pattern '*Tests.py' \
-		--start-directory ./ \
-		./tests/functional
+		--top-level-directory ./ \
+		--start-directory ./tests/functional/ \
+		./tests/functional/
 TESTS_PASSED=$?
 
 if [[ $TESTS_PASSED -eq 0 ]];
