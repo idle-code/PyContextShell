@@ -164,3 +164,8 @@ class ListActionsActionTests(FilesystemTestsBase):
         action_list = self.execute(".", "list.actions")
 
         self.assertSetEqual({'contains', 'get', 'is', 'list'}, set(action_list))
+
+    def test_list_nested(self):
+        action_list = self.execute(".", "list.actions", "is")
+
+        self.assertSetEqual({'is.file', 'is.directory'}, set(action_list))

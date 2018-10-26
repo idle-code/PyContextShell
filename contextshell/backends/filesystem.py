@@ -45,6 +45,10 @@ class FilesystemTree(BuiltinExecutor):
             return []
         return list(sorted([NodePath(f.name) for f in dir_path.iterdir()]))
 
-    def list_actions_action(self, _: NodePath) -> List[NodePath]:
+    def list_actions_action(self, _: NodePath, prefix_: NodePath = None) -> List[NodePath]:
         # TODO: list actions depending on target type (might require issue #14)
-        return list(map(lambda a: a.name, self.list_builtin_actions()))
+        prefix = NodePath(prefix_)
+        all_actions = self.list_builtin_actions()
+        action_names = map(lambda a: NodePath(a.name[: len(prefix) + 1]), all_actions)
+        names_matching_prefix = filter(prefix.is_parent_of, action_names)
+        return list(names_matching_prefix)
