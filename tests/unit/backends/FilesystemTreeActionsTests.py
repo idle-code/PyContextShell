@@ -1,14 +1,7 @@
-import os
 import tempfile
-import unittest
 from pathlib import Path
-from typing import List
 
-from contextshell.action import Executor, pack_argument_tree
-
-from .bases import Base
-
-from contextshell.path import NodePath, NodePath as np  # isort:skip
+from .bases import ActionTestsBase
 
 
 def create_filesystem_tree(*args, **kwargs):
@@ -16,7 +9,7 @@ def create_filesystem_tree(*args, **kwargs):
     return FilesystemTree(*args, **kwargs)
 
 
-class FilesystemTestsBase(unittest.TestCase):
+class FilesystemTestsBase(ActionTestsBase):
     """Test base for tests wishing to use actual filesystem directory"""
     def _make_test_path(self, relative_path):
         return Path(self.test_directory.name).joinpath(relative_path)
@@ -31,19 +24,18 @@ class FilesystemTestsBase(unittest.TestCase):
         full_path = self._make_test_path(path)
         full_path.mkdir(parents=True)
 
+    def create_backend(self):
+        return create_filesystem_tree(self.test_directory.name)
+
     def setUp(self):
-        super().setUp()
         temp_dir_suffix = type(self).__name__
         self.test_directory = tempfile.TemporaryDirectory(temp_dir_suffix)
-        self.backend = create_filesystem_tree(self.test_directory.name)
+
+        super().setUp()
 
     def tearDown(self):
         self.test_directory.cleanup()
         super().tearDown()
-
-    def execute(self, target, action, *args, **kwargs):
-        args_tree = pack_argument_tree(*args, **kwargs)
-        return self.backend.execute(np(target), np(action), args_tree)
 
 
 class ContainsActionTests(FilesystemTestsBase):

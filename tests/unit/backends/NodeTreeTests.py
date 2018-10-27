@@ -1,10 +1,6 @@
 import unittest
-from typing import List
-
-from contextshell.action import Executor
 
 from ..fakes import FakeAction
-from .bases import Base
 
 from contextshell.path import NodePath, NodePath as np  # isort:skip
 
