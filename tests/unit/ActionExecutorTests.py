@@ -3,7 +3,7 @@ from collections import OrderedDict
 from typing import Optional
 
 from contextshell.action import Action, ActionExecutor, pack_argument_tree
-from tests.unit.Fakes import FakeAction
+from tests.unit.fakes import FakeAction
 
 from contextshell.path import NodePath, NodePath as np  # isort:skip
 

@@ -1,7 +1,8 @@
 import unittest
 
-from contextshell.path import NodePath as np
-from tests.unit.Fakes import FakeAction
+from ..fakes import FakeAction
+
+from contextshell.path import NodePath, NodePath as np  # isort:skip
 
 
 def create_tree(*args, **kwargs):
@@ -61,7 +62,7 @@ class ResolveOptionalTests(unittest.TestCase):
 
         resolved_node = tree._resolve_optional_path(existing_path)
 
-        self.assertIs('BAR', resolved_node.get())
+        self.assertEqual('BAR', resolved_node.get())
 
     def test_resolve_optional_nonexistent(self):
         tree = create_tree()
@@ -260,7 +261,7 @@ class ListActions(unittest.TestCase):
 
 
 class FindFirstInTests(unittest.TestCase):
-    def test_no_canditates_provided(self):
+    def test_no_candidates_provided(self):
         tree = create_tree()
 
         with self.assertRaises(ValueError):

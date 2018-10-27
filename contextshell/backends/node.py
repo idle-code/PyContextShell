@@ -92,40 +92,44 @@ class NodeTreeRoot(ActionExecutor):
         self.root = Node(None)
         self.install_default_actions()
 
-    def create_action(self, target: NodePath, path: str, value=None):  # NOCOVER
+    def create_action(self, target: NodePath, path: str, value=None):
         self.create(NodePath.join(target, path), value)
 
-    def contains_action(self, target: NodePath, path: str) -> bool:  # NOCOVER
+    def contains_action(self, target: NodePath, path: str) -> bool:
         return self.contains(NodePath.join(target, path))
 
-    def get_action(self, target: NodePath):  # NOCOVER
+    def get_action(self, target: NodePath):
         return self.get(target)
 
-    def set_action(self, target: NodePath, new_value):  # NOCOVER
+    def set_action(self, target: NodePath, new_value):
         return self.set(target, new_value)
 
-    def list_action(self, target: NodePath):  # NOCOVER
+    def list_action(self, target: NodePath):
         all_list = self.list(target)
         return list(filter(lambda p: not NodePath(p).is_attribute, all_list))
 
-    def list_all_action(self, target: NodePath):  # NOCOVER
+    def list_all_action(self, target: NodePath):
         return self.list(target)
 
-    def list_attributes_action(self, target: NodePath):  # NOCOVER
+    def list_attributes_action(self, target: NodePath):
         all_list = self.list(target)
         return list(filter(lambda p: NodePath(p).is_attribute, all_list))
 
-    def list_actions_action(self, target: NodePath):  # NOCOVER
+    def list_actions_action(self, target: NodePath):
         # FIXME: use the same mechanism as in self.find_action
         # CHECK: consider using find.all.actions action
         actions_branch = NodePath.join(target, "@actions")
         return self.list(actions_branch)
 
-    def remove_action(self, target: NodePath):  # NOCOVER
-        # CHECK: use 'path' argument?
-        return self.remove(target)
+    def remove_action(self, target: NodePath, path: NodePath = None):
+        if path is None:
+            return self.remove(target)
+        path_to_remove = NodePath.join(target, path)
+        if not self.contains(path_to_remove):
+            return None
+        return self.remove(path_to_remove)
 
-    def find_type_action(self, target: NodePath, type_name: str):  # NOCOVER
+    def find_type_action(self, target: NodePath, type_name: str):
         return self.find_type(target, NodePath(type_name))
 
     def install_default_actions(self):

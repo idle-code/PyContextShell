@@ -2,7 +2,7 @@ import unittest
 
 from contextshell.action import pack_argument_tree
 from contextshell.path import NodePath as np
-from tests.unit.Fakes import FakeActionExecutor
+from tests.unit.fakes import FakeActionExecutor
 
 
 def create_virtual_tree():

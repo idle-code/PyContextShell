@@ -2,7 +2,7 @@ import unittest
 
 from contextshell.action import BuiltinExecutor
 from contextshell.path import NodePath
-from tests.unit.Fakes import FakeAction
+from tests.unit.fakes import FakeAction
 
 
 class RegisterAction(unittest.TestCase):
