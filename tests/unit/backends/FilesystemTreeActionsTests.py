@@ -9,7 +9,7 @@ def create_filesystem_tree(*args, **kwargs):
     return FilesystemTree(*args, **kwargs)
 
 
-class FilesystemTestsBase(ActionTestsBase):
+class FilesystemActionsTestsBase(ActionTestsBase):
     """Test base for tests wishing to use actual filesystem directory"""
     def _make_test_path(self, relative_path):
         return Path(self.test_directory.name).joinpath(relative_path)
@@ -38,7 +38,7 @@ class FilesystemTestsBase(ActionTestsBase):
         super().tearDown()
 
 
-class ContainsActionTests(FilesystemTestsBase):
+class ContainsActionTests(FilesystemActionsTestsBase):
     def test_existing_file(self):
         self.create_file('file')
 
@@ -73,7 +73,7 @@ class ContainsActionTests(FilesystemTestsBase):
         self.assertFalse(exists)
 
 
-class GetActionTests(FilesystemTestsBase):
+class GetActionTests(FilesystemActionsTestsBase):
     def test_empty_file(self):
         self.create_file('file')
 
@@ -96,7 +96,7 @@ class GetActionTests(FilesystemTestsBase):
         self.assertEqual(dir_value, None)
 
 
-class IsActionTests(FilesystemTestsBase):
+class IsActionTests(FilesystemActionsTestsBase):
     def test_directory_is_file(self):
         self.create_directory('dir')
 
@@ -126,7 +126,7 @@ class IsActionTests(FilesystemTestsBase):
         self.assertFalse(is_dir)
 
 
-class ListActionTests(FilesystemTestsBase):
+class ListActionTests(FilesystemActionsTestsBase):
     def test_list_file(self):
         self.create_file('file')
 
@@ -151,7 +151,7 @@ class ListActionTests(FilesystemTestsBase):
         self.assertIn('file', file_list)
 
 
-class ListActionsActionTests(FilesystemTestsBase):
+class ListActionsActionTests(FilesystemActionsTestsBase):
     def test_list_all(self):
         action_list = self.execute(".", "list.actions")
 
