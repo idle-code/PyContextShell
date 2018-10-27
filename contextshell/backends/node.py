@@ -121,9 +121,13 @@ class NodeTreeRoot(ActionExecutor):
         actions_branch = NodePath.join(target, "@actions")
         return self.list(actions_branch)
 
-    def remove_action(self, target: NodePath):
-        # CHECK: use 'path' argument?
-        return self.remove(target)
+    def remove_action(self, target: NodePath, path: NodePath = None):
+        if path is None:
+            return self.remove(target)
+        path_to_remove = NodePath.join(target, path)
+        if not self.contains(path_to_remove):
+            return None
+        return self.remove(path_to_remove)
 
     def find_type_action(self, target: NodePath, type_name: str):
         return self.find_type(target, NodePath(type_name))

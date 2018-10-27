@@ -1,4 +1,5 @@
 import tempfile
+import unittest
 from pathlib import Path
 
 from .bases import ActionTestsBase
@@ -149,6 +150,25 @@ class ListActionTests(FilesystemActionsTestsBase):
 
         self.assertIn('dir', file_list)
         self.assertIn('file', file_list)
+
+    @unittest.skip("Re-enable when path uses '/' as separator")
+    def test_list_hidden(self):
+        self.create_directory('parent/.dir')
+        self.create_file('parent/.file')
+
+        file_list = self.execute(".parent", "list")
+
+        self.assertListEqual(file_list, [])
+
+    @unittest.skip("Re-enable when path uses '/' as separator")
+    def test_list_all(self):
+        self.create_directory('parent/.dir')
+        self.create_file('parent/.file')
+
+        file_list = self.execute(".parent", "list.all")
+
+        self.assertIn('@dir', file_list)
+        self.assertIn('@file', file_list)
 
 
 class ListActionsActionTests(FilesystemActionsTestsBase):
