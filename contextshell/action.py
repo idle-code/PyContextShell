@@ -93,6 +93,7 @@ class BuiltinExecutor(ActionExecutor):
     def __init__(self):
         super().__init__()
         self.builtin_actions: Dict[NodePath, Action] = {}
+        self.register_builtin_action(action_from_function(self.list_actions_action))
 
     def register_builtin_action(self, action: Action):
         if action is None:
@@ -101,7 +102,10 @@ class BuiltinExecutor(ActionExecutor):
             raise ValueError(f"Builtin action '{action.name}' already registered")
         self.builtin_actions[action.name] = action
 
-    def list_builtin_actions(self) -> List[NodePath]:
+    def list_actions_action(
+        self, target: NodePath, prefix: Optional[NodePath] = None
+    ) -> List[NodePath]:
+        del target, prefix
         return list(map(lambda a: a.name, self.builtin_actions.values()))
 
     def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:

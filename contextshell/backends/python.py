@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from ..action import BuiltinExecutor, action_from_function
 from ..path import NodePath
@@ -15,7 +15,7 @@ class PythonObjectTree(BuiltinExecutor):
         self.register_builtin_action(action_from_function(self.get_action))
         self.register_builtin_action(action_from_function(self.set_action))
         self.register_builtin_action(action_from_function(self.list_action))
-        self.register_builtin_action(action_from_function(self.list_actions_action))
+        # self.register_builtin_action(action_from_function(self.list_actions_action))
 
     # TODO: try to resolve action to the method if it exists
 
@@ -60,9 +60,11 @@ class PythonObjectTree(BuiltinExecutor):
         target_obj = self._resolve_to_object(self.root_object, target)
         return [NodePath(f) for f in dir(target_obj) if self._is_field(target_obj, f)]
 
-    def list_actions_action(self, target: NodePath) -> List[NodePath]:
+    def list_actions_action(
+        self, target: NodePath, prefix: Optional[NodePath] = None
+    ) -> List[NodePath]:
         target_obj = self._resolve_to_object(self.root_object, target)
         target_actions = [NodePath(f) for f in dir(target_obj) if self._is_action(target_obj, f)]
-        builtin_actions = self.list_builtin_actions()
+        builtin_actions = super().list_actions_action(target, prefix)
 
         return target_actions + builtin_actions

@@ -3,6 +3,7 @@
     <words>
       <w>callables</w>
       <w>isort</w>
+      <w>linter</w>
       <w>pylint</w>
       <w>rabarbar</w>
       <w>subnode</w>

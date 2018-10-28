@@ -33,18 +33,18 @@ class ListActions(unittest.TestCase):
     def test_no_actions(self):
         executor = BuiltinExecutor()
 
-        registered_actions = executor.list_builtin_actions()
+        registered_actions = executor.list_actions_action(NodePath('.'))
 
-        self.assertListEqual([], registered_actions)
+        self.assertListEqual([NodePath('list.actions')], registered_actions)
 
     def test_single_action(self):
         executor = BuiltinExecutor()
         action = FakeAction()
         executor.register_builtin_action(action)
 
-        registered_actions = executor.list_builtin_actions()
+        registered_actions = executor.list_actions_action(NodePath('.'))
 
-        self.assertListEqual([action.name], registered_actions)
+        self.assertIn(action.name, registered_actions)
 
 
 class FindAction(unittest.TestCase):
