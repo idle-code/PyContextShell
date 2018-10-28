@@ -1,7 +1,6 @@
 import unittest
 from abc import ABC, abstractmethod
 
-from contextshell.action import ActionExecutor, Executor
 from contextshell.backends.node import NodeTreeRoot
 from contextshell.backends.virtual import VirtualTree
 from contextshell.command import CommandInterpreter

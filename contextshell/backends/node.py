@@ -133,6 +133,7 @@ class NodeTreeRoot(ActionExecutor):
         return self.find_type(target, NodePath(type_name))
 
     def install_default_actions(self):
+        # FIXME: use BuiltinExecutor (or derivative) instead of install_global_action
         self.install_global_action(action_from_function(self.create_action))
         self.install_global_action(action_from_function(self.contains_action))
         self.install_global_action(action_from_function(self.get_action))

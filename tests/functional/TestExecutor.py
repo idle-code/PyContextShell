@@ -51,7 +51,7 @@ Actual output:
 def script_test(method):
     def executor(self):
         shell = self.create_shell()
-        exec = TestExecutor(shell)
+        test_executor = TestExecutor(shell)
         test_script = method.__doc__
-        exec.test(test_script)
+        test_executor.test(test_script)
     return executor

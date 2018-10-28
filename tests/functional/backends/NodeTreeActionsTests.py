@@ -1,6 +1,6 @@
 import unittest
 
-from tests.functional.ShellTestsBase import NodeTreeTestsBase
+from tests.functional.bases import NodeTreeTestsBase
 from tests.functional.TestExecutor import script_test
 
 

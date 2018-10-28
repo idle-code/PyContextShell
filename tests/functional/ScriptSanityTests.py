@@ -18,16 +18,16 @@ class FakeShell:
 
 class TestExecutorTests(unittest.TestCase):
     def test_with_output_and_no_command_throw(self):
-        exec = create_executor(FakeShell())
+        executor = create_executor(FakeShell())
 
         with self.assertRaises(ValueError):
-            exec.test("output")
+            executor.test("output")
 
     def test_single_command_no_output(self):
         shell = FakeShell()
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
-        exec.test("$ .: action")
+        executor.test("$ .: action")
 
         self.assertIn(".: action", shell.executed_commands)
 
@@ -35,9 +35,9 @@ class TestExecutorTests(unittest.TestCase):
         shell = FakeShell()
         shell.responses['foo'] = None
         shell.responses['bar'] = None
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
-        exec.test("""
+        executor.test("""
                 $ foo
                 $ bar
                 """)
@@ -50,9 +50,9 @@ class TestExecutorTests(unittest.TestCase):
     def test_single_command_output_matches(self):
         shell = FakeShell()
         shell.responses['.: action'] = 'bar'
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
-        exec.test("""
+        executor.test("""
         $ .: action
         bar
         """)
@@ -60,9 +60,9 @@ class TestExecutorTests(unittest.TestCase):
     def test_single_command_multiline_output_matches(self):
         shell = FakeShell()
         shell.responses['.: action'] = 'bar\nspam'
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
-        exec.test("""
+        executor.test("""
         $ .: action
         bar
         spam
@@ -71,10 +71,10 @@ class TestExecutorTests(unittest.TestCase):
     def test_single_command_different_output(self):
         shell = FakeShell()
         shell.responses['.: action'] = 'bar'
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
         with self.assertRaises(AssertionError):
-            exec.test("""
+            executor.test("""
             $ .: action
             foo
             """)
@@ -82,10 +82,10 @@ class TestExecutorTests(unittest.TestCase):
     def test_single_command_multiline_output_differs(self):
         shell = FakeShell()
         shell.responses['.: action'] = 'bar\nspam'
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
         with self.assertRaises(AssertionError):
-            exec.test("""
+            executor.test("""
             $ .: action
             bar
             gruz
@@ -94,7 +94,7 @@ class TestExecutorTests(unittest.TestCase):
     def test_single_command_unexpected_output(self):
         shell = FakeShell()
         shell.responses['.: action'] = 'bar'
-        exec = create_executor(shell)
+        executor = create_executor(shell)
 
         with self.assertRaises(AssertionError):
-            exec.test("$ .: action")
+            executor.test("$ .: action")
