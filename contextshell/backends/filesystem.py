@@ -49,6 +49,6 @@ class FilesystemTree(BuiltinExecutor):
         # TODO: list actions depending on target type (might require issue #14)
         prefix = NodePath(prefix_)
         all_actions = self.list_builtin_actions()
-        action_names = map(lambda a: NodePath(a.name[: len(prefix) + 1]), all_actions)
+        action_names = map(lambda a: NodePath(a[: len(prefix) + 1]), all_actions)
         names_matching_prefix = filter(prefix.is_parent_of, action_names)
         return list(names_matching_prefix)

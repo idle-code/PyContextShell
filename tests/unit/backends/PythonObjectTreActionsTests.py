@@ -99,3 +99,48 @@ class SetActionTests(PythonObjectTreeTestsBase):
         self.execute('.prop', 'set', 'NEW')
 
         self.assertEqual(self.root.prop, 'NEW')
+
+
+class ListActionTests(PythonObjectTreeTestsBase):
+    def test_field(self):
+        field_list = self.execute('.', 'list')
+
+        self.assertIn('field', field_list)
+
+    def test_property(self):
+        field_list = self.execute('.', 'list')
+
+        self.assertIn('prop', field_list)
+
+    def test_subnode(self):
+        field_list = self.execute('.', 'list')
+
+        self.assertIn('sub', field_list)
+
+    def test_method(self):
+        field_list = self.execute('.', 'list')
+
+        self.assertNotIn('method', field_list)
+
+
+class ListActionsActionTests(PythonObjectTreeTestsBase):
+    def test_field_have_set(self):
+        field_actions = self.execute('.field', 'list.actions')
+
+        self.assertIn('set', field_actions)
+
+
+class ActionFromMethod(PythonObjectTreeTestsBase):
+    def create_root_object(self):
+        class ActionsFromMethodTestRoot:
+            method_called = False
+
+            def method(self):
+                self.method_called = True
+
+        return ActionsFromMethodTestRoot()
+
+    def test_method_is_called(self):
+        self.execute('.', 'method')
+
+        self.assertTrue(self.root.method_called)

@@ -101,8 +101,8 @@ class BuiltinExecutor(ActionExecutor):
             raise ValueError(f"Builtin action '{action.name}' already registered")
         self.builtin_actions[action.name] = action
 
-    def list_builtin_actions(self) -> List[Action]:
-        return list(self.builtin_actions.values())
+    def list_builtin_actions(self) -> List[NodePath]:
+        return list(map(lambda a: a.name, self.builtin_actions.values()))
 
     def find_action(self, target: NodePath, action: NodePath) -> Optional[Action]:
         return self.builtin_actions.get(action)

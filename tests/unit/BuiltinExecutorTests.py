@@ -44,7 +44,7 @@ class ListActions(unittest.TestCase):
 
         registered_actions = executor.list_builtin_actions()
 
-        self.assertListEqual([action], registered_actions)
+        self.assertListEqual([action.name], registered_actions)
 
 
 class FindAction(unittest.TestCase):
